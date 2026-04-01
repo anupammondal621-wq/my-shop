@@ -3,6 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { loadCart, CartItem } from "@/utils/cart";
+import { clearBuyNowProduct } from "@/utils/buyNow";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -78,6 +85,25 @@ export default function CheckoutPage() {
     localStorage.setItem("checkout_shipping", JSON.stringify(updated));
   };
 
+  const loadRazorpayScript = () => {
+    return new Promise<boolean>((resolve) => {
+      const existingScript = document.getElementById("razorpay-checkout-script");
+
+      if (existingScript) {
+        resolve(true);
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.id = "razorpay-checkout-script";
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+
+      document.body.appendChild(script);
+    });
+  };
+
   const handleContinueToPayment = async () => {
     if (
       !form.email ||
@@ -97,6 +123,13 @@ export default function CheckoutPage() {
       setLoading(true);
 
       localStorage.setItem("checkout_shipping", JSON.stringify(form));
+
+      const scriptLoaded = await loadRazorpayScript();
+
+      if (!scriptLoaded) {
+        alert("Razorpay SDK failed to load.");
+        return;
+      }
 
       const params = new URLSearchParams(window.location.search);
       const mode = params.get("mode");
@@ -124,10 +157,74 @@ export default function CheckoutPage() {
         return;
       }
 
-      if (data.url) {
-        window.location.href = data.url;
-      }
-    } catch {
+      const options = {
+        key: data.key,
+        amount: data.amount,
+        currency: data.currency,
+        name: data.name,
+        description: data.description,
+        order_id: data.orderId,
+        prefill: {
+          name: `${form.firstName} ${form.lastName}`.trim(),
+          email: form.email,
+          contact: form.phone,
+        },
+        notes: {
+          address: `${form.address} ${form.apartment}`.trim(),
+          city: form.city,
+          state: form.state,
+          postal_code: form.postalCode,
+          country: form.country,
+        },
+        theme: {
+          color: "#000000",
+        },
+        handler: async function (paymentResponse: {
+          razorpay_order_id: string;
+          razorpay_payment_id: string;
+          razorpay_signature: string;
+        }) {
+          const verifyResponse = await fetch("/api/payment/verify", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              razorpay_order_id: paymentResponse.razorpay_order_id,
+              razorpay_payment_id: paymentResponse.razorpay_payment_id,
+              razorpay_signature: paymentResponse.razorpay_signature,
+              mode,
+              buyNowProduct,
+              totalAmount: total,
+            }),
+          });
+
+          const verifyData = await verifyResponse.json();
+
+          if (!verifyResponse.ok) {
+            alert(verifyData.error || "Payment verification failed");
+            return;
+          }
+
+          localStorage.removeItem("checkout_shipping");
+
+          if (mode === "buy-now") {
+            clearBuyNowProduct();
+          }
+
+          window.location.href = verifyData.redirectUrl || "/checkout/success";
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          },
+        },
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.open();
+    } catch (error) {
+      console.error(error);
       alert("Something went wrong while starting payment.");
     } finally {
       setLoading(false);
@@ -136,7 +233,6 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-white text-black">
-      {/* Same top bar style as Shop page */}
       <div className="border-b border-black px-6 py-4">
         <h1 className="text-sm uppercase tracking-widest">Checkout</h1>
       </div>
@@ -306,11 +402,11 @@ export default function CheckoutPage() {
             disabled={loading || cart.length === 0}
             className="mt-8 w-full rounded-full bg-black px-6 py-3 text-white disabled:opacity-50"
           >
-            {loading ? "Redirecting..." : "Continue to Payment"}
+            {loading ? "Processing..." : "Continue to Payment"}
           </button>
 
           <p className="mt-4 text-sm text-gray-500">
-            Secure payment powered by Stripe.
+            Secure payment powered by Razorpay.
           </p>
         </aside>
       </div>
