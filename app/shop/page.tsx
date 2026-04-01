@@ -124,56 +124,6 @@ export default function Shop() {
               </div>
             </Link>
 
-{/* DESKTOP HOVER BAR */}
-<div className="pointer-events-none absolute bottom-[110px] left-0 right-0 hidden translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 md:block">
-  <div className="pointer-events-auto flex w-full h-[44px] border-t border-black">
-    {product.pack ? (
-      <>
-        {/* Left white section */}
-        <div className="flex min-w-0 flex-1 bg-[#f3f3f3] text-black">
-          <div className="min-w-0 flex-1 truncate border-r border-black px-4 py-3 text-sm">
-            {product.pack}
-          </div>
-
-          <button
-            type="button"
-            className="flex w-[42px] items-center justify-center border-r border-black"
-          >
-            <span className="text-sm">▾</span>
-          </button>
-        </div>
-
-        {/* Right black section */}
-        <button
-          onClick={() => handleAddToCartAndGoCart(product)}
-          className="flex min-w-0 flex-1 bg-black text-white"
-        >
-          <div className="min-w-0 flex-1 px-4 py-3 text-center text-sm font-medium uppercase tracking-wide">
-            {product.buttonPrice}
-          </div>
-
-          <div className="min-w-0 flex-1 whitespace-nowrap border-l border-white px-4 py-3 text-center text-sm font-medium uppercase tracking-wide">
-            Add to Cart
-          </div>
-        </button>
-      </>
-    ) : (
-      <button
-        onClick={() => handleAddToCartAndGoCart(product)}
-        className="flex w-full bg-black text-white"
-      >
-        <div className="min-w-0 flex-1 px-4 py-3 text-center text-sm font-medium uppercase tracking-wide">
-          {product.buttonPrice}
-        </div>
-
-        <div className="min-w-0 flex-1 whitespace-nowrap border-l border-white px-4 py-3 text-center text-sm font-medium uppercase tracking-wide">
-          Add to Cart
-        </div>
-      </button>
-    )}
-  </div>
-</div>
-
 {/* Mobile rows */}
 <div className="md:hidden">
   {/* Top spacer (keeps height same) */}
