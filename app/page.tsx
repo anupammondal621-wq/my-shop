@@ -285,6 +285,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
               />
 
               <div className="absolute bottom-10 left-10">
+                
                 <button
 
                   onClick={() => router.push("/product/product-one")}
