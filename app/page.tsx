@@ -312,10 +312,12 @@ export default function Home() {
             className="w-full"
           >
             {allProducts.map((product, index) => (
-              <SwiperSlide
-                key={`all-mobile-${product.slug}-${product.name}-${index}`}
-                className="!w-[86%]"
-              >
+<SwiperSlide
+  key={`all-mobile-${product.slug}-${product.name}-${index}`}
+  className={`!w-[86%] ${
+    index !== allProducts.length - 1 ? "border-r border-black" : ""
+  }`}
+>
                 <ProductCard product={product} />
               </SwiperSlide>
             ))}
