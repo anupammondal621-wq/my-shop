@@ -167,51 +167,9 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           <p className="mt-3 text-[14px]">{product.price}</p>
         </div>
       </Link>
-
-
-
-{/* Mobile rows */}
-<div className="md:hidden">
-  {/* Top spacer (keeps height same) */}
-  <div
-    className={`flex w-full min-h-[46px] ${
-      product.pack ? "border-t border-black bg-[#f3f3f3]" : "bg-transparent"
-    }`}
-  >
-    {product.pack ? (
-      <>
-        <div className="min-w-0 flex-1 truncate px-3 py-3 text-[12px]">
-          {product.pack}
-        </div>
-
-        <div className="flex w-10 items-center justify-center border-l border-black">
-          <span className="text-sm">▾</span>
-        </div>
-      </>
-    ) : (
-      <div className="w-full" />
-    )}
-  </div>
-
-  {/* Bottom button */}
-  <button
-    onClick={() => handleAddToCartAndGoCart(product)}
-    className={`flex w-full bg-black text-white ${
-      product.pack ? "border-t border-black" : ""
-    }`}
-  >
-    <div className="min-w-0 flex-1 px-3 py-3 text-left text-[12px] uppercase tracking-wide">
-      {product.buttonPrice}
-    </div>
-
-    <div className="min-w-0 flex-1 border-l border-white px-3 py-3 text-center text-[12px] uppercase tracking-wide">
-      Add to Cart
-    </div>
-  </button>
-</div>
     </div>
   );
-};
+};  
 
   return (
     <main className="w-full bg-white text-black">
