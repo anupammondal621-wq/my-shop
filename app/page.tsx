@@ -150,7 +150,7 @@ export default function Home() {
 
   const ProductCard = ({ product }: { product: ProductType }) => {
     return (
-      <div className="group relative w-full border-b border-black bg-[#f3f3f3] lg:border-r">
+      <div className="group relative w-full bg-[#f3f3f3]">
         <Link href={`/product/${product.slug}`} className="block">
           <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
             <Image
@@ -250,32 +250,39 @@ export default function Home() {
         </button>
       </div>
 
-      {/* PISTABARFI SPECIALS */}
-      <section className="w-full">
-        <div className="border-b border-black px-6 py-4">
-          <h2 className="text-sm uppercase tracking-widest">
-            Pistabarfi Specials
-          </h2>
-        </div>
+{/* PISTABARFI SPECIALS */}
+<section className="w-full">
+  <div className="border-b border-black px-6 py-4">
+    <h2 className="text-sm uppercase tracking-widest">
+      Pistabarfi Specials
+    </h2>
+  </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4">
-          {specials.map((product, index) => (
-            <ProductCard
-              key={`special-${product.slug}-${product.name}-${index}`}
-              product={product}
-            />
-          ))}
-        </div>
+  <div className="grid grid-cols-2 lg:grid-cols-4">
+    {specials.map((product, index) => (
+      <div
+        key={`special-${product.slug}-${product.name}-${index}`}
+        className={`
+          border-b border-black
+          ${index % 2 === 0 ? "border-r border-black" : ""}
+          lg:border-r
+          lg:[&:nth-child(4n)]:border-r-0
+        `}
+      >
+        <ProductCard product={product} />
+      </div>
+    ))}
+  </div>
 
-        <div className="border-b border-black px-6 py-5 text-center">
-          <button
-            onClick={() => router.push("/shop")}
-            className="text-sm font-medium hover:underline"
-          >
-            View all products
-          </button>
-        </div>
-      </section>
+  <div className="border-b border-black px-6 py-5 text-center">
+    <button
+      onClick={() => router.push("/shop")}
+      className="text-sm font-medium hover:underline"
+    >
+      View all products
+    </button>
+  </div>
+</section>
 
       {/* ALL PRODUCTS */}
       <section className="w-full overflow-hidden">
