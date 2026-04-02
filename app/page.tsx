@@ -173,59 +173,59 @@ const ProductCard = ({ product }: { product: ProductType }) => {
 
   return (
     <main className="w-full bg-white text-black">
-      {/* HERO */}
-      <section className="h-screen w-full">
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ delay: 3000 }}
-          loop={true}
-          className="h-full w-full"
-          onSwiper={setSwiper}
-          onSlideChange={(swiperInstance) => {
-            setActiveSlide(swiperInstance.realIndex + 1);
-          }}
-        >
-          <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
-                src="/1.webp"
-                className="h-full w-full object-cover"
-                alt="Slide 1"
-              />
+{/* HERO */}
+<section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
+  <Swiper
+    modules={[Autoplay]}
+    autoplay={{ delay: 3000 }}
+    loop={true}
+    className="h-full w-full"
+    onSwiper={setSwiper}
+    onSlideChange={(swiperInstance) => {
+      setActiveSlide(swiperInstance.realIndex + 1);
+    }}
+  >
+    {/* SLIDE 1 */}
+    <SwiperSlide>
+      <div className="relative h-full w-full">
+        <img
+          src="/1.webp"
+          className="h-full w-full object-cover object-[center_35%] sm:object-center"
+          alt="Slide 1"
+        />
 
-              <div className="absolute bottom-10 left-10">
-                
-                <button
+        <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
+          <button
+            onClick={() => router.push("/product/product-one")}
+            className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
+          >
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    </SwiperSlide>
 
-                  onClick={() => router.push("/product/product-one")}
-                  className="rounded-full bg-black px-6 py-3 text-sm text-white transition hover:bg-gray-800"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
+    {/* SLIDE 2 */}
+    <SwiperSlide>
+      <div className="relative h-full w-full">
+        <img
+          src="/2.webp"
+          className="h-full w-full object-cover object-[center_35%] sm:object-center"
+          alt="Slide 2"
+        />
 
-          <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
-                src="/2.webp"
-                className="h-full w-full object-cover"
-                alt="Slide 2"
-              />
-
-              <div className="absolute bottom-10 left-10">
-                <button
-                  onClick={() => router.push("/shop")}
-                  className="rounded-full bg-white px-6 py-3 text-sm font-medium text-black transition hover:bg-gray-200"
-                >
-                  Shop More
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </section>
+        <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
+          <button
+            onClick={() => router.push("/shop")}
+            className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
+          >
+            Shop More
+          </button>
+        </div>
+      </div>
+    </SwiperSlide>
+  </Swiper>
+</section>
 
       {/* SLIDER NAV */}
       <div className="flex items-center justify-between border-t border-b border-black px-6 py-3 text-sm">
