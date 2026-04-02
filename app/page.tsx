@@ -250,23 +250,33 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </button>
       </div>
 
-      {/* PISTABARFI SPECIALS */}
-      <section className="w-full">
-        <div className="border-b border-black px-6 py-4">
-          <h2 className="text-sm uppercase tracking-widest">
-            Pistabarfi Specials
-          </h2>
-        </div>
+{/* PISTABARFI SPECIALS */}
+<section className="w-full">
+  <div className="border-b border-black px-6 py-4">
+    <h2 className="text-sm uppercase tracking-widest">
+      Pistabarfi Specials
+    </h2>
+  </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4">
-          {specials.map((product, index) => (
-            <ProductCard
-              key={`special-${product.slug}-${product.name}-${index}`}
-              product={product}
-            />
-          ))}
-        </div>
-      </section>
+  <div className="grid grid-cols-2 lg:grid-cols-4">
+    {specials.map((product, index) => (
+      <ProductCard
+        key={`special-${product.slug}-${product.name}-${index}`}
+        product={product}
+      />
+    ))}
+  </div>
+
+  {/* MOVE VIEW ALL PRODUCTS HERE */}
+  <div className="border-b border-black px-6 py-5 text-center">
+    <button
+      onClick={() => router.push("/shop")}
+      className="text-sm font-medium hover:underline"
+    >
+      View all products
+    </button>
+  </div>
+</section>
 
 {/* ALL PRODUCTS */}
 <section className="w-full overflow-hidden">
@@ -276,15 +286,15 @@ const ProductCard = ({ product }: { product: ProductType }) => {
 
   {/* Mobile: 1 product slider */}
   <div className="lg:hidden overflow-hidden">
-<Swiper
-  slidesPerView={1.08}
-  slidesPerGroup={1}
-  spaceBetween={8}
-  loop={false}
-  allowTouchMove={true}
-  touchStartPreventDefault={false}
-  className="w-full"
->
+    <Swiper
+      slidesPerView={1.08}
+      slidesPerGroup={1}
+      spaceBetween={8}
+      loop={false}
+      allowTouchMove={true}
+      touchStartPreventDefault={false}
+      className="w-full"
+    >
       {allProducts.map((product, index) => (
         <SwiperSlide
           key={`all-mobile-${product.slug}-${product.name}-${index}`}
@@ -306,15 +316,6 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         product={product}
       />
     ))}
-  </div>
-
-  <div className="border-b border-black px-6 py-5 text-center">
-    <button
-      onClick={() => router.push("/shop")}
-      className="text-sm font-medium hover:underline"
-    >
-      View all products
-    </button>
   </div>
 </section>
 
