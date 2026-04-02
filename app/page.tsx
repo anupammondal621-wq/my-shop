@@ -148,30 +148,30 @@ export default function Home() {
     );
   };
 
-  const ProductCard = ({ product }: { product: ProductType }) => {
-    return (
-      <div className="group relative w-full bg-[#f3f3f3]">
-        <Link href={`/product/${product.slug}`} className="block">
-          <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              sizes="(max-width: 768px) 86vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover transition duration-300 group-hover:scale-105"
-            />
-          </div>
+const ProductCard = ({ product }: { product: ProductType }) => {
+  return (
+    <div className="group relative flex h-full flex-col bg-[#f3f3f3]">
+      <Link href={`/product/${product.slug}`} className="flex h-full flex-col">
+        <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition duration-300 group-hover:scale-105"
+          />
+        </div>
 
-          <div className="min-h-[120px] p-6 sm:min-h-[110px]">
-            <h3 className="text-[14px] uppercase leading-6 tracking-wide">
-              {product.name}
-            </h3>
-            <p className="mt-4 text-[14px]">{product.price}</p>
-          </div>
-        </Link>
-      </div>
-    );
-  };
+        <div className="flex min-h-[110px] flex-1 flex-col p-4">
+          <h3 className="text-[14px] uppercase tracking-wide">
+            {product.name}
+          </h3>
+          <p className="mt-3 text-[14px]">{product.price}</p>
+        </div>
+      </Link>
+    </div>
+  );
+};
 
   return (
     <main className="w-full bg-white text-black">
@@ -258,14 +258,16 @@ export default function Home() {
     </h2>
   </div>
 
-  <div className="grid grid-cols-2 lg:grid-cols-4">
+  <div className="grid grid-cols-2 border-b border-black lg:grid-cols-4">
     {specials.map((product, index) => (
       <div
         key={`special-${product.slug}-${product.name}-${index}`}
         className={`
-          border-b border-black
-          ${index % 2 === 0 ? "border-r border-black" : ""}
-          lg:border-r
+          flex h-full flex-col bg-[#f3f3f3]
+          border-black
+          ${index < specials.length - 2 ? "border-b" : ""}
+          ${index % 2 === 0 ? "border-r" : ""}
+          lg:border-b-0 lg:border-r
           lg:[&:nth-child(4n)]:border-r-0
         `}
       >
@@ -321,9 +323,11 @@ export default function Home() {
             {allProducts.map((product, index) => (
 <SwiperSlide
   key={`all-mobile-${product.slug}-${product.name}-${index}`}
-  className={`!w-[86%] ${
-    index !== allProducts.length - 1 ? "border-r border-black" : ""
-  }`}
+  className={`
+    !w-[86%]
+    border-b border-black
+    ${index !== allProducts.length - 1 ? "border-r border-black" : ""}
+  `}
 >
                 <ProductCard product={product} />
               </SwiperSlide>
@@ -332,14 +336,19 @@ export default function Home() {
         </div>
 
         {/* Desktop grid */}
-        <div className="hidden lg:grid lg:grid-cols-4">
-          {allProducts.map((product, index) => (
-            <ProductCard
-              key={`all-desktop-${product.slug}-${product.name}-${index}`}
-              product={product}
-            />
-          ))}
-        </div>
+<div className="hidden lg:grid lg:grid-cols-4 border-b border-black">
+  {allProducts.map((product, index) => (
+    <div
+      key={`all-desktop-${product.slug}-${product.name}-${index}`}
+      className={`
+        border-r border-black
+        last:border-r-0
+      `}
+    >
+      <ProductCard product={product} />
+    </div>
+  ))}
+</div>
       </section>
 
       {/* MOVING TEXT SECTION */}
