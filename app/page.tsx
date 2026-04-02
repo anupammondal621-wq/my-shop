@@ -118,8 +118,11 @@ const galleryImages = [
 
 export default function Home() {
   const router = useRouter();
-  const [swiper, setSwiper] = useState<SwiperType | null>(null);
+
+  const [heroSwiper, setHeroSwiper] = useState<SwiperType | null>(null);
+  const [productSwiper, setProductSwiper] = useState<SwiperType | null>(null);
   const [gallerySwiper, setGallerySwiper] = useState<SwiperType | null>(null);
+
   const [activeSlide, setActiveSlide] = useState(1);
   const [openFAQs, setOpenFAQs] = useState<number[]>([]);
 
@@ -154,16 +157,16 @@ export default function Home() {
               src={product.image}
               alt={product.name}
               fill
-              sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 25vw"
+              sizes="(max-width: 768px) 86vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover transition duration-300 group-hover:scale-105"
             />
           </div>
 
-          <div className="min-h-[120px] p-4 sm:min-h-[110px]">
+          <div className="min-h-[120px] p-6 sm:min-h-[110px]">
             <h3 className="text-[14px] uppercase leading-6 tracking-wide">
               {product.name}
             </h3>
-            <p className="mt-3 text-[14px]">{product.price}</p>
+            <p className="mt-4 text-[14px]">{product.price}</p>
           </div>
         </Link>
       </div>
@@ -179,12 +182,11 @@ export default function Home() {
           autoplay={{ delay: 3000 }}
           loop={true}
           className="h-full w-full"
-          onSwiper={setSwiper}
+          onSwiper={setHeroSwiper}
           onSlideChange={(swiperInstance) => {
             setActiveSlide(swiperInstance.realIndex + 1);
           }}
         >
-          {/* SLIDE 1 */}
           <SwiperSlide>
             <div className="relative h-full w-full">
               <img
@@ -204,7 +206,6 @@ export default function Home() {
             </div>
           </SwiperSlide>
 
-          {/* SLIDE 2 */}
           <SwiperSlide>
             <div className="relative h-full w-full">
               <img
@@ -226,10 +227,10 @@ export default function Home() {
         </Swiper>
       </section>
 
-      {/* SLIDER NAV */}
+      {/* HERO SLIDER NAV */}
       <div className="flex items-center justify-between border-t border-b border-black px-6 py-3 text-sm">
         <button
-          onClick={() => swiper?.slidePrev()}
+          onClick={() => heroSwiper?.slidePrev()}
           className="px-2 py-1 hover:opacity-60"
           aria-label="Previous slide"
         >
@@ -241,7 +242,7 @@ export default function Home() {
         </span>
 
         <button
-          onClick={() => swiper?.slideNext()}
+          onClick={() => heroSwiper?.slideNext()}
           className="px-2 py-1 hover:opacity-60"
           aria-label="Next slide"
         >
@@ -278,16 +279,33 @@ export default function Home() {
 
       {/* ALL PRODUCTS */}
       <section className="w-full overflow-hidden">
-        <div className="border-b border-black px-6 py-4">
+        <div className="flex items-center justify-between border-b border-black px-6 py-4">
           <h2 className="text-sm uppercase tracking-widest">All Products</h2>
+
+          <div className="flex items-center gap-4 lg:hidden">
+            <button
+              onClick={() => productSwiper?.slidePrev()}
+              className="text-2xl leading-none"
+              aria-label="Previous product"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => productSwiper?.slideNext()}
+              className="text-2xl leading-none"
+              aria-label="Next product"
+            >
+              →
+            </button>
+          </div>
         </div>
 
-        {/* Mobile: 1 full product + small portion of next */}
-        <div className="lg:hidden overflow-hidden pr-4">
+        {/* Mobile slider */}
+        <div className="lg:hidden overflow-hidden">
           <Swiper
-            slidesPerView={5}
-            slidesPerGroup={1}
-            spaceBetween={8}
+            onSwiper={setProductSwiper}
+            slidesPerView="auto"
+            spaceBetween={0}
             loop={false}
             allowTouchMove={true}
             touchStartPreventDefault={false}
@@ -296,6 +314,7 @@ export default function Home() {
             {allProducts.map((product, index) => (
               <SwiperSlide
                 key={`all-mobile-${product.slug}-${product.name}-${index}`}
+                className="!w-[86%]"
               >
                 <ProductCard product={product} />
               </SwiperSlide>
@@ -303,7 +322,7 @@ export default function Home() {
           </Swiper>
         </div>
 
-        {/* Desktop: 4 product grid */}
+        {/* Desktop grid */}
         <div className="hidden lg:grid lg:grid-cols-4">
           {allProducts.map((product, index) => (
             <ProductCard
