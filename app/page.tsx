@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Swiper, SwiperSlide } from "swiper/react";
 import type { Swiper as SwiperType } from "swiper";
-import "swiper/css";
 import { Autoplay } from "swiper/modules";
 import { addToCart } from "@/utils/cart";
 
@@ -146,86 +145,86 @@ export default function Home() {
     );
   };
 
-const ProductCard = ({ product }: { product: ProductType }) => {
-  return (
-    <div className="group relative w-full border-r border-b border-black bg-[#f3f3f3]">
-      <Link href={`/product/${product.slug}`} className="block">
-        <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
-          />
-        </div>
+  const ProductCard = ({ product }: { product: ProductType }) => {
+    return (
+      <div className="group relative w-full border-b border-black bg-[#f3f3f3] lg:border-r">
+        <Link href={`/product/${product.slug}`} className="block">
+          <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 85vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition duration-300 group-hover:scale-105"
+            />
+          </div>
 
-        <div className="min-h-[120px] p-4 sm:min-h-[110px]">
-          <h3 className="text-[14px] uppercase leading-6 tracking-wide">
-            {product.name}
-          </h3>
-          <p className="mt-3 text-[14px]">{product.price}</p>
-        </div>
-      </Link>
-    </div>
-  );
-};  
+          <div className="min-h-[120px] p-4 sm:min-h-[110px]">
+            <h3 className="text-[14px] uppercase leading-6 tracking-wide">
+              {product.name}
+            </h3>
+            <p className="mt-3 text-[14px]">{product.price}</p>
+          </div>
+        </Link>
+      </div>
+    );
+  };
 
   return (
     <main className="w-full bg-white text-black">
-{/* HERO */}
-<section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
-  <Swiper
-    modules={[Autoplay]}
-    autoplay={{ delay: 3000 }}
-    loop={true}
-    className="h-full w-full"
-    onSwiper={setSwiper}
-    onSlideChange={(swiperInstance) => {
-      setActiveSlide(swiperInstance.realIndex + 1);
-    }}
-  >
-    {/* SLIDE 1 */}
-    <SwiperSlide>
-      <div className="relative h-full w-full">
-        <img
-          src="/1.webp"
-          className="h-full w-full object-cover object-[center_35%] sm:object-center"
-          alt="Slide 1"
-        />
+      {/* HERO */}
+      <section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
+        <Swiper
+          modules={[Autoplay]}
+          autoplay={{ delay: 3000 }}
+          loop={true}
+          className="h-full w-full"
+          onSwiper={setSwiper}
+          onSlideChange={(swiperInstance) => {
+            setActiveSlide(swiperInstance.realIndex + 1);
+          }}
+        >
+          {/* SLIDE 1 */}
+          <SwiperSlide>
+            <div className="relative h-full w-full">
+              <img
+                src="/1.webp"
+                className="h-full w-full object-cover object-[center_35%] sm:object-center"
+                alt="Slide 1"
+              />
 
-        <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
-          <button
-            onClick={() => router.push("/product/product-one")}
-            className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
-          >
-            Add to Cart
-          </button>
-        </div>
-      </div>
-    </SwiperSlide>
+              <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
+                <button
+                  onClick={() => router.push("/product/product-one")}
+                  className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
+                >
+                  Add to Cart
+                </button>
+              </div>
+            </div>
+          </SwiperSlide>
 
-    {/* SLIDE 2 */}
-    <SwiperSlide>
-      <div className="relative h-full w-full">
-        <img
-          src="/2.webp"
-          className="h-full w-full object-cover object-[center_35%] sm:object-center"
-          alt="Slide 2"
-        />
+          {/* SLIDE 2 */}
+          <SwiperSlide>
+            <div className="relative h-full w-full">
+              <img
+                src="/2.webp"
+                className="h-full w-full object-cover object-[center_35%] sm:object-center"
+                alt="Slide 2"
+              />
 
-        <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
-          <button
-            onClick={() => router.push("/shop")}
-            className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
-          >
-            Shop More
-          </button>
-        </div>
-      </div>
-    </SwiperSlide>
-  </Swiper>
-</section>
+              <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
+                <button
+                  onClick={() => router.push("/shop")}
+                  className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
+                >
+                  Shop More
+                </button>
+              </div>
+            </div>
+          </SwiperSlide>
+        </Swiper>
+      </section>
 
       {/* SLIDER NAV */}
       <div className="flex items-center justify-between border-t border-b border-black px-6 py-3 text-sm">
@@ -250,74 +249,70 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </button>
       </div>
 
-{/* PISTABARFI SPECIALS */}
-<section className="w-full">
-  <div className="border-b border-black px-6 py-4">
-    <h2 className="text-sm uppercase tracking-widest">
-      Pistabarfi Specials
-    </h2>
-  </div>
+      {/* PISTABARFI SPECIALS */}
+      <section className="w-full">
+        <div className="border-b border-black px-6 py-4">
+          <h2 className="text-sm uppercase tracking-widest">
+            Pistabarfi Specials
+          </h2>
+        </div>
 
-  <div className="grid grid-cols-2 lg:grid-cols-4">
-    {specials.map((product, index) => (
-      <ProductCard
-        key={`special-${product.slug}-${product.name}-${index}`}
-        product={product}
-      />
-    ))}
-  </div>
+        <div className="grid grid-cols-2 lg:grid-cols-4">
+          {specials.map((product, index) => (
+            <ProductCard
+              key={`special-${product.slug}-${product.name}-${index}`}
+              product={product}
+            />
+          ))}
+        </div>
 
-  {/* MOVE VIEW ALL PRODUCTS HERE */}
-  <div className="border-b border-black px-6 py-5 text-center">
-    <button
-      onClick={() => router.push("/shop")}
-      className="text-sm font-medium hover:underline"
-    >
-      View all products
-    </button>
-  </div>
-</section>
+        <div className="border-b border-black px-6 py-5 text-center">
+          <button
+            onClick={() => router.push("/shop")}
+            className="text-sm font-medium hover:underline"
+          >
+            View all products
+          </button>
+        </div>
+      </section>
 
-{/* ALL PRODUCTS */}
-<section className="w-full overflow-hidden">
-  <div className="border-b border-black px-6 py-4">
-    <h2 className="text-sm uppercase tracking-widest">All Products</h2>
-  </div>
+      {/* ALL PRODUCTS */}
+      <section className="w-full overflow-hidden">
+        <div className="border-b border-black px-6 py-4">
+          <h2 className="text-sm uppercase tracking-widest">All Products</h2>
+        </div>
 
-  {/* Mobile: 1 product slider */}
-  <div className="lg:hidden overflow-hidden">
-    <Swiper
-      slidesPerView={1.08}
-      slidesPerGroup={1}
-      spaceBetween={8}
-      loop={false}
-      allowTouchMove={true}
-      touchStartPreventDefault={false}
-      className="w-full"
-    >
-      {allProducts.map((product, index) => (
-        <SwiperSlide
-          key={`all-mobile-${product.slug}-${product.name}-${index}`}
-          className="!w-full"
-        >
-          <div className="w-full">
-            <ProductCard product={product} />
-          </div>
-        </SwiperSlide>
-      ))}
-    </Swiper>
-  </div>
+        {/* Mobile: 1 full product + small portion of next */}
+        <div className="lg:hidden overflow-hidden pr-4">
+          <Swiper
+            slidesPerView={5}
+            slidesPerGroup={1}
+            spaceBetween={8}
+            loop={false}
+            allowTouchMove={true}
+            touchStartPreventDefault={false}
+            className="w-full"
+          >
+            {allProducts.map((product, index) => (
+              <SwiperSlide
+                key={`all-mobile-${product.slug}-${product.name}-${index}`}
+              >
+                <ProductCard product={product} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
-  {/* Desktop: 4 product grid */}
-  <div className="hidden lg:grid lg:grid-cols-4">
-    {allProducts.map((product, index) => (
-      <ProductCard
-        key={`all-desktop-${product.slug}-${product.name}-${index}`}
-        product={product}
-      />
-    ))}
-  </div>
-</section>
+        {/* Desktop: 4 product grid */}
+        <div className="hidden lg:grid lg:grid-cols-4">
+          {allProducts.map((product, index) => (
+            <ProductCard
+              key={`all-desktop-${product.slug}-${product.name}-${index}`}
+              product={product}
+            />
+          ))}
+        </div>
+      </section>
 
       {/* MOVING TEXT SECTION */}
       <section className="w-full overflow-hidden border-b border-black bg-white py-4">
@@ -501,7 +496,6 @@ const ProductCard = ({ product }: { product: ProductType }) => {
             <div
               key={index}
               className="border-b border-black md:min-h-[335px] md:border-b-0 md:border-r last:md:border-r-0"
-              
             >
               <button
                 onClick={() => toggleFAQ(index)}
@@ -533,7 +527,6 @@ const ProductCard = ({ product }: { product: ProductType }) => {
 
         <div className="border-t border-black py-5 text-center">
           <button
-          
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="text-sm font-medium hover:underline"
           >
@@ -634,7 +627,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
               </p>
               <p>
                 <span className="font-semibold">Email</span> :
-                sapport@bongomithai.com
+                support@bongomithai.com
               </p>
               <p>
                 <span className="font-semibold">Location</span> : Kolkata
