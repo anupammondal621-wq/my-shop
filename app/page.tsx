@@ -390,51 +390,55 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </div>
       </section>
 
-      {/* GIFTING SECTION */}
-      <section className="w-full border-b border-black">
-        <div className="grid grid-cols-1 lg:grid-cols-2">
-          <div className="flex items-start bg-[#f5f5f5] px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-            <div className="max-w-[640px]">
-              <h2 className="text-[24px] uppercase tracking-wide sm:text-[28px]">
-                Gifting with Pistabarfi
-              </h2>
+{/* GIFTING SECTION */}
+<section className="w-full border-b border-black">
+  <div className="grid grid-cols-1 lg:grid-cols-2">
+    
+    {/* IMAGE (now on left) */}
+    <div className="relative min-h-[420px] border-b border-black lg:min-h-[540px] lg:border-b-0 lg:border-r">
+      <Image
+        src="/product-7.jpg"
+        alt="Gifting with Pistabarfi"
+        fill
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        className="object-cover"
+      />
+    </div>
 
-              <div className="mt-8 space-y-6 text-[16px] leading-8 text-black">
-                <p>
-                  At Pistabarfi, we create thoughtful, customised pieces for
-                  wedding favours, birth announcements, corporate gifting etc.
-                  Everything can be personalised, whether it&apos;s a name, a
-                  logo, or a detail that makes it uniquely yours.
-                </p>
+    {/* TEXT (now on right) */}
+    <div className="flex items-start bg-[#f5f5f5] px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+      <div className="max-w-[640px]">
+        <h2 className="text-[24px] uppercase tracking-wide sm:text-[28px]">
+          Gifting with Pistabarfi
+        </h2>
 
-                <p>For more details, feel free to get in touch.</p>
+        <div className="mt-8 space-y-6 text-[16px] leading-8 text-black">
+          <p>
+            At Pistabarfi, we create thoughtful, customised pieces for
+            wedding favours, birth announcements, corporate gifting etc.
+            Everything can be personalised, whether it&apos;s a name, a
+            logo, or a detail that makes it uniquely yours.
+          </p>
 
-                <p>
-                  You can watch one of the weddings we worked on by clicking the
-                  button below.
-                </p>
-              </div>
+          <p>For more details, feel free to get in touch.</p>
 
-              <button
-                onClick={() => router.push("/contact")}
-                className="mt-10 bg-black px-8 py-4 text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
-              >
-                Contact Us
-              </button>
-            </div>
-          </div>
-
-          <div className="relative min-h-[420px] border-b border-black lg:min-h-[540px] lg:border-b-0 lg:border-l">
-            <Image
-              src="/product-7.jpg"
-              alt="Gifting with Pistabarfi"
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
+          <p>
+            You can watch one of the weddings we worked on by clicking the
+            button below.
+          </p>
         </div>
-      </section>
+
+        <button
+          onClick={() => router.push("/contact")}
+          className="mt-10 bg-black px-8 py-4 text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
+        >
+          Contact Us
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
 
       {/* TWO IMAGE SECTION */}
       <section className="w-full border-b border-black">
