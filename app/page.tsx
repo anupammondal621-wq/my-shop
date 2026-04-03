@@ -162,8 +162,8 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           />
         </div>
 
-        <div className="flex min-h-[110px] flex-1 flex-col p-4">
-          <h3 className="text-[14px] uppercase tracking-wide">
+        <div className="flex h-[120px] flex-col justify-between p-4">
+          <h3 className="min-h-[40px] text-[14px] uppercase tracking-wide leading-5">
             {product.name}
           </h3>
           <p className="mt-3 text-[14px]">{product.price}</p>
