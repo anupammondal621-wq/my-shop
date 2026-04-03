@@ -630,15 +630,14 @@ const ProductCard = ({ product }: { product: ProductType }) => {
 >
             {galleryImages.map((image, index) => (
               <SwiperSlide key={index}>
-                <div className="bg-white">
-                  <Image
-                    src={image}
-                    alt={`Gallery image ${index + 1}`}
-                    width={700}
-                    height={900}
-                    className="h-[500px] w-full object-cover"
-                  />
-                </div>
+<div className="bg-white aspect-square w-full relative">
+  <Image
+    src={image}
+    alt={`Gallery image ${index + 1}`}
+    fill
+    className="object-cover"
+  />
+</div>
               </SwiperSlide>
             ))}
           </Swiper>
