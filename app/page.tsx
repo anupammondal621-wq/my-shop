@@ -604,22 +604,30 @@ const ProductCard = ({ product }: { product: ProductType }) => {
             →
           </button>
 
-          <Swiper
-            modules={[Autoplay]}
-            onSwiper={setGallerySwiper}
-            loop={true}
-            speed={700}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: false,
-            }}
-            allowTouchMove={true}
-            spaceBetween={8}
-            slidesPerView={5}
-            slidesPerGroup={1}
-            className="w-full"
-          >
+<Swiper
+  modules={[Autoplay]}
+  onSwiper={setGallerySwiper}
+  loop={true}
+  speed={700}
+  autoplay={{
+    delay: 2500,
+    disableOnInteraction: false,
+    pauseOnMouseEnter: false,
+  }}
+  allowTouchMove={true}
+  spaceBetween={8}
+  slidesPerView={2} // default (mobile)
+  breakpoints={{
+    640: {
+      slidesPerView: 3,
+    },
+    1024: {
+      slidesPerView: 5,
+    },
+  }}
+  slidesPerGroup={1}
+  className="w-full"
+>
             {galleryImages.map((image, index) => (
               <SwiperSlide key={index}>
                 <div className="bg-white">
