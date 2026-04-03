@@ -150,20 +150,20 @@ export default function Home() {
 
 const ProductCard = ({ product }: { product: ProductType }) => {
   return (
-    <div className="group relative flex h-full flex-col bg-[#f3f3f3]">
-      <Link href={`/product/${product.slug}`} className="flex h-full flex-col">
-        <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+    <div className="group relative h-full border-black">
+      <Link href={`/product/${product.slug}`} className="block h-full">
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
           <Image
             src={product.image}
             alt={product.name}
             fill
-            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 50vw, 25vw"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
             className="object-cover transition duration-300 group-hover:scale-105"
           />
         </div>
 
-        <div className="flex h-[132px] flex-col justify-between p-4">
-          <h3 className="min-h-[44px] text-[14px] uppercase tracking-wide leading-5">
+        <div className="h-[110px] p-4">
+          <h3 className="text-[14px] uppercase tracking-wide">
             {product.name}
           </h3>
           <p className="mt-3 text-[14px]">{product.price}</p>
@@ -258,12 +258,11 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     </h2>
   </div>
 
-<div className="grid grid-cols-2 auto-rows-fr border-b border-black lg:grid-cols-4">
+<div className="grid grid-cols-2 lg:grid-cols-4 border-b border-black">
   {specials.map((product, index) => (
     <div
       key={`special-${product.slug}-${product.name}-${index}`}
       className={`
-        h-full bg-[#f3f3f3]
         border-black
         ${index < specials.length - 2 ? "border-b" : ""}
         ${index % 2 === 0 ? "border-r" : ""}
