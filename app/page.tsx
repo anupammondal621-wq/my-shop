@@ -162,8 +162,8 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           />
         </div>
 
-        <div className="flex h-[120px] flex-col justify-between p-4">
-          <h3 className="min-h-[40px] text-[14px] uppercase tracking-wide leading-5">
+        <div className="flex h-[132px] flex-col justify-between p-4">
+          <h3 className="min-h-[44px] text-[14px] uppercase tracking-wide leading-5">
             {product.name}
           </h3>
           <p className="mt-3 text-[14px]">{product.price}</p>
@@ -258,23 +258,23 @@ const ProductCard = ({ product }: { product: ProductType }) => {
     </h2>
   </div>
 
-  <div className="grid grid-cols-2 border-b border-black lg:grid-cols-4">
-    {specials.map((product, index) => (
-      <div
-        key={`special-${product.slug}-${product.name}-${index}`}
-        className={`
-          flex h-full flex-col bg-[#f3f3f3]
-          border-black
-          ${index < specials.length - 2 ? "border-b" : ""}
-          ${index % 2 === 0 ? "border-r" : ""}
-          lg:border-b-0 lg:border-r
-          lg:[&:nth-child(4n)]:border-r-0
-        `}
-      >
-        <ProductCard product={product} />
-      </div>
-    ))}
-  </div>
+<div className="grid grid-cols-2 auto-rows-fr border-b border-black lg:grid-cols-4">
+  {specials.map((product, index) => (
+    <div
+      key={`special-${product.slug}-${product.name}-${index}`}
+      className={`
+        h-full bg-[#f3f3f3]
+        border-black
+        ${index < specials.length - 2 ? "border-b" : ""}
+        ${index % 2 === 0 ? "border-r" : ""}
+        lg:border-b-0 lg:border-r
+        lg:[&:nth-child(4n)]:border-r-0
+      `}
+    >
+      <ProductCard product={product} />
+    </div>
+  ))}
+</div>
 
   <div className="border-b border-black px-6 py-5 text-center">
     <button
