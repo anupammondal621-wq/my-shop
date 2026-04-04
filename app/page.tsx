@@ -122,22 +122,25 @@ const ProductCard = memo(function ProductCard({
   product: ProductType;
 }) {
   return (
-    <div className="group relative h-full border-black">
-      <Link href={`/product/${product.slug}`} className="block h-full">
+    <div className="flex h-full flex-col">
+      <Link href={`/product/${product.slug}`} className="flex h-full flex-col">
+        {/* Image */}
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
           <Image
             src={product.image}
             alt={product.name}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
+            className="object-cover"
           />
         </div>
 
-        <div className="h-[110px] p-4">
-          <h3 className="text-[14px] uppercase tracking-wide">
+        {/* Content */}
+        <div className="flex min-h-[110px] flex-col justify-between p-4">
+          <h3 className="line-clamp-2 text-[14px] uppercase tracking-wide leading-5">
             {product.name}
           </h3>
+
           <p className="mt-3 text-[14px]">{product.price}</p>
         </div>
       </Link>
@@ -261,40 +264,41 @@ export default function Home() {
         </button>
       </div>
 
-      {/* PISTABARFI SPECIALS */}
-      <section className="w-full">
-        <div className="border-b border-black px-6 py-4">
-          <h2 className="text-sm uppercase tracking-widest">
-            Pistabarfi Specials
-          </h2>
-        </div>
+{/* PISTABARFI SPECIALS */}
+<section className="w-full">
+  <div className="border-b border-black px-6 py-4">
+    <h2 className="text-sm uppercase tracking-widest">
+      Pistabarfi Specials
+    </h2>
+  </div>
 
-        <div className="grid grid-cols-2 border-b border-black lg:grid-cols-4">
-          {specials.map((product, index) => (
-            <div
-              key={`special-${product.slug}-${product.name}-${index}`}
-              className={`
-                border-black
-                ${index < specials.length - 2 ? "border-b" : ""}
-                ${index % 2 === 0 ? "border-r" : ""}
-                lg:border-b-0 lg:border-r
-                lg:[&:nth-child(4n)]:border-r-0
-              `}
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
+  <div className="grid grid-cols-2 border-b border-black lg:grid-cols-4">
+    {specials.map((product, index) => (
+      <div
+        key={`special-${product.slug}-${product.name}-${index}`}
+        className={`
+          flex
+          border-black
+          ${index < specials.length - 2 ? "border-b" : ""}
+          ${index % 2 === 0 ? "border-r" : ""}
+          lg:border-b-0 lg:border-r
+          lg:[&:nth-child(4n)]:border-r-0
+        `}
+      >
+        <ProductCard product={product} />
+      </div>
+    ))}
+  </div>
 
-        <div className="border-b border-black px-6 py-5 text-center">
-          <button
-            onClick={() => router.push("/shop")}
-            className="text-sm font-medium hover:underline"
-          >
-            View all products
-          </button>
-        </div>
-      </section>
+  <div className="border-b border-black px-6 py-5 text-center">
+    <button
+      onClick={() => router.push("/shop")}
+      className="text-sm font-medium hover:underline"
+    >
+      View all products
+    </button>
+  </div>
+</section>
 
       {/* ALL PRODUCTS */}
       <section className="w-full overflow-hidden">
