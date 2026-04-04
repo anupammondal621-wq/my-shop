@@ -3,7 +3,7 @@ import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export const metadata = {
-  title: "My Shop",
+  title: "BongoMithai",
   description: "My online shop",
 };
 
