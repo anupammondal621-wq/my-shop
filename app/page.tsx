@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState, memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -116,12 +116,41 @@ const galleryImages = [
   "/product-9.jpeg",
 ];
 
+const ProductCard = memo(function ProductCard({
+  product,
+}: {
+  product: ProductType;
+}) {
+  return (
+    <div className="group relative h-full border-black">
+      <Link href={`/product/${product.slug}`} className="block h-full">
+        <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
+          <Image
+            src={product.image}
+            alt={product.name}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
+            className="object-cover transition duration-300 group-hover:scale-105"
+          />
+        </div>
+
+        <div className="h-[110px] p-4">
+          <h3 className="text-[14px] uppercase tracking-wide">
+            {product.name}
+          </h3>
+          <p className="mt-3 text-[14px]">{product.price}</p>
+        </div>
+      </Link>
+    </div>
+  );
+});
+
 export default function Home() {
   const router = useRouter();
 
-  const [heroSwiper, setHeroSwiper] = useState<SwiperType | null>(null);
-  const [productSwiper, setProductSwiper] = useState<SwiperType | null>(null);
-  const [gallerySwiper, setGallerySwiper] = useState<SwiperType | null>(null);
+  const heroSwiperRef = useRef<SwiperType | null>(null);
+  const productSwiperRef = useRef<SwiperType | null>(null);
+  const gallerySwiperRef = useRef<SwiperType | null>(null);
 
   const [activeSlide, setActiveSlide] = useState(1);
   const [openFAQs, setOpenFAQs] = useState<number[]>([]);
@@ -148,51 +177,31 @@ export default function Home() {
     );
   };
 
-const ProductCard = ({ product }: { product: ProductType }) => {
-  return (
-    <div className="group relative h-full border-black">
-      <Link href={`/product/${product.slug}`} className="block h-full">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
-          />
-        </div>
-
-        <div className="h-[110px] p-4">
-          <h3 className="text-[14px] uppercase tracking-wide">
-            {product.name}
-          </h3>
-          <p className="mt-3 text-[14px]">{product.price}</p>
-        </div>
-      </Link>
-    </div>
-  );
-};
-
   return (
     <main className="w-full bg-white text-black">
       {/* HERO */}
       <section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
         <Swiper
           modules={[Autoplay]}
-          autoplay={{ delay: 3000 }}
+          autoplay={{ delay: 3000, disableOnInteraction: false }}
           loop={true}
           className="h-full w-full"
-          onSwiper={setHeroSwiper}
+          onSwiper={(swiper) => {
+            heroSwiperRef.current = swiper;
+          }}
           onSlideChange={(swiperInstance) => {
             setActiveSlide(swiperInstance.realIndex + 1);
           }}
         >
           <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
+            <div className="relative h-full w-full [transform:translateZ(0)] [backface-visibility:hidden]">
+              <Image
                 src="/1.webp"
-                className="h-full w-full object-cover object-[center_35%] sm:object-center"
                 alt="Slide 1"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover object-[center_35%] sm:object-center [transform:translateZ(0)] [backface-visibility:hidden]"
               />
 
               <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
@@ -207,11 +216,13 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           </SwiperSlide>
 
           <SwiperSlide>
-            <div className="relative h-full w-full">
-              <img
+            <div className="relative h-full w-full [transform:translateZ(0)] [backface-visibility:hidden]">
+              <Image
                 src="/2.webp"
-                className="h-full w-full object-cover object-[center_35%] sm:object-center"
                 alt="Slide 2"
+                fill
+                sizes="100vw"
+                className="object-cover object-[center_35%] sm:object-center [transform:translateZ(0)] [backface-visibility:hidden]"
               />
 
               <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
@@ -230,7 +241,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
       {/* HERO SLIDER NAV */}
       <div className="flex items-center justify-between border-t border-b border-black px-6 py-3 text-sm">
         <button
-          onClick={() => heroSwiper?.slidePrev()}
+          onClick={() => heroSwiperRef.current?.slidePrev()}
           className="px-2 py-1 hover:opacity-60"
           aria-label="Previous slide"
         >
@@ -242,7 +253,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </span>
 
         <button
-          onClick={() => heroSwiper?.slideNext()}
+          onClick={() => heroSwiperRef.current?.slideNext()}
           className="px-2 py-1 hover:opacity-60"
           aria-label="Next slide"
         >
@@ -250,40 +261,40 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </button>
       </div>
 
-{/* PISTABARFI SPECIALS */}
-<section className="w-full">
-  <div className="border-b border-black px-6 py-4">
-    <h2 className="text-sm uppercase tracking-widest">
-      Pistabarfi Specials
-    </h2>
-  </div>
+      {/* PISTABARFI SPECIALS */}
+      <section className="w-full">
+        <div className="border-b border-black px-6 py-4">
+          <h2 className="text-sm uppercase tracking-widest">
+            Pistabarfi Specials
+          </h2>
+        </div>
 
-<div className="grid grid-cols-2 lg:grid-cols-4 border-b border-black">
-  {specials.map((product, index) => (
-    <div
-      key={`special-${product.slug}-${product.name}-${index}`}
-      className={`
-        border-black
-        ${index < specials.length - 2 ? "border-b" : ""}
-        ${index % 2 === 0 ? "border-r" : ""}
-        lg:border-b-0 lg:border-r
-        lg:[&:nth-child(4n)]:border-r-0
-      `}
-    >
-      <ProductCard product={product} />
-    </div>
-  ))}
-</div>
+        <div className="grid grid-cols-2 border-b border-black lg:grid-cols-4">
+          {specials.map((product, index) => (
+            <div
+              key={`special-${product.slug}-${product.name}-${index}`}
+              className={`
+                border-black
+                ${index < specials.length - 2 ? "border-b" : ""}
+                ${index % 2 === 0 ? "border-r" : ""}
+                lg:border-b-0 lg:border-r
+                lg:[&:nth-child(4n)]:border-r-0
+              `}
+            >
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
 
-  <div className="border-b border-black px-6 py-5 text-center">
-    <button
-      onClick={() => router.push("/shop")}
-      className="text-sm font-medium hover:underline"
-    >
-      View all products
-    </button>
-  </div>
-</section>
+        <div className="border-b border-black px-6 py-5 text-center">
+          <button
+            onClick={() => router.push("/shop")}
+            className="text-sm font-medium hover:underline"
+          >
+            View all products
+          </button>
+        </div>
+      </section>
 
       {/* ALL PRODUCTS */}
       <section className="w-full overflow-hidden">
@@ -292,14 +303,14 @@ const ProductCard = ({ product }: { product: ProductType }) => {
 
           <div className="flex items-center gap-4 lg:hidden">
             <button
-              onClick={() => productSwiper?.slidePrev()}
+              onClick={() => productSwiperRef.current?.slidePrev()}
               className="text-2xl leading-none"
               aria-label="Previous product"
             >
               ←
             </button>
             <button
-              onClick={() => productSwiper?.slideNext()}
+              onClick={() => productSwiperRef.current?.slideNext()}
               className="text-2xl leading-none"
               aria-label="Next product"
             >
@@ -309,9 +320,11 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </div>
 
         {/* Mobile slider */}
-        <div className="lg:hidden overflow-hidden">
+        <div className="overflow-hidden lg:hidden">
           <Swiper
-            onSwiper={setProductSwiper}
+            onSwiper={(swiper) => {
+              productSwiperRef.current = swiper;
+            }}
             slidesPerView="auto"
             spaceBetween={0}
             loop={false}
@@ -320,14 +333,14 @@ const ProductCard = ({ product }: { product: ProductType }) => {
             className="w-full"
           >
             {allProducts.map((product, index) => (
-<SwiperSlide
-  key={`all-mobile-${product.slug}-${product.name}-${index}`}
-  className={`
-    !w-[86%]
-    border-b border-black
-    ${index !== allProducts.length - 1 ? "border-r border-black" : ""}
-  `}
->
+              <SwiperSlide
+                key={`all-mobile-${product.slug}-${product.name}-${index}`}
+                className={`
+                  !w-[86%]
+                  border-b border-black
+                  ${index !== allProducts.length - 1 ? "border-r border-black" : ""}
+                `}
+              >
                 <ProductCard product={product} />
               </SwiperSlide>
             ))}
@@ -335,25 +348,22 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </div>
 
         {/* Desktop grid */}
-<div className="hidden lg:grid lg:grid-cols-4 border-b border-black">
-  {allProducts.map((product, index) => (
-    <div
-      key={`all-desktop-${product.slug}-${product.name}-${index}`}
-      className={`
-        border-r border-black
-        last:border-r-0
-      `}
-    >
-      <ProductCard product={product} />
-    </div>
-  ))}
-</div>
+        <div className="hidden border-b border-black lg:grid lg:grid-cols-4">
+          {allProducts.map((product, index) => (
+            <div
+              key={`all-desktop-${product.slug}-${product.name}-${index}`}
+              className="border-r border-black last:border-r-0"
+            >
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
       </section>
 
       {/* MOVING TEXT SECTION */}
       <section className="w-full overflow-hidden border-b border-black bg-white py-4">
         <div className="flex w-max flex-nowrap animate-marquee whitespace-nowrap">
-          <div className="flex items-center shrink-0">
+          <div className="flex shrink-0 items-center">
             <span className="mx-6 text-[18px] font-normal tracking-wide">
               Wedding Announcements / Corporate Gifting / Customizations ·
             </span>
@@ -370,7 +380,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
             </span>
           </div>
 
-          <div className="flex items-center shrink-0">
+          <div className="flex shrink-0 items-center">
             <span className="mx-6 text-[18px] font-normal tracking-wide">
               Wedding Announcements / Corporate Gifting / Customizations ·
             </span>
@@ -389,55 +399,51 @@ const ProductCard = ({ product }: { product: ProductType }) => {
         </div>
       </section>
 
-{/* GIFTING SECTION */}
-<section className="w-full border-b border-black">
-  <div className="grid grid-cols-1 lg:grid-cols-2">
-    
-    {/* IMAGE (now on left) */}
-    <div className="relative min-h-[420px] border-b border-black lg:min-h-[540px] lg:border-b-0 lg:border-r">
-      <Image
-        src="/product-7.jpg"
-        alt="Gifting with Pistabarfi"
-        fill
-        sizes="(max-width: 1024px) 100vw, 50vw"
-        className="object-cover"
-      />
-    </div>
+      {/* GIFTING SECTION */}
+      <section className="w-full border-b border-black">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="relative min-h-[420px] border-b border-black lg:min-h-[540px] lg:border-b-0 lg:border-r">
+            <Image
+              src="/product-7.jpg"
+              alt="Gifting with Pistabarfi"
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
 
-    {/* TEXT (now on right) */}
-    <div className="flex items-start bg-[#f5f5f5] px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-      <div className="max-w-[640px]">
-        <h2 className="text-[24px] uppercase tracking-wide sm:text-[28px]">
-          Gifting with Pistabarfi
-        </h2>
+          <div className="flex items-start bg-[#f5f5f5] px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+            <div className="max-w-[640px]">
+              <h2 className="text-[24px] uppercase tracking-wide sm:text-[28px]">
+                Gifting with Pistabarfi
+              </h2>
 
-        <div className="mt-8 space-y-6 text-[16px] leading-8 text-black">
-          <p>
-            At Pistabarfi, we create thoughtful, customised pieces for
-            wedding favours, birth announcements, corporate gifting etc.
-            Everything can be personalised, whether it&apos;s a name, a
-            logo, or a detail that makes it uniquely yours.
-          </p>
+              <div className="mt-8 space-y-6 text-[16px] leading-8 text-black">
+                <p>
+                  At Pistabarfi, we create thoughtful, customised pieces for
+                  wedding favours, birth announcements, corporate gifting etc.
+                  Everything can be personalised, whether it&apos;s a name, a
+                  logo, or a detail that makes it uniquely yours.
+                </p>
 
-          <p>For more details, feel free to get in touch.</p>
+                <p>For more details, feel free to get in touch.</p>
 
-          <p>
-            You can watch one of the weddings we worked on by clicking the
-            button below.
-          </p>
+                <p>
+                  You can watch one of the weddings we worked on by clicking the
+                  button below.
+                </p>
+              </div>
+
+              <button
+                onClick={() => router.push("/contact")}
+                className="mt-10 bg-black px-8 py-4 text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
+              >
+                Contact Us
+              </button>
+            </div>
+          </div>
         </div>
-
-        <button
-          onClick={() => router.push("/contact")}
-          className="mt-10 bg-black px-8 py-4 text-sm font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
-        >
-          Contact Us
-        </button>
-      </div>
-    </div>
-
-  </div>
-</section>
+      </section>
 
       {/* TWO IMAGE SECTION */}
       <section className="w-full border-b border-black">
@@ -588,7 +594,7 @@ const ProductCard = ({ product }: { product: ProductType }) => {
 
         <div className="relative bg-white px-[8px] py-[8px]">
           <button
-            onClick={() => gallerySwiper?.slidePrev()}
+            onClick={() => gallerySwiperRef.current?.slidePrev()}
             className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white text-black transition hover:opacity-80"
             aria-label="Previous gallery slide"
           >
@@ -596,47 +602,49 @@ const ProductCard = ({ product }: { product: ProductType }) => {
           </button>
 
           <button
-            onClick={() => gallerySwiper?.slideNext()}
+            onClick={() => gallerySwiperRef.current?.slideNext()}
             className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-black bg-white text-black transition hover:opacity-80"
             aria-label="Next gallery slide"
           >
             →
           </button>
 
-<Swiper
-  modules={[Autoplay]}
-  onSwiper={setGallerySwiper}
-  loop={true}
-  speed={700}
-  autoplay={{
-    delay: 2500,
-    disableOnInteraction: false,
-    pauseOnMouseEnter: false,
-  }}
-  allowTouchMove={true}
-  spaceBetween={8}
-  slidesPerView={2} // default (mobile)
-  breakpoints={{
-    640: {
-      slidesPerView: 3,
-    },
-    1024: {
-      slidesPerView: 5,
-    },
-  }}
-  slidesPerGroup={1}
-  className="w-full"
->
+          <Swiper
+            modules={[Autoplay]}
+            onSwiper={(swiper) => {
+              gallerySwiperRef.current = swiper;
+            }}
+            loop={true}
+            speed={700}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: false,
+            }}
+            allowTouchMove={true}
+            spaceBetween={8}
+            slidesPerView={2}
+            breakpoints={{
+              640: {
+                slidesPerView: 3,
+              },
+              1024: {
+                slidesPerView: 5,
+              },
+            }}
+            slidesPerGroup={1}
+            className="w-full"
+          >
             {galleryImages.map((image, index) => (
               <SwiperSlide key={index}>
-<div className="bg-white aspect-[5/7] w-full relative">
-  <Image
-    src={image}
-    alt={`Gallery image ${index + 1}`}
-    fill
-    className="object-cover"
-  />
-</div>
+                <div className="relative aspect-[5/7] w-full bg-white">
+                  <Image
+                    src={image}
+                    alt={`Gallery image ${index + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
