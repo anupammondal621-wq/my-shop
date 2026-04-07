@@ -50,17 +50,17 @@ export default function Header() {
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         
         {/* LEFT: TEXT + LOGO */}
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <span className="text-lg font-bold sm:text-xl">
-            BongoMithai
-          </span>
+<Link href="/" className="flex items-center gap-3 shrink-0">
+  <img
+    src="/logo_vector.svg"
+    alt="Logo"
+    className="h-12 w-auto"
+  />
 
-          <img
-            src="/logo_vector.svg"
-            alt="Logo"
-            className="h-12 w-auto"
-          />
-        </Link>
+  <span className="text-lg font-bold sm:text-xl">
+    BongoMithai
+  </span>
+</Link>
 
         {/* RIGHT: NAVIGATION */}
         <nav className="flex items-center gap-3 whitespace-nowrap text-xs font-medium sm:gap-6 sm:text-sm">
