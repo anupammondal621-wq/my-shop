@@ -49,13 +49,21 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 h-[70px] border-b bg-white text-black">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* LEFT: BRAND NAME */}
-        <Link href="/" className="shrink-0 text-lg font-bold sm:text-xl">
-          BongoMithai
+        {/* LEFT: TEXT + LOGO */}
+        <Link href="/" className="flex items-center gap-2 shrink-0">
+          <span className="text-lg font-bold sm:text-xl">
+            BongoMithai
+          </span>
+
+          <img
+            src="/logo_vector.svg"
+            alt="Logo"
+            className="h-6 w-auto"
+          />
         </Link>
 
-        {/* CENTER: NAV */}
-        <nav className="flex-1 flex justify-center items-center gap-3 whitespace-nowrap text-xs font-medium sm:gap-6 sm:text-sm">
+        {/* RIGHT: NAVIGATION */}
+        <nav className="flex items-center gap-3 whitespace-nowrap text-xs font-medium sm:gap-6 sm:text-sm">
           <Link href="/" className="shrink-0">
             Home
           </Link>
@@ -97,13 +105,6 @@ export default function Header() {
             </>
           )}
         </nav>
-
-        {/* RIGHT: LOGO */}
-        <img
-          src="/logo_vector.svg"
-          alt="Logo"
-          className="h-8 w-auto shrink-0"
-        />
 
       </div>
     </header>
