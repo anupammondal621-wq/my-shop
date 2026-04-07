@@ -125,24 +125,28 @@ const ProductCard = memo(function ProductCard({
 }) {
   return (
     <div
-      className={`group relative ${bordered ? "border-b border-r border-black" : ""}`}
+      className={`group relative h-full ${
+        bordered ? "border-b border-r border-black" : ""
+      }`}
     >
-      <Link href={`/product/${product.slug}`} className="block">
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-            className="object-cover transition duration-300 group-hover:scale-105"
-          />
-        </div>
+      <Link href={`/product/${product.slug}`} className="block h-full">
+        <div className="flex h-full flex-col">
+          <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
+            <Image
+              src={product.image}
+              alt={product.name}
+              fill
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition duration-300 group-hover:scale-105"
+            />
+          </div>
 
-        <div className="min-h-[110px] p-4">
-          <h3 className="text-[14px] uppercase tracking-wide">
-            {product.name}
-          </h3>
-          <p className="mt-3 text-[14px]">{product.price}</p>
+          <div className="flex-1 min-h-[110px] p-4">
+            <h3 className="text-[14px] uppercase tracking-wide">
+              {product.name}
+            </h3>
+            <p className="mt-3 text-[14px]">{product.price}</p>
+          </div>
         </div>
       </Link>
     </div>
@@ -326,14 +330,14 @@ export default function Home() {
       className="w-full"
     >
       {allProducts.map((product, index) => (
-        <SwiperSlide
-          key={`all-mobile-${product.slug}-${product.name}-${index}`}
-          className={`!w-[86%] ${
-            index !== allProducts.length - 1 ? "border-r border-black" : ""
-          }`}
-        >
-          <ProductCard product={product} bordered={false} />
-        </SwiperSlide>
+<SwiperSlide
+  key={`all-mobile-${product.slug}-${product.name}-${index}`}
+  className={`!w-[86%] h-auto ${
+    index !== allProducts.length - 1 ? "border-r border-black" : ""
+  }`}
+>
+  <ProductCard product={product} bordered={false} />
+</SwiperSlide>
       ))}
     </Swiper>
   </div>
