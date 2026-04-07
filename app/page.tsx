@@ -316,31 +316,33 @@ export default function Home() {
     </div>
   </div>
 
-  {/* Mobile slider */}
-  <div className="overflow-hidden border-b border-black lg:hidden">
-    <Swiper
-      onSwiper={(swiper) => {
-        productSwiperRef.current = swiper;
-      }}
-      slidesPerView="auto"
-      spaceBetween={0}
-      loop={false}
-      allowTouchMove={true}
-      touchStartPreventDefault={false}
-      className="w-full"
-    >
-      {allProducts.map((product, index) => (
-<SwiperSlide
-  key={`all-mobile-${product.slug}-${product.name}-${index}`}
-  className={`!w-[86%] h-auto ${
-    index !== allProducts.length - 1 ? "border-r border-black" : ""
-  }`}
->
-  <ProductCard product={product} bordered={false} />
-</SwiperSlide>
-      ))}
-    </Swiper>
-  </div>
+{/* Mobile slider */}
+<div className="overflow-hidden border-b border-black lg:hidden">
+  <Swiper
+    onSwiper={(swiper) => {
+      productSwiperRef.current = swiper;
+    }}
+    slidesPerView="auto"
+    spaceBetween={0}
+    loop={false}
+    allowTouchMove={true}
+    touchStartPreventDefault={false}
+    className="w-full"
+  >
+    {allProducts.map((product, index) => (
+      <SwiperSlide
+        key={`all-mobile-${product.slug}-${product.name}-${index}`}
+        className="!w-[86%] relative"
+      >
+        {index !== allProducts.length - 1 && (
+          <span className="absolute right-0 top-0 bottom-0 z-10 w-[1px] bg-black" />
+        )}
+
+        <ProductCard product={product} bordered={false} />
+      </SwiperSlide>
+    ))}
+  </Swiper>
+</div>
 
   {/* Desktop grid */}
   <div className="hidden border-b border-black lg:grid lg:grid-cols-4">
