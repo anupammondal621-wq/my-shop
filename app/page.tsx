@@ -538,7 +538,7 @@ export default function Home() {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className="border-b border-black md:min-h-[335px] md:border-b-0 md:border-r last:md:border-r-0"
+              className="border-b border-black last:border-b-0 md:min-h-[335px] md:border-b-0 md:border-r last:md:border-r-0"
             >
               <button
                 onClick={() => toggleFAQ(index)}
