@@ -118,11 +118,15 @@ const galleryImages = [
 
 const ProductCard = memo(function ProductCard({
   product,
+  bordered = true,
 }: {
   product: ProductType;
+  bordered?: boolean;
 }) {
   return (
-    <div className="group relative border-b border-r border-black">
+    <div
+      className={`group relative ${bordered ? "border-b border-r border-black" : ""}`}
+    >
       <Link href={`/product/${product.slug}`} className="block">
         <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
           <Image
@@ -308,46 +312,67 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile slider */}
-        <div className="overflow-hidden lg:hidden">
-          <Swiper
-            onSwiper={(swiper) => {
-              productSwiperRef.current = swiper;
-            }}
-            slidesPerView="auto"
-            spaceBetween={0}
-            loop={false}
-            allowTouchMove={true}
-            touchStartPreventDefault={false}
-            className="w-full"
-          >
-            {allProducts.map((product, index) => (
-              <SwiperSlide
-                key={`all-mobile-${product.slug}-${product.name}-${index}`}
-                className={`
-                  !w-[86%]
-                  border-b border-black
-                  ${index !== allProducts.length - 1 ? "border-r border-black" : ""}
-                `}
-              >
-                <ProductCard product={product} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </div>
+{/* ALL PRODUCTS */}
+<section className="w-full overflow-hidden">
+  <div className="flex items-center justify-between border-b border-black px-6 py-4">
+    <h2 className="text-sm uppercase tracking-widest">All Products</h2>
 
-        {/* Desktop grid */}
-        <div className="hidden border-b border-black lg:grid lg:grid-cols-4">
-          {allProducts.map((product, index) => (
-            <div
-              key={`all-desktop-${product.slug}-${product.name}-${index}`}
-              className="border-r border-black last:border-r-0"
-            >
-              <ProductCard product={product} />
-            </div>
-          ))}
-        </div>
-      </section>
+    <div className="flex items-center gap-4 lg:hidden">
+      <button
+        onClick={() => productSwiperRef.current?.slidePrev()}
+        className="text-2xl leading-none"
+        aria-label="Previous product"
+      >
+        ←
+      </button>
+      <button
+        onClick={() => productSwiperRef.current?.slideNext()}
+        className="text-2xl leading-none"
+        aria-label="Next product"
+      >
+        →
+      </button>
+    </div>
+  </div>
+
+  {/* Mobile slider */}
+  <div className="overflow-hidden border-b border-black lg:hidden">
+    <Swiper
+      onSwiper={(swiper) => {
+        productSwiperRef.current = swiper;
+      }}
+      slidesPerView="auto"
+      spaceBetween={0}
+      loop={false}
+      allowTouchMove={true}
+      touchStartPreventDefault={false}
+      className="w-full"
+    >
+      {allProducts.map((product, index) => (
+        <SwiperSlide
+          key={`all-mobile-${product.slug}-${product.name}-${index}`}
+          className={`!w-[86%] ${
+            index !== allProducts.length - 1 ? "border-r border-black" : ""
+          }`}
+        >
+          <ProductCard product={product} bordered={false} />
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  </div>
+
+  {/* Desktop grid */}
+  <div className="hidden border-b border-black lg:grid lg:grid-cols-4">
+    {allProducts.map((product, index) => (
+      <div
+        key={`all-desktop-${product.slug}-${product.name}-${index}`}
+        className="border-r border-black last:border-r-0"
+      >
+        <ProductCard product={product} bordered={false} />
+      </div>
+    ))}
+  </div>
+</section>
 
       {/* MOVING TEXT SECTION */}
       <section className="w-full overflow-hidden border-b border-black bg-white py-4">
