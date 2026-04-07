@@ -289,29 +289,6 @@ export default function Home() {
   </div>
 </section>
 
-      {/* ALL PRODUCTS */}
-      <section className="w-full overflow-hidden">
-        <div className="flex items-center justify-between border-b border-black px-6 py-4">
-          <h2 className="text-sm uppercase tracking-widest">All Products</h2>
-
-          <div className="flex items-center gap-4 lg:hidden">
-            <button
-              onClick={() => productSwiperRef.current?.slidePrev()}
-              className="text-2xl leading-none"
-              aria-label="Previous product"
-            >
-              ←
-            </button>
-            <button
-              onClick={() => productSwiperRef.current?.slideNext()}
-              className="text-2xl leading-none"
-              aria-label="Next product"
-            >
-              →
-            </button>
-          </div>
-        </div>
-
 {/* ALL PRODUCTS */}
 <section className="w-full overflow-hidden">
   <div className="flex items-center justify-between border-b border-black px-6 py-4">
