@@ -14,7 +14,10 @@ export default function Header() {
   useEffect(() => {
     const updateCartCount = async () => {
       const cart: CartItem[] = await loadCart();
-      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      const totalItems = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
       setCartCount(totalItems);
     };
 
@@ -45,11 +48,14 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 h-[70px] border-b bg-white text-black">
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+        
+        {/* LEFT: BRAND NAME */}
         <Link href="/" className="shrink-0 text-lg font-bold sm:text-xl">
           BongoMithai
         </Link>
 
-        <nav className="flex items-center gap-3 whitespace-nowrap text-xs font-medium sm:gap-6 sm:text-sm">
+        {/* CENTER: NAV */}
+        <nav className="flex-1 flex justify-center items-center gap-3 whitespace-nowrap text-xs font-medium sm:gap-6 sm:text-sm">
           <Link href="/" className="shrink-0">
             Home
           </Link>
@@ -91,6 +97,14 @@ export default function Header() {
             </>
           )}
         </nav>
+
+        {/* RIGHT: LOGO */}
+        <img
+          src="/logo_vector.svg"
+          alt="Logo"
+          className="h-8 w-auto shrink-0"
+        />
+
       </div>
     </header>
   );
