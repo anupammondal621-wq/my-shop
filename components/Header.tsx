@@ -58,7 +58,7 @@ export default function Header() {
           <img
             src="/logo_vector.svg"
             alt="Logo"
-            className="h-6 w-auto"
+            className="h-12 w-auto"
           />
         </Link>
 
