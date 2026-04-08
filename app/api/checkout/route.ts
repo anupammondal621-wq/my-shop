@@ -2,11 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Razorpay from "razorpay";
 import { createClient } from "@/utils/supabase/server";
 
-const razorpay = new Razorpay({
-  key_id: process.env.RAZORPAY_KEY_ID!,
-  key_secret: process.env.RAZORPAY_KEY_SECRET!,
-});
-
 function getShippingCost(postalCode: string) {
   if (!postalCode || postalCode.length < 2) return 0;
 
@@ -20,6 +15,11 @@ function getShippingCost(postalCode: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID!,
+      key_secret: process.env.RAZORPAY_KEY_SECRET!,
+    });
+
     const supabase = await createClient();
 
     const {
