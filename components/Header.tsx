@@ -15,7 +15,10 @@ export default function Header() {
   useEffect(() => {
     const updateCartCount = async () => {
       const cart: CartItem[] = await loadCart();
-      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      const totalItems = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
       setCartCount(totalItems);
     };
 
@@ -70,14 +73,17 @@ export default function Header() {
               alt="Logo"
               className="h-14 w-auto sm:h-16"
             />
-            <span className="text-lg font-bold sm:text-xl">BongoMithai</span>
+            <span className="text-lg font-bold sm:text-xl">
+              BongoMithai
+            </span>
           </Link>
 
           {/* RIGHT: SEARCH + CART */}
           <div className="flex items-center gap-4">
+            {/* SEARCH */}
             <button
               type="button"
-              onClick={() => window.location.href = "/search"}
+              onClick={() => (window.location.href = "/search")}
               aria-label="Search"
               className="shrink-0"
             >
@@ -94,12 +100,13 @@ export default function Header() {
               </svg>
             </button>
 
+            {/* CART */}
             <Link href="/cart" className="relative shrink-0" aria-label="Cart">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                stroke="black"
                 strokeWidth="1.8"
                 className="h-6 w-6"
               >
@@ -108,7 +115,7 @@ export default function Header() {
               </svg>
 
               {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-semibold text-white">
+                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
                   {cartCount}
                 </span>
               )}
@@ -117,10 +124,12 @@ export default function Header() {
         </div>
       </header>
 
-
       {/* SIDE MENU */}
       {menuOpen && (
-        <div className="fixed inset-0 z-[60] bg-black/30" onClick={() => setMenuOpen(false)}>
+        <div
+          className="fixed inset-0 z-[60] bg-black/30"
+          onClick={() => setMenuOpen(false)}
+        >
           <div
             className="h-full w-[82%] max-w-[320px] border-r border-black bg-white p-6"
             onClick={(e) => e.stopPropagation()}
