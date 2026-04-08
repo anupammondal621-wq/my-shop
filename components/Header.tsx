@@ -8,16 +8,14 @@ import { loadCart, CartItem } from "@/utils/cart";
 export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState<any>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const supabase = createClient();
 
   useEffect(() => {
     const updateCartCount = async () => {
       const cart: CartItem[] = await loadCart();
-      const totalItems = cart.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
       setCartCount(totalItems);
     };
 
@@ -41,72 +39,145 @@ export default function Header() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setUser(null);
+    setMenuOpen(false);
     window.dispatchEvent(new Event("cartUpdated"));
     window.location.href = "/";
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 h-[70px] border-b bg-white text-black">
-      <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
-        
-        {/* LEFT: TEXT + LOGO */}
-<Link href="/" className="flex items-center gap-3 shrink-0">
-  <img
-    src="/logo_vector.svg"
-    alt="Logo"
-    className="h-12 w-auto"
-  />
+    <>
+      <header className="fixed left-0 right-0 top-0 z-50 h-[70px] border-b border-black bg-white text-black">
+        <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+          {/* LEFT: HAMBURGER */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            className="flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-[4px]"
+          >
+            <span className="block h-[1.5px] w-6 bg-black" />
+            <span className="block h-[1.5px] w-6 bg-black" />
+            <span className="block h-[1.5px] w-6 bg-black" />
+          </button>
 
-  <span className="text-lg font-bold sm:text-xl">
-    BongoMithai
-  </span>
-</Link>
-
-        {/* RIGHT: NAVIGATION */}
-        <nav className="flex items-center gap-3 whitespace-nowrap text-xs font-medium sm:gap-6 sm:text-sm">
-          <Link href="/" className="shrink-0">
-            Home
+          {/* MIDDLE: LOGO + BRAND */}
+          <Link
+            href="/"
+            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap"
+          >
+            <img
+              src="/logo_vector.svg"
+              alt="Logo"
+              className="h-10 w-auto sm:h-12"
+            />
+            <span className="text-lg font-bold sm:text-xl">BongoMithai</span>
           </Link>
 
-          <Link href="/shop" className="shrink-0">
-            Shop
-          </Link>
+          {/* RIGHT: SEARCH + CART */}
+          <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => window.location.href = "/search"}
+              aria-label="Search"
+              className="shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="h-6 w-6"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20L16.65 16.65" />
+              </svg>
+            </button>
 
-          <Link href="/cart" className="relative shrink-0 pr-3">
-            Cart
-            {cartCount > 0 && (
-              <span className="absolute right-0 top-0 flex h-5 w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-red-600 text-[11px] font-semibold text-white">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+            <Link href="/cart" className="relative shrink-0" aria-label="Cart">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="h-6 w-6"
+              >
+                <path d="M7 8V7a5 5 0 0 1 10 0v1" />
+                <path d="M6 8h12l-1 11H7L6 8Z" />
+              </svg>
 
-          {!user ? (
-            <>
-              <Link href="/login" className="shrink-0">
-                Login
-              </Link>
-              <Link href="/signup" className="shrink-0">
-                Sign Up
-              </Link>
-            </>
-          ) : (
-            <>
-              <Link href="/account" className="shrink-0">
-                Account
-              </Link>
+              {cartCount > 0 && (
+                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-semibold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* SIDE MENU */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-[60] bg-black/30" onClick={() => setMenuOpen(false)}>
+          <div
+            className="h-full w-[82%] max-w-[320px] border-r border-black bg-white p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-8 flex items-center justify-between">
+              <span className="text-lg font-semibold">Menu</span>
               <button
                 type="button"
-                onClick={handleLogout}
-                className="shrink-0 cursor-pointer"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="text-2xl leading-none"
               >
-                Logout
+                ×
               </button>
-            </>
-          )}
-        </nav>
+            </div>
 
-      </div>
-    </header>
+            <nav className="flex flex-col gap-5 text-base">
+              <Link href="/" onClick={() => setMenuOpen(false)}>
+                Home
+              </Link>
+
+              <Link href="/shop" onClick={() => setMenuOpen(false)}>
+                Shop
+              </Link>
+
+              <Link href="/cart" onClick={() => setMenuOpen(false)}>
+                Cart
+              </Link>
+
+              {!user ? (
+                <>
+                  <Link href="/login" onClick={() => setMenuOpen(false)}>
+                    Login
+                  </Link>
+
+                  <Link href="/signup" onClick={() => setMenuOpen(false)}>
+                    Sign Up
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/account" onClick={() => setMenuOpen(false)}>
+                    Account
+                  </Link>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="text-left"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </nav>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
