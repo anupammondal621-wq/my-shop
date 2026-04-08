@@ -52,16 +52,18 @@ export default function Header() {
       <header className="fixed left-0 right-0 top-0 z-50 h-[70px] border-b border-black bg-white text-black">
         <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* LEFT: HAMBURGER */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            className="flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-[4px]"
-          >
-            <span className="block h-[1.5px] w-6 bg-black" />
-            <span className="block h-[1.5px] w-6 bg-black" />
-            <span className="block h-[1.5px] w-6 bg-black" />
-          </button>
+<button
+  type="button"
+  onClick={() => setMenuOpen(true)}
+  aria-label="Open menu"
+  className="flex h-10 w-10 items-center justify-center"
+>
+  <div className="flex flex-col justify-between h-4 w-5">
+    <span className="block h-[2px] w-full bg-black rounded" />
+    <span className="block h-[2px] w-full bg-black rounded" />
+    <span className="block h-[2px] w-full bg-black rounded" />
+  </div>
+</button>
 
           {/* MIDDLE: LOGO + BRAND */}
           <Link
