@@ -60,30 +60,34 @@ export default function CartPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-[#f3f3f3] text-black">
+      <main className="min-h-screen bg-white text-black">
         {/* HEADER */}
-        <div className="border-b border-black px-6 py-4 flex justify-between">
-          <h1 className="text-sm uppercase tracking-widest">Cart</h1>
-          <button
-            onClick={() => router.push("/shop")}
-            className="text-sm underline"
-          >
-            Continue shopping
-          </button>
+        <div className="border-b border-black px-6 py-4">
+          <div className="flex items-center justify-between">
+            <h1 className="text-sm uppercase tracking-widest">Cart</h1>
+            <button
+              onClick={() => router.push("/shop")}
+              className="text-sm underline"
+            >
+              Continue shopping
+            </button>
+          </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="mx-auto max-w-6xl px-4 py-8">
           {cart.map((item) => {
             const itemPrice = getNumericPrice(item.price);
             const itemTotal = itemPrice * item.quantity;
 
             return (
               <div key={item.slug} className="border-b py-8">
-                {/* MOBILE */}
+                
+                {/* ================= MOBILE (UPDATED) ================= */}
                 <div className="block md:hidden">
-                  <div className="flex gap-4">
+                  <div className="flex items-start gap-4">
+                    
                     {/* IMAGE */}
-                    <div className="relative h-[90px] w-[90px] bg-gray-100">
+                    <div className="relative h-[90px] w-[90px] shrink-0 overflow-hidden bg-[#f5f5f5]">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -94,6 +98,7 @@ export default function CartPage() {
 
                     {/* RIGHT */}
                     <div className="flex-1">
+                      
                       {/* TOP ROW */}
                       <div className="flex justify-between gap-3">
                         <div>
@@ -156,10 +161,11 @@ export default function CartPage() {
                   </div>
                 </div>
 
-                {/* DESKTOP */}
-                <div className="hidden md:flex justify-between items-center">
-                  <div className="flex gap-4">
-                    <div className="relative h-[120px] w-[120px] bg-gray-100">
+                {/* ================= DESKTOP (UNCHANGED) ================= */}
+                <div className="hidden md:grid md:grid-cols-[1.7fr_0.9fr_0.7fr] md:items-start md:gap-6">
+                  
+                  <div className="flex items-start gap-5">
+                    <div className="relative h-[120px] w-[120px] shrink-0 overflow-hidden bg-[#f5f5f5]">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -168,55 +174,79 @@ export default function CartPage() {
                       />
                     </div>
 
-                    <div>
-                      <h2 className="text-lg text-[#d26a6a]">{item.name}</h2>
-                      <p className="mt-2 text-[#d26a6a]">
+                    <div className="pt-1">
+                      <h2 className="text-[18px] leading-snug">
+                        {item.name}
+                      </h2>
+
+                      <p className="mt-3 text-[15px]">
                         Rs. {itemPrice.toFixed(2)}
                       </p>
+
+                      {item.pack ? (
+                        <p className="mt-3 text-[15px] text-black/70">
+                          {item.pack}
+                        </p>
+                      ) : null}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-6">
-                    <div className="flex border px-4 py-2">
+                  <div className="flex items-center justify-center gap-5">
+                    <div className="flex h-[52px] w-[180px] items-center justify-between border border-black px-6">
                       <button
                         onClick={() =>
                           decreaseQuantity(item.slug, item.quantity)
                         }
+                        className="text-[28px]"
                       >
                         -
                       </button>
-                      <span className="px-4">{item.quantity}</span>
+
+                      <span className="text-[18px]">
+                        {item.quantity}
+                      </span>
+
                       <button
                         onClick={() =>
                           increaseQuantity(item.slug, item.quantity)
                         }
+                        className="text-[28px]"
                       >
                         +
                       </button>
                     </div>
 
-                    <p className="text-[#d26a6a]">
+                    <button onClick={() => removeItem(item.slug)}>
+                      🗑
+                    </button>
+                  </div>
+
+                  <div className="pt-1 text-right">
+                    <p className="text-[18px]">
                       Rs. {itemTotal.toFixed(2)}
                     </p>
                   </div>
                 </div>
+
               </div>
             );
           })}
 
           {/* SUMMARY */}
-          <div className="mt-10 max-w-sm ml-auto">
-            <div className="flex justify-between text-lg">
-              <span>Subtotal</span>
-              <span>Rs. {subtotal.toFixed(2)}</span>
-            </div>
+          <div className="flex justify-end pt-12">
+            <div className="w-full max-w-[420px]">
+              <div className="flex justify-between text-[18px]">
+                <span>Subtotal</span>
+                <span>Rs. {subtotal.toFixed(2)}</span>
+              </div>
 
-            <button
-              onClick={() => router.push("/checkout")}
-              className="mt-6 w-full bg-black text-white py-4 rounded-full"
-            >
-              Checkout
-            </button>
+              <button
+                onClick={() => router.push("/checkout")}
+                className="mt-8 w-full rounded-full bg-black px-6 py-4 text-white"
+              >
+                Check out
+              </button>
+            </div>
           </div>
         </div>
       </main>
