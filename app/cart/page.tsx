@@ -118,7 +118,7 @@ export default function CartPage() {
 </div>            
 
               {/* CART ITEMS */}
-              <div>
+              <div className="border-b border-[#d26a6a]/40 pb-6">
                 {cart.map((item) => {
                   const itemPrice = getNumericPrice(item.price);
                   const itemTotal = itemPrice * item.quantity;
