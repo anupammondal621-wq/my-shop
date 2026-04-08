@@ -75,44 +75,42 @@ export default function Header() {
 
           {/* RIGHT: SEARCH + CART */}
           <div className="flex items-center gap-4">
-            <button
-              type="button"
-              onClick={() => window.location.href = "/search"}
-              aria-label="Search"
-              className="shrink-0"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                className="h-6 w-6"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="M20 20L16.65 16.65" />
-              </svg>
-            </button>
+<button
+  onClick={() => (window.location.href = "/search")}
+  className="p-2 hover:opacity-70 transition"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2.2}
+    stroke="currentColor"
+    className="h-6 w-6"
+  >
+    <circle cx="11" cy="11" r="7" />
+    <path d="M20 20L16.5 16.5" />
+  </svg>
+</button>
 
-            <Link href="/cart" className="relative shrink-0" aria-label="Cart">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                className="h-6 w-6"
-              >
-                <path d="M7 8V7a5 5 0 0 1 10 0v1" />
-                <path d="M6 8h12l-1 11H7L6 8Z" />
-              </svg>
+<Link href="/cart" className="relative p-2">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={2.2}
+    stroke="currentColor"
+    className="h-6 w-6"
+  >
+    <path d="M6 8h12l-1 11H7L6 8Z" />
+    <path d="M9 8V7a3 3 0 0 1 6 0v1" />
+  </svg>
 
-              {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] font-semibold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+  {cartCount > 0 && (
+    <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black text-[10px] text-white">
+      {cartCount}
+    </span>
+  )}
+</Link>
           </div>
         </div>
       </header>
