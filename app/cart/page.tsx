@@ -299,7 +299,7 @@ export default function CartPage() {
               {/* SUMMARY */}
               <div className="flex justify-center md:justify-end pt-8 md:pt-14">
                 <div className="w-full max-w-[420px]">
-                  <div className="flex items-center justify-center gap-2 text-[16px] md:text-[20px]">
+                  <div className="flex items-center justify-center gap-3 text-[18px] md:text-[20px]">
                     <span>Subtotal</span>
                     <span>Rs. {subtotal.toFixed(2)}</span>
                   </div>
@@ -310,7 +310,7 @@ export default function CartPage() {
 
                   <button
                     onClick={() => router.push("/checkout")}
-                    className="mt-8 w-full rounded-full bg-black px-5 py-4 text-[18px] text-white transition hover:opacity-90"
+                    className="mt-8 mx-auto block w-[80%] rounded-full bg-black px-6 py-4 text-[18px] text-white transition hover:opacity-90"
                   >
                     Check out
                   </button>
