@@ -113,7 +113,7 @@ export default function CartPage() {
                   return (
                     <div
                       key={item.slug}
-                      className="border-b border-black/20 py-8"
+                      className="py-8"
                     >
                       {/* MOBILE VIEW */}
                       <div className="block md:hidden">
