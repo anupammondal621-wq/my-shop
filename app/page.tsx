@@ -187,64 +187,66 @@ export default function Home() {
 
   return (
     <main className="w-full bg-white text-black">
-      {/* HERO */}
-      <section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{ delay: 3000, disableOnInteraction: false }}
-          loop={true}
-          className="h-full w-full"
-          onSwiper={(swiper) => {
-            heroSwiperRef.current = swiper;
-          }}
-          onSlideChange={(swiperInstance) => {
-            setActiveSlide(swiperInstance.realIndex + 1);
-          }}
-        >
-          <SwiperSlide>
-            <div className="relative h-full w-full [transform:translateZ(0)] [backface-visibility:hidden]">
-              <Image
-                src="/1.webp"
-                alt="Slide 1"
-                fill
-                priority
-                sizes="100vw"
-                className="object-cover object-[center_35%] sm:object-center [transform:translateZ(0)] [backface-visibility:hidden]"
-              />
+{/* HERO */}
+<section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
+  <Swiper
+    modules={[Autoplay]}
+    autoplay={{ delay: 3000, disableOnInteraction: false }}
+    loop={true}
+    className="h-full w-full"
+    onSwiper={(swiper) => {
+      heroSwiperRef.current = swiper;
+    }}
+    onSlideChange={(swiperInstance) => {
+      setActiveSlide(swiperInstance.realIndex + 1);
+    }}
+  >
+    <SwiperSlide>
+      <div className="relative h-full w-full [transform:translateZ(0)] [backface-visibility:hidden]">
+        <Image
+          src="/1.webp"
+          alt="Slide 1"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[center_35%] sm:object-center [transform:translateZ(0)] [backface-visibility:hidden]"
+        />
 
-              <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
-                <button
-                  onClick={() => router.push("/product/product-one")}
-                  className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
-                >
-                  Add to Cart
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
+        {/* EXACT STYLE BUTTON */}
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 sm:bottom-10">
+          <button
+            onClick={() => router.push("/product/product-one")}
+            className="flex h-[48px] min-w-[124px] items-center justify-center rounded-full border-2 border-white bg-transparent px-8 text-[17px] font-normal leading-none text-white transition duration-300 hover:bg-white hover:text-black"
+          >
+            Shop
+          </button>
+        </div>
+      </div>
+    </SwiperSlide>
 
-          <SwiperSlide>
-            <div className="relative h-full w-full [transform:translateZ(0)] [backface-visibility:hidden]">
-              <Image
-                src="/2.webp"
-                alt="Slide 2"
-                fill
-                sizes="100vw"
-                className="object-cover object-[center_35%] sm:object-center [transform:translateZ(0)] [backface-visibility:hidden]"
-              />
+    <SwiperSlide>
+      <div className="relative h-full w-full [transform:translateZ(0)] [backface-visibility:hidden]">
+        <Image
+          src="/2.webp"
+          alt="Slide 2"
+          fill
+          sizes="100vw"
+          className="object-cover object-[center_35%] sm:object-center [transform:translateZ(0)] [backface-visibility:hidden]"
+        />
 
-              <div className="absolute bottom-6 left-4 sm:bottom-10 sm:left-10">
-                <button
-                  onClick={() => router.push("/shop")}
-                  className="border border-black bg-white px-6 py-3 text-[13px] uppercase tracking-wide text-black transition-all duration-300 hover:bg-gray-200 sm:px-7 sm:py-4 sm:text-[14px]"
-                >
-                  Shop More
-                </button>
-              </div>
-            </div>
-          </SwiperSlide>
-        </Swiper>
-      </section>
+        {/* EXACT STYLE BUTTON */}
+        <div className="absolute bottom-7 left-1/2 -translate-x-1/2 sm:bottom-10">
+          <button
+            onClick={() => router.push("/shop")}
+            className="flex h-[48px] min-w-[124px] items-center justify-center rounded-full border-2 border-white bg-transparent px-8 text-[17px] font-normal leading-none text-white transition duration-300 hover:bg-white hover:text-black"
+          >
+            Shop
+          </button>
+        </div>
+      </div>
+    </SwiperSlide>
+  </Swiper>
+</section>
 
       {/* HERO SLIDER NAV */}
       <div className="flex items-center justify-between border-t border-b border-black px-6 py-3 text-sm">
