@@ -100,26 +100,32 @@ export default function Header() {
               </svg>
             </button>
 
-            {/* CART */}
-            <Link href="/cart" className="relative shrink-0" aria-label="Cart">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="black"
-                strokeWidth="1.8"
-                className="h-6 w-6"
-              >
-                <path d="M7 8V7a5 5 0 0 1 10 0v1" />
-                <path d="M6 8h12l-1 11H7L6 8Z" />
-              </svg>
+<Link href="/cart" className="relative shrink-0" aria-label="Cart">
+  {/* MODERN ROUNDED BAG ICON */}
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="black"
+    strokeWidth="1.6"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-6 w-6"
+  >
+    {/* handle */}
+    <path d="M9 7a3 3 0 0 1 6 0" />
 
-              {cartCount > 0 && (
-                <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
-                  {cartCount}
-                </span>
-              )}
-            </Link>
+    {/* bag body (rounded) */}
+    <path d="M5 8h14l-1.2 10.5a2 2 0 0 1-2 1.5H8.2a2 2 0 0 1-2-1.5L5 8Z" />
+  </svg>
+
+  {/* RED BADGE */}
+  {cartCount > 0 && (
+    <span className="absolute -right-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+      {cartCount}
+    </span>
+  )}
+</Link>
           </div>
         </div>
       </header>
