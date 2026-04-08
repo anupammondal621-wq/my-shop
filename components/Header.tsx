@@ -68,7 +68,7 @@ export default function Header() {
             <img
               src="/logo_vector.svg"
               alt="Logo"
-              className="h-10 w-auto sm:h-12"
+              className="h-14 w-auto sm:h-16"
             />
             <span className="text-lg font-bold sm:text-xl">BongoMithai</span>
           </Link>
