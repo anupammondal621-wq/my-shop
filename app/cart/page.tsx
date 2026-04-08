@@ -104,6 +104,19 @@ export default function CartPage() {
                 </div>
               </div>
 
+{/* MOBILE HEADER */}
+<div className="block md:hidden px-1 pb-4 mb-6 border-b border-black/20">
+  <div className="flex items-center justify-between">
+    <span className="text-[10px] uppercase tracking-[0.25em] text-black/60">
+      Product
+    </span>
+
+    <span className="text-[10px] uppercase tracking-[0.25em] text-black/60">
+      Total
+    </span>
+  </div>
+</div>              
+
               {/* CART ITEMS */}
               <div>
                 {cart.map((item) => {
