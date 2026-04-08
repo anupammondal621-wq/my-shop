@@ -205,7 +205,7 @@ export default function CartPage() {
                                   strokeWidth="1.7"
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
-                                  className="h-7 w-7"
+                                  className="h-5 w-5 md:h-6 md:w-6"
                                 >
                                   <path d="M3 6h18" />
                                   <path d="M8 6V4h8v2" />
@@ -312,7 +312,7 @@ export default function CartPage() {
               {/* SUMMARY */}
               <div className="flex justify-center md:justify-end pt-8 md:pt-14">
                 <div className="w-full max-w-[420px]">
-                  <div className="flex items-center justify-center gap-3 text-[18px] md:text-[20px]">
+                  <div className="flex items-center justify-center md:justify-end gap-3 text-[18px] md:text-[20px]">
                     <span>Subtotal</span>
                     <span>Rs. {subtotal.toFixed(2)}</span>
                   </div>
@@ -323,7 +323,7 @@ export default function CartPage() {
 
                   <button
                     onClick={() => router.push("/checkout")}
-                    className="mt-8 mx-auto block w-[80%] rounded-full bg-black px-6 py-4 text-[18px] text-white transition hover:opacity-90"
+                    className="mt-8 block mx-auto w-[80%] md:ml-auto md:mr-0 md:w-[260px] rounded-full bg-black px-6 py-4 text-[18px] text-white transition hover:opacity-90"
                   >
                     Check out
                   </button>
