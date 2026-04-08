@@ -61,19 +61,19 @@ export default function Header() {
   className="flex h-10 w-10 items-center justify-start"
 >
   {menuOpen ? (
-    // ✅ SVG CROSS
+    // ✅ BIGGER SVG CROSS (matches hamburger width)
     <div className="flex h-4 w-5 items-center justify-center">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="none"
         stroke="black"
-        strokeWidth="2"
+        strokeWidth="1.8"
         strokeLinecap="round"
-        className="h-4 w-4"
+        className="h-5 w-5"   // 👈 increased from h-4 w-4
       >
-        <path d="M6 6L18 18" />
-        <path d="M6 18L18 6" />
+        <path d="M5 5L19 19" />
+        <path d="M5 19L19 5" />
       </svg>
     </div>
   ) : (
