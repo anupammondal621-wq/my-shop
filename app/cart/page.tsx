@@ -128,21 +128,21 @@ export default function CartPage() {
                             />
                           </div>
 
-                          <div className="min-w-0 flex-1 pt-1">
-                            <h2 className="text-[18px] leading-[1.25] uppercase">
-                              {item.name}
-                            </h2>
+<div className="min-w-0 flex-1 pt-1">
+  <h2 className="text-[14px] leading-[1.35] uppercase sm:text-[16px]">
+    {item.name}
+  </h2>
 
-                            <p className="mt-3 text-[16px]">
-                              Rs. {itemPrice.toFixed(2)}
-                            </p>
+  <p className="mt-2 text-[14px] sm:text-[15px]">
+    Rs. {itemPrice.toFixed(2)}
+  </p>
 
-                            {item.pack ? (
-                              <p className="mt-3 text-[14px] text-black/70">
-                                {item.pack}
-                              </p>
-                            ) : null}
-                          </div>
+  {item.pack ? (
+    <p className="mt-2 text-[12px] text-black/70 sm:text-[13px]">
+      {item.pack}
+    </p>
+  ) : null}
+</div>
                         </div>
 
                         {/* QUANTITY + DELETE */}
