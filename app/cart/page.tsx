@@ -105,20 +105,20 @@ export default function CartPage() {
               </div>
 
 {/* MOBILE HEADER */}
-<div className="block md:hidden pb-4 mb-6 border-b border-[#d26a6a]/40">
+<div className="block md:hidden pb-4 mb-6 border-b border-black/20">
   <div className="flex items-center justify-between">
-    <span className="text-[11px] uppercase tracking-[0.25em] text-[#d26a6a]">
+    <span className="text-[11px] uppercase tracking-[0.25em] text-black">
       Product
     </span>
 
-    <span className="text-[11px] uppercase tracking-[0.25em] text-[#d26a6a]">
+    <span className="text-[11px] uppercase tracking-[0.25em] text-black">
       Total
     </span>
   </div>
 </div>            
 
               {/* CART ITEMS */}
-              <div className="border-b border-[#d26a6a]/40 pb-6">
+              <div className="border-b border-black/20 pb-6">
                 {cart.map((item) => {
                   const itemPrice = getNumericPrice(item.price);
                   const itemTotal = itemPrice * item.quantity;
