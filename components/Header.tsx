@@ -101,7 +101,7 @@ export default function Header() {
             </button>
 
 <Link href="/cart" className="relative shrink-0" aria-label="Cart">
-  {/* BIGGER CART ICON */}
+  {/* CART ICON */}
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -110,15 +110,15 @@ export default function Header() {
     strokeWidth="1.6"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="h-7 w-7"  // 👈 increased from h-6 w-6
+    className="h-7 w-7"
   >
     <path d="M9 7a3 3 0 0 1 6 0" />
     <path d="M5 8h14l-1.2 10.5a2 2 0 0 1-2 1.5H8.2a2 2 0 0 1-2-1.5L5 8Z" />
   </svg>
 
-  {/* BADGE (adjusted position slightly) */}
+  {/* BADGE → moved to bottom-right */}
   {cartCount > 0 && (
-    <span className="absolute -right-2.5 -top-2.5 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+    <span className="absolute -right-2 -bottom-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
       {cartCount}
     </span>
   )}
