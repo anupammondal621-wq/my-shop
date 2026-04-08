@@ -130,16 +130,16 @@ export default function CartPage() {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-4">
                               <div className="min-w-0 flex-1 pt-1">
-                                <h2 className="text-[18px] leading-[1.25] uppercase">
+                                <h2 className="text-[15px] leading-[1.3] uppercase">
                                   {item.name}
                                 </h2>
 
-                                <p className="mt-3 text-[16px]">
+                                <p className="mt-2 text-[14px]">
                                   Rs. {itemPrice.toFixed(2)}
                                 </p>
 
                                 {item.pack ? (
-                                  <p className="mt-3 text-[14px] text-black/70">
+                                  <p className="mt-2 text-[12px] text-black/70">
                                     {item.pack}
                                   </p>
                                 ) : null}
@@ -153,18 +153,18 @@ export default function CartPage() {
                             </div>
 
                             <div className="mt-6 flex items-center gap-6">
-                              <div className="flex h-[58px] w-[170px] items-center justify-between border border-black px-6">
+                              <div className="flex h-[46px] w-[140px] items-center justify-between border border-black px-4">
                                 <button
                                   onClick={() =>
                                     decreaseQuantity(item.slug, item.quantity)
                                   }
-                                  className="text-[30px] leading-none"
+                                  className="text-[20px] leading-none"
                                   aria-label={`Decrease quantity of ${item.name}`}
                                 >
                                   -
                                 </button>
 
-                                <span className="text-[18px] leading-none">
+                                <span className="text-[14px] leading-none">
                                   {item.quantity}
                                 </span>
 
@@ -172,7 +172,7 @@ export default function CartPage() {
                                   onClick={() =>
                                     increaseQuantity(item.slug, item.quantity)
                                   }
-                                  className="text-[30px] leading-none"
+                                  className="text-[20px] leading-none"
                                   aria-label={`Increase quantity of ${item.name}`}
                                 >
                                   +
