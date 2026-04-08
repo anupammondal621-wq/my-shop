@@ -87,7 +87,7 @@ export default function CartPage() {
             </div>
           ) : (
             <>
-              {/* DESKTOP TABLE HEADER */}
+              {/* DESKTOP HEADER */}
               <div className="hidden grid-cols-[1.7fr_0.9fr_0.7fr] border-b border-black/20 pb-4 md:grid">
                 <div className="text-[11px] uppercase tracking-[0.22em]">
                   Product
@@ -100,7 +100,7 @@ export default function CartPage() {
                 </div>
               </div>
 
-              {/* ITEMS */}
+              {/* CART ITEMS */}
               <div>
                 {cart.map((item) => {
                   const itemPrice = getNumericPrice(item.price);
@@ -111,11 +111,11 @@ export default function CartPage() {
                       key={item.slug}
                       className="border-b border-black/20 py-8"
                     >
-                      {/* MOBILE */}
-                      <div className="md:hidden">
-                        <div className="grid grid-cols-[96px_1fr_auto] gap-4">
-                          {/* image */}
-                          <div className="relative h-24 w-24 overflow-hidden bg-[#f5f5f5]">
+                      {/* MOBILE VIEW */}
+                      <div className="block md:hidden">
+                        {/* IMAGE + DETAILS */}
+                        <div className="flex items-start gap-5">
+                          <div className="relative h-[110px] w-[110px] shrink-0 overflow-hidden bg-[#f5f5f5]">
                             <Image
                               src={item.image}
                               alt={item.name}
@@ -124,37 +124,31 @@ export default function CartPage() {
                             />
                           </div>
 
-                          {/* details */}
-                          <div className="min-w-0">
-                            <h2 className="text-[18px] leading-snug uppercase">
+                          <div className="min-w-0 flex-1 pt-1">
+                            <h2 className="text-[18px] leading-[1.25] uppercase">
                               {item.name}
                             </h2>
-                            <p className="mt-2 text-[16px]">
+
+                            <p className="mt-3 text-[16px]">
                               Rs. {itemPrice.toFixed(2)}
                             </p>
+
                             {"pack" in item && item.pack ? (
-                              <p className="mt-2 text-[14px] text-black/70">
+                              <p className="mt-3 text-[14px] text-black/70">
                                 {item.pack}
                               </p>
                             ) : null}
                           </div>
-
-                          {/* total */}
-                          <div className="text-right">
-                            <p className="text-[16px] whitespace-nowrap">
-                              Rs. {itemTotal.toFixed(2)}
-                            </p>
-                          </div>
                         </div>
 
-                        {/* quantity + remove */}
-                        <div className="mt-5 flex items-center gap-4 pl-[112px]">
-                          <div className="flex h-[52px] w-[180px] items-center justify-between border border-black px-6">
+                        {/* QUANTITY + DELETE */}
+                        <div className="mt-8 flex items-center gap-6">
+                          <div className="flex h-[58px] w-[170px] items-center justify-between border border-black px-6">
                             <button
                               onClick={() =>
                                 decreaseQuantity(item.slug, item.quantity)
                               }
-                              className="text-[28px] leading-none"
+                              className="text-[30px] leading-none"
                               aria-label={`Decrease quantity of ${item.name}`}
                             >
                               -
@@ -168,7 +162,7 @@ export default function CartPage() {
                               onClick={() =>
                                 increaseQuantity(item.slug, item.quantity)
                               }
-                              className="text-[28px] leading-none"
+                              className="text-[30px] leading-none"
                               aria-label={`Increase quantity of ${item.name}`}
                             >
                               +
@@ -188,7 +182,7 @@ export default function CartPage() {
                               strokeWidth="1.7"
                               strokeLinecap="round"
                               strokeLinejoin="round"
-                              className="h-6 w-6"
+                              className="h-7 w-7"
                             >
                               <path d="M3 6h18" />
                               <path d="M8 6V4h8v2" />
@@ -198,11 +192,21 @@ export default function CartPage() {
                             </svg>
                           </button>
                         </div>
+
+                        {/* TOTAL */}
+                        <div className="mt-10 flex items-center justify-between">
+                          <span className="text-[16px] uppercase tracking-[0.18em]">
+                            Total
+                          </span>
+
+                          <span className="text-[18px] whitespace-nowrap">
+                            Rs. {itemTotal.toFixed(2)}
+                          </span>
+                        </div>
                       </div>
 
-                      {/* DESKTOP */}
+                      {/* DESKTOP VIEW */}
                       <div className="hidden md:grid md:grid-cols-[1.7fr_0.9fr_0.7fr] md:items-start md:gap-6">
-                        {/* product */}
                         <div className="flex items-start gap-5">
                           <div className="relative h-[120px] w-[120px] shrink-0 overflow-hidden bg-[#f5f5f5]">
                             <Image
@@ -217,9 +221,11 @@ export default function CartPage() {
                             <h2 className="text-[18px] leading-snug">
                               {item.name}
                             </h2>
+
                             <p className="mt-3 text-[15px]">
                               Rs. {itemPrice.toFixed(2)}
                             </p>
+
                             {"pack" in item && item.pack ? (
                               <p className="mt-3 text-[15px] text-black/70">
                                 {item.pack}
@@ -228,7 +234,6 @@ export default function CartPage() {
                           </div>
                         </div>
 
-                        {/* quantity */}
                         <div className="flex items-center justify-center gap-5">
                           <div className="flex h-[52px] w-[180px] items-center justify-between border border-black px-6">
                             <button
@@ -279,7 +284,6 @@ export default function CartPage() {
                           </button>
                         </div>
 
-                        {/* total */}
                         <div className="pt-1 text-right">
                           <p className="text-[18px]">
                             Rs. {itemTotal.toFixed(2)}
@@ -292,14 +296,14 @@ export default function CartPage() {
               </div>
 
               {/* SUMMARY */}
-              <div className="flex justify-end pt-10 sm:pt-14">
+              <div className="flex justify-end pt-12 md:pt-14">
                 <div className="w-full max-w-[420px]">
-                  <div className="flex items-center justify-between text-[18px] sm:text-[20px]">
+                  <div className="flex items-center justify-between text-[18px] md:text-[20px]">
                     <span>Subtotal</span>
                     <span>Rs. {subtotal.toFixed(2)}</span>
                   </div>
 
-                  <p className="mt-5 text-[14px] text-black/75 sm:text-[15px]">
+                  <p className="mt-8 text-right text-[14px] text-black/85 md:text-[15px]">
                     Taxes and shipping calculated at checkout
                   </p>
 
