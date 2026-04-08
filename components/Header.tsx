@@ -55,6 +55,7 @@ export default function Header() {
           
           {/* LEFT: HAMBURGER / CLOSE */}
 <button
+
   type="button"
   onClick={() => setMenuOpen(!menuOpen)}
   aria-label="Menu"
