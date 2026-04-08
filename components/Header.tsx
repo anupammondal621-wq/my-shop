@@ -81,24 +81,29 @@ export default function Header() {
           {/* RIGHT: SEARCH + CART */}
           <div className="flex items-center gap-4">
             {/* SEARCH */}
-            <button
-              type="button"
-              onClick={() => (window.location.href = "/search")}
-              aria-label="Search"
-              className="shrink-0"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                className="h-6 w-6"
-              >
-                <circle cx="11" cy="11" r="7" />
-                <path d="M20 20L16.65 16.65" />
-              </svg>
-            </button>
+<button
+  type="button"
+  onClick={() => (window.location.href = "/search")}
+  aria-label="Search"
+  className="shrink-0"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="h-7 w-7"  // 👈 same as cart
+  >
+    {/* circle */}
+    <circle cx="11" cy="11" r="7" />
+
+    {/* longer handle */}
+    <path d="M20.5 20.5L15.5 15.5" />
+  </svg>
+</button>
 
 <Link href="/cart" className="relative shrink-0" aria-label="Cart">
   {/* CART ICON */}
