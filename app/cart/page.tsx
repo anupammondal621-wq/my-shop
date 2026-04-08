@@ -297,14 +297,14 @@ export default function CartPage() {
               </div>
 
               {/* SUMMARY */}
-              <div className="flex justify-end pt-12 md:pt-14">
+              <div className="flex justify-center md:justify-end pt-8 md:pt-14">
                 <div className="w-full max-w-[420px]">
-                  <div className="flex items-center justify-between text-[18px] md:text-[20px]">
+                  <div className="flex items-center justify-center gap-2 text-[16px] md:text-[20px]">
                     <span>Subtotal</span>
                     <span>Rs. {subtotal.toFixed(2)}</span>
                   </div>
 
-                  <p className="mt-8 text-right text-[14px] text-black/85 md:text-[15px]">
+                  <p className="mt-6 text-center md:text-right text-[14px] text-black/85 md:text-[15px]">
                     Taxes and shipping calculated at checkout
                   </p>
 
