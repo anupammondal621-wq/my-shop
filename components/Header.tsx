@@ -57,8 +57,8 @@ export default function Header() {
           <button
             type="button"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="flex h-10 w-10 items-center justify-center"
+            aria-label="Menu"
+            className="flex h-10 w-10 items-center justify-start"
           >
             {menuOpen ? (
               <span className="text-3xl leading-none">×</span>
@@ -141,56 +141,55 @@ export default function Header() {
           className="fixed inset-x-0 bottom-0 top-[70px] z-40 bg-black/30"
           onClick={() => setMenuOpen(false)}
         >
-{/* SIDEBAR */}
-<div
-  className="h-full w-[82%] max-w-[320px] border-r border-black bg-white pt-6"
-  onClick={(e) => e.stopPropagation()}
->
-  {/* MATCH HEADER PADDING */}
-  <div className="px-4 sm:px-6 lg:px-8">
-
-    {/* MENU ONLY (no cross) */}
-    <nav className="flex flex-col gap-5 text-base">
-      <Link href="/" onClick={() => setMenuOpen(false)}>
-        Home
-      </Link>
-
-      <Link href="/shop" onClick={() => setMenuOpen(false)}>
-        Shop
-      </Link>
-
-      <Link href="/cart" onClick={() => setMenuOpen(false)}>
-        Cart
-      </Link>
-
-      {!user ? (
-        <>
-          <Link href="/login" onClick={() => setMenuOpen(false)}>
-            Login
-          </Link>
-
-          <Link href="/signup" onClick={() => setMenuOpen(false)}>
-            Sign Up
-          </Link>
-        </>
-      ) : (
-        <>
-          <Link href="/account" onClick={() => setMenuOpen(false)}>
-            Account
-          </Link>
-
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="text-left"
+          {/* SIDEBAR */}
+          <div
+            className="h-full w-[82%] max-w-[320px] border-r border-black bg-white pt-6"
+            onClick={(e) => e.stopPropagation()}
           >
-            Logout
-          </button>
-        </>
-      )}
-    </nav>
-  </div>
-</div>
+            {/* SAME PADDING AS HEADER → PERFECT ALIGNMENT */}
+            <div className="px-4 sm:px-6 lg:px-8">
+
+              <nav className="flex flex-col gap-5 text-base">
+                <Link href="/" onClick={() => setMenuOpen(false)}>
+                  Home
+                </Link>
+
+                <Link href="/shop" onClick={() => setMenuOpen(false)}>
+                  Shop
+                </Link>
+
+                <Link href="/cart" onClick={() => setMenuOpen(false)}>
+                  Cart
+                </Link>
+
+                {!user ? (
+                  <>
+                    <Link href="/login" onClick={() => setMenuOpen(false)}>
+                      Login
+                    </Link>
+
+                    <Link href="/signup" onClick={() => setMenuOpen(false)}>
+                      Sign Up
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/account" onClick={() => setMenuOpen(false)}>
+                      Account
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="text-left"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+              </nav>
+            </div>
+          </div>
         </div>
       )}
     </>
