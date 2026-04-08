@@ -61,324 +61,165 @@ export default function CartPage() {
   return (
     <>
       <main className="min-h-screen bg-[#f3f3f3] text-black">
-        {/* TOP HEADER */}
-        <div className="border-b border-black px-6 py-4">
-          <div className="flex items-center justify-between gap-4">
-            <h1 className="text-sm uppercase tracking-widest">Cart</h1>
-
-            <button
-              onClick={() => router.push("/shop")}
-              className="text-sm underline underline-offset-4"
-            >
-              Continue shopping
-            </button>
-          </div>
+        {/* HEADER */}
+        <div className="border-b border-black px-6 py-4 flex justify-between">
+          <h1 className="text-sm uppercase tracking-widest">Cart</h1>
+          <button
+            onClick={() => router.push("/shop")}
+            className="text-sm underline"
+          >
+            Continue shopping
+          </button>
         </div>
 
-        <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-          {cart.length === 0 ? (
-            <div className="py-20 text-center">
-              <h2 className="text-2xl font-semibold">Your cart is empty</h2>
-              <p className="mt-3 text-gray-600">
-                Add something beautiful to get started.
-              </p>
-              <button
-                onClick={() => router.push("/shop")}
-                className="mt-6 border border-black px-6 py-3 text-sm uppercase tracking-wide"
-              >
-                Continue Shopping
-              </button>
-            </div>
-          ) : (
-            <>
-              {/* DESKTOP HEADER */}
-              <div className="hidden grid-cols-[1.7fr_0.9fr_0.7fr] border-b border-black/20 pb-4 md:grid">
-                <div className="text-[11px] uppercase tracking-[0.22em]">
-                  Product
-                </div>
-                <div className="text-center text-[11px] uppercase tracking-[0.22em]">
-                  Quantity
-                </div>
-                <div className="text-right text-[11px] uppercase tracking-[0.22em]">
-                  Total
-                </div>
-              </div>
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          {cart.map((item) => {
+            const itemPrice = getNumericPrice(item.price);
+            const itemTotal = itemPrice * item.quantity;
 
-              {/* CART ITEMS */}
-              <div>
-                {cart.map((item) => {
-                  const itemPrice = getNumericPrice(item.price);
-                  const itemTotal = itemPrice * item.quantity;
+            return (
+              <div key={item.slug} className="border-b py-8">
+                {/* MOBILE */}
+                <div className="block md:hidden">
+                  <div className="flex gap-4">
+                    {/* IMAGE */}
+                    <div className="relative h-[90px] w-[90px] bg-gray-100">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
 
-                  return (
-                    <div
-                      key={item.slug}
-                      className="border-b border-black/20 py-8"
-                    >
-                      {/* MOBILE VIEW */}
-                      <div className="block md:hidden">
-                        <div className="flex items-start gap-4">
-                          {/* IMAGE */}
-                          <div className="relative h-[95px] w-[95px] shrink-0 overflow-hidden bg-[#f5f5f5]">
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+                    {/* RIGHT */}
+                    <div className="flex-1">
+                      {/* TOP ROW */}
+                      <div className="flex justify-between gap-3">
+                        <div>
+                          <h2 className="text-[14px] font-light uppercase tracking-[0.05em] text-[#d26a6a]">
+                            {item.name}
+                          </h2>
 
-                          {/* RIGHT SIDE */}
-                          <div className="min-w-0 flex-1">
-                            {/* TOP ROW: TEXT + TOTAL PRICE */}
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="min-w-0 flex-1">
-                                <h2 className="text-[15px] font-light leading-[1.4] tracking-[0.06em] text-[#d26a6a] uppercase">
-                                  {item.name}
-                                </h2>
+                          <p className="mt-2 text-[14px] text-[#d26a6a] font-light">
+                            Rs. {itemPrice.toFixed(2)}
+                          </p>
 
-                                <p className="mt-3 text-[15px] font-light tracking-[0.05em] text-[#d26a6a]">
-                                  Rs. {itemPrice.toFixed(2)}
-                                </p>
-
-                                {item.pack ? (
-                                  <p className="mt-4 text-[14px] font-light tracking-[0.05em] text-[#d26a6a]">
-                                    {item.pack}
-                                  </p>
-                                ) : null}
-                              </div>
-
-                              <div className="shrink-0 pt-1">
-                                <p className="whitespace-nowrap text-[15px] font-light tracking-[0.05em] text-[#d26a6a]">
-                                  Rs. {itemTotal.toFixed(2)}
-                                </p>
-                              </div>
-                            </div>
-
-                            {/* QUANTITY + DELETE */}
-                            <div className="mt-5 flex items-center gap-5">
-                              <div className="flex h-[52px] w-[170px] items-center justify-between border border-[#d26a6a]/60 px-5 text-[#d26a6a]">
-                                <button
-                                  onClick={() =>
-                                    decreaseQuantity(item.slug, item.quantity)
-                                  }
-                                  className="text-[24px] font-light leading-none"
-                                  aria-label={`Decrease quantity of ${item.name}`}
-                                >
-                                  -
-                                </button>
-
-                                <span className="text-[18px] font-light leading-none">
-                                  {item.quantity}
-                                </span>
-
-                                <button
-                                  onClick={() =>
-                                    increaseQuantity(item.slug, item.quantity)
-                                  }
-                                  className="text-[24px] font-light leading-none"
-                                  aria-label={`Increase quantity of ${item.name}`}
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <button
-                                onClick={() => removeItem(item.slug)}
-                                aria-label={`Remove ${item.name}`}
-                                className="shrink-0 text-[#d26a6a]"
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1.7"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="h-6 w-6"
-                                >
-                                  <path d="M3 6h18" />
-                                  <path d="M8 6V4h8v2" />
-                                  <path d="M19 6l-1 14H6L5 6" />
-                                  <path d="M10 11v6" />
-                                  <path d="M14 11v6" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
+                          {item.pack && (
+                            <p className="mt-2 text-[13px] text-[#d26a6a] font-light">
+                              {item.pack}
+                            </p>
+                          )}
                         </div>
+
+                        {/* TOTAL */}
+                        <p className="text-[14px] text-[#d26a6a] font-light whitespace-nowrap">
+                          Rs. {itemTotal.toFixed(2)}
+                        </p>
                       </div>
 
-                      {/* DESKTOP VIEW */}
-                      <div className="hidden md:grid md:grid-cols-[1.7fr_0.9fr_0.7fr] md:items-start md:gap-6">
-                        <div className="flex items-start gap-5">
-                          <div className="relative h-[120px] w-[120px] shrink-0 overflow-hidden bg-[#f5f5f5]">
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+                      {/* QUANTITY */}
+                      <div className="mt-4 flex items-center gap-4">
+                        <div className="flex h-[44px] w-[130px] items-center justify-between border border-[#d26a6a]/60 px-4 text-[#d26a6a]">
+                          <button
+                            onClick={() =>
+                              decreaseQuantity(item.slug, item.quantity)
+                            }
+                            className="text-[20px]"
+                          >
+                            -
+                          </button>
 
-                          <div className="pt-1">
-                            <h2 className="text-[18px] leading-snug text-[#d26a6a]">
-                              {item.name}
-                            </h2>
-
-                            <p className="mt-3 text-[15px] text-[#d26a6a]">
-                              Rs. {itemPrice.toFixed(2)}
-                            </p>
-
-                            {item.pack ? (
-                              <p className="mt-3 text-[15px] text-[#d26a6a]/80">
-                                {item.pack}
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-center gap-5">
-                          <div className="flex h-[52px] w-[180px] items-center justify-between border border-[#d26a6a]/60 px-6 text-[#d26a6a]">
-                            <button
-                              onClick={() =>
-                                decreaseQuantity(item.slug, item.quantity)
-                              }
-                              className="text-[28px] leading-none"
-                              aria-label={`Decrease quantity of ${item.name}`}
-                            >
-                              -
-                            </button>
-
-                            <span className="text-[18px] leading-none">
-                              {item.quantity}
-                            </span>
-
-                            <button
-                              onClick={() =>
-                                increaseQuantity(item.slug, item.quantity)
-                              }
-                              className="text-[28px] leading-none"
-                              aria-label={`Increase quantity of ${item.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
+                          <span className="text-[15px]">
+                            {item.quantity}
+                          </span>
 
                           <button
-                            onClick={() => removeItem(item.slug)}
-                            aria-label={`Remove ${item.name}`}
-                            className="text-[#d26a6a]"
+                            onClick={() =>
+                              increaseQuantity(item.slug, item.quantity)
+                            }
+                            className="text-[20px]"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.7"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-6 w-6"
-                            >
-                              <path d="M3 6h18" />
-                              <path d="M8 6V4h8v2" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6" />
-                              <path d="M14 11v6" />
-                            </svg>
+                            +
                           </button>
                         </div>
 
-                        <div className="pt-1 text-right">
-                          <p className="text-[18px] text-[#d26a6a]">
-                            Rs. {itemTotal.toFixed(2)}
-                          </p>
-                        </div>
+                        {/* DELETE */}
+                        <button
+                          onClick={() => removeItem(item.slug)}
+                          className="text-[#d26a6a]"
+                        >
+                          🗑
+                        </button>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                </div>
 
-              {/* SUMMARY */}
-              <div className="flex justify-end pt-12 md:pt-14">
-                <div className="w-full max-w-[420px]">
-                  <div className="flex items-center justify-between text-[18px] md:text-[20px]">
-                    <span>Subtotal</span>
-                    <span>Rs. {subtotal.toFixed(2)}</span>
+                {/* DESKTOP */}
+                <div className="hidden md:flex justify-between items-center">
+                  <div className="flex gap-4">
+                    <div className="relative h-[120px] w-[120px] bg-gray-100">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+
+                    <div>
+                      <h2 className="text-lg text-[#d26a6a]">{item.name}</h2>
+                      <p className="mt-2 text-[#d26a6a]">
+                        Rs. {itemPrice.toFixed(2)}
+                      </p>
+                    </div>
                   </div>
 
-                  <p className="mt-8 text-right text-[14px] text-black/85 md:text-[15px]">
-                    Taxes and shipping calculated at checkout
-                  </p>
+                  <div className="flex items-center gap-6">
+                    <div className="flex border px-4 py-2">
+                      <button
+                        onClick={() =>
+                          decreaseQuantity(item.slug, item.quantity)
+                        }
+                      >
+                        -
+                      </button>
+                      <span className="px-4">{item.quantity}</span>
+                      <button
+                        onClick={() =>
+                          increaseQuantity(item.slug, item.quantity)
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
 
-                  <button
-                    onClick={() => router.push("/checkout")}
-                    className="mt-8 w-full rounded-full bg-black px-6 py-4 text-[18px] text-white transition hover:opacity-90"
-                  >
-                    Check out
-                  </button>
+                    <p className="text-[#d26a6a]">
+                      Rs. {itemTotal.toFixed(2)}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </>
-          )}
+            );
+          })}
+
+          {/* SUMMARY */}
+          <div className="mt-10 max-w-sm ml-auto">
+            <div className="flex justify-between text-lg">
+              <span>Subtotal</span>
+              <span>Rs. {subtotal.toFixed(2)}</span>
+            </div>
+
+            <button
+              onClick={() => router.push("/checkout")}
+              className="mt-6 w-full bg-black text-white py-4 rounded-full"
+            >
+              Checkout
+            </button>
+          </div>
         </div>
       </main>
-
-      {/* FOOTER */}
-      <section className="w-full border-b border-black bg-[#f3f3f3]">
-        <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
-          <div className="px-5 py-6 sm:px-8 lg:border-r lg:border-black">
-            <p className="mb-4 text-[16px] leading-7">
-              Get 10% off your next purchase. Subscribe to our newsletter.
-            </p>
-
-            <form className="space-y-2">
-              <input
-                type="email"
-                placeholder="your@email.address"
-                className="w-full border border-black bg-[#f3f3f3] px-4 py-3 text-[16px] outline-none placeholder:text-black"
-              />
-
-              <button
-                type="submit"
-                className="w-full bg-black px-4 py-3 text-[18px] font-semibold uppercase tracking-wide text-white"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-
-          <div className="px-5 py-8 sm:px-8">
-            <div className="space-y-3 text-[16px] leading-8">
-              <p>
-                <span className="font-semibold">Contact</span> : +91 9775534553
-              </p>
-              <p>
-                <span className="font-semibold">Email</span> :
-                support@bongomithai.com
-              </p>
-              <p>
-                <span className="font-semibold">Location</span> : Kolkata
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-b border-black px-5 py-6 sm:px-8">
-          <div className="flex justify-end gap-8 text-[16px]">
-            <button onClick={() => router.push("/search")}>Search</button>
-            <button onClick={() => router.push("/returns")}>Returns</button>
-          </div>
-        </div>
-
-        <div className="px-5 py-4 sm:px-8">
-          <p className="text-right text-[16px]">
-            © 2026 BongoMithai. All rights reserved.
-          </p>
-        </div>
-      </section>
     </>
   );
 }
