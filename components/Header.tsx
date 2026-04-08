@@ -54,22 +54,37 @@ export default function Header() {
         <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
           
           {/* LEFT: HAMBURGER / CLOSE */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Menu"
-            className="flex h-10 w-10 items-center justify-start"
-          >
-            {menuOpen ? (
-              <span className="text-3xl leading-none">×</span>
-            ) : (
-              <div className="flex h-4 w-5 flex-col justify-between">
-                <span className="block h-[2px] w-full rounded bg-black" />
-                <span className="block h-[2px] w-full rounded bg-black" />
-                <span className="block h-[2px] w-full rounded bg-black" />
-              </div>
-            )}
-          </button>
+<button
+  type="button"
+  onClick={() => setMenuOpen(!menuOpen)}
+  aria-label="Menu"
+  className="flex h-10 w-10 items-center justify-start"
+>
+  {menuOpen ? (
+    // ✅ SVG CROSS
+    <div className="flex h-4 w-5 items-center justify-center">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="black"
+        strokeWidth="2"
+        strokeLinecap="round"
+        className="h-4 w-4"
+      >
+        <path d="M6 6L18 18" />
+        <path d="M6 18L18 6" />
+      </svg>
+    </div>
+  ) : (
+    // ✅ HAMBURGER
+    <div className="flex h-4 w-5 flex-col justify-between">
+      <span className="block h-[2px] w-full rounded bg-black" />
+      <span className="block h-[2px] w-full rounded bg-black" />
+      <span className="block h-[2px] w-full rounded bg-black" />
+    </div>
+  )}
+</button>
 
           {/* LOGO */}
           <Link
