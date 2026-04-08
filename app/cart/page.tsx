@@ -62,7 +62,7 @@ export default function CartPage() {
         {/* HEADER - KEEP ORIGINAL STYLE */}
         <div className="border-b border-black px-6 py-4">
           <div className="flex items-center justify-between gap-4">
-            <h1 className="text-sm uppercase tracking-widest">Cart</h1>
+            <h1 className="text-sm uppercase tracking-widest">Your Cart</h1>
 
             <button
               onClick={() => router.push("/shop")}
@@ -90,7 +90,7 @@ export default function CartPage() {
           ) : (
             <>
               {/* TABLE HEADER */}
-              <div className="hidden grid-cols-[1.8fr_0.8fr_0.7fr] border-b border-black py-4 md:grid">
+              <div className="hidden grid-cols-[1.8fr_0.8fr_0.7fr] border-b border-black/20 py-4 md:grid">
                 <div className="text-[11px] uppercase tracking-[0.22em]">
                   Product
                 </div>
