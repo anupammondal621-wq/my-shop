@@ -116,98 +116,94 @@ export default function CartPage() {
                       className="border-b border-black/20 py-8"
                     >
                       {/* MOBILE VIEW */}
-                      <div className="block md:hidden">
-                        {/* IMAGE + DETAILS */}
-                        <div className="flex items-start gap-5">
-                          <div className="relative h-[110px] w-[110px] shrink-0 overflow-hidden bg-[#f5f5f5]">
-                            <Image
-                              src={item.image}
-                              alt={item.name}
-                              fill
-                              className="object-cover"
-                            />
-                          </div>
+<div className="block md:hidden">
+  {/* IMAGE + DETAILS */}
+  <div className="flex items-start gap-4">
+    <div className="relative h-[95px] w-[95px] shrink-0 overflow-hidden bg-[#f5f5f5]">
+      <Image
+        src={item.image}
+        alt={item.name}
+        fill
+        className="object-cover"
+      />
+    </div>
 
-<div className="min-w-0 flex-1 pt-1">
-  <h2 className="text-[14px] leading-[1.35] uppercase sm:text-[16px]">
-    {item.name}
-  </h2>
+    <div className="min-w-0 flex-1 pt-1">
+      <h2 className="text-[14px] leading-[1.35] uppercase sm:text-[16px]">
+        {item.name}
+      </h2>
 
-  <p className="mt-2 text-[14px] sm:text-[15px]">
-    Rs. {itemPrice.toFixed(2)}
-  </p>
+      <p className="mt-2 text-[14px] sm:text-[15px]">
+        Rs. {itemPrice.toFixed(2)}
+      </p>
 
-  {item.pack ? (
-    <p className="mt-2 text-[12px] text-black/70 sm:text-[13px]">
-      {item.pack}
-    </p>
-  ) : null}
+      {item.pack ? (
+        <p className="mt-2 text-[12px] text-black/70 sm:text-[13px]">
+          {item.pack}
+        </p>
+      ) : null}
+    </div>
+  </div>
+
+  {/* QUANTITY + DELETE */}
+  <div className="mt-5 flex items-center gap-4">
+    <div className="flex h-[48px] w-[140px] items-center justify-between border border-black px-4">
+      <button
+        onClick={() => decreaseQuantity(item.slug, item.quantity)}
+        className="text-[24px] leading-none"
+        aria-label={`Decrease quantity of ${item.name}`}
+      >
+        -
+      </button>
+
+      <span className="text-[16px] leading-none">
+        {item.quantity}
+      </span>
+
+      <button
+        onClick={() => increaseQuantity(item.slug, item.quantity)}
+        className="text-[24px] leading-none"
+        aria-label={`Increase quantity of ${item.name}`}
+      >
+        +
+      </button>
+    </div>
+
+    <button
+      onClick={() => removeItem(item.slug)}
+      aria-label={`Remove ${item.name}`}
+      className="shrink-0"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="h-6 w-6"
+      >
+        <path d="M3 6h18" />
+        <path d="M8 6V4h8v2" />
+        <path d="M19 6l-1 14H6L5 6" />
+        <path d="M10 11v6" />
+        <path d="M14 11v6" />
+      </svg>
+    </button>
+  </div>
+
+  {/* TOTAL */}
+  <div className="mt-5 flex items-center justify-between">
+    <span className="text-[13px] uppercase tracking-[0.18em]">
+      Total
+    </span>
+
+    <span className="text-[16px] whitespace-nowrap">
+      Rs. {itemTotal.toFixed(2)}
+    </span>
+  </div>
 </div>
-                        </div>
-
-                        {/* QUANTITY + DELETE */}
-                        <div className="mt-8 flex items-center gap-6">
-                          <div className="flex h-[58px] w-[170px] items-center justify-between border border-black px-6">
-                            <button
-                              onClick={() =>
-                                decreaseQuantity(item.slug, item.quantity)
-                              }
-                              className="text-[30px] leading-none"
-                              aria-label={`Decrease quantity of ${item.name}`}
-                            >
-                              -
-                            </button>
-
-                            <span className="text-[18px] leading-none">
-                              {item.quantity}
-                            </span>
-
-                            <button
-                              onClick={() =>
-                                increaseQuantity(item.slug, item.quantity)
-                              }
-                              className="text-[30px] leading-none"
-                              aria-label={`Increase quantity of ${item.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
-
-                          <button
-                            onClick={() => removeItem(item.slug)}
-                            aria-label={`Remove ${item.name}`}
-                            className="shrink-0"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.7"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-7 w-7"
-                            >
-                              <path d="M3 6h18" />
-                              <path d="M8 6V4h8v2" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6" />
-                              <path d="M14 11v6" />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {/* TOTAL */}
-                        <div className="mt-10 flex items-center justify-between">
-                          <span className="text-[16px] uppercase tracking-[0.18em]">
-                            Total
-                          </span>
-
-                          <span className="text-[18px] whitespace-nowrap">
-                            Rs. {itemTotal.toFixed(2)}
-                          </span>
-                        </div>
-                      </div>
 
                       {/* DESKTOP VIEW */}
                       <div className="hidden md:grid md:grid-cols-[1.7fr_0.9fr_0.7fr] md:items-start md:gap-6">
