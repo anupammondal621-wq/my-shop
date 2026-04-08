@@ -26,20 +26,31 @@ export default function CartPage() {
   const increaseQuantity = async (slug: string, currentQuantity: number) => {
     await updateCartItemQuantity(slug, currentQuantity + 1);
     refreshCart();
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const decreaseQuantity = async (slug: string, currentQuantity: number) => {
-    await updateCartItemQuantity(slug, currentQuantity - 1);
+    if (currentQuantity <= 1) {
+      await removeCartItem(slug);
+    } else {
+      await updateCartItemQuantity(slug, currentQuantity - 1);
+    }
     refreshCart();
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const removeItem = async (slug: string) => {
     await removeCartItem(slug);
     refreshCart();
+    window.dispatchEvent(new Event("cartUpdated"));
+  };
+
+  const getNumericPrice = (price: string | number) => {
+    return Number(String(price).replace(/[^\d.]/g, ""));
   };
 
   const subtotal: number = cart.reduce((total: number, item: CartItem) => {
-    const numericPrice = Number(String(item.price).replace(/[^\d.]/g, ""));
+    const numericPrice = getNumericPrice(item.price);
     return total + numericPrice * item.quantity;
   }, 0);
 
@@ -48,73 +59,104 @@ export default function CartPage() {
   return (
     <>
       <main className="min-h-screen bg-white text-black">
-        {/* HEADER */}
-        <div className="border-b border-black px-6 py-4">
-          <h1 className="text-sm uppercase tracking-widest">Cart</h1>
-        </div>
-
-        <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="mx-auto max-w-6xl px-6 py-12 md:px-10 lg:px-12">
           {cart.length === 0 ? (
-            <div className="rounded-3xl border border-black/10 bg-white p-10 text-center shadow-sm">
-              <h2 className="mb-3 text-2xl font-semibold">Your cart is empty</h2>
-              <p className="mb-6 text-gray-600">
-                Add something beautiful to get started.
+            <div className="py-20 text-center">
+              <h1 className="text-[42px] font-normal leading-none text-[#ef6b61]">
+                Your cart
+              </h1>
+              <p className="mt-8 text-[16px] text-[#ef6b61]">
+                Your cart is empty.
               </p>
               <button
                 onClick={() => router.push("/shop")}
-                className="rounded-full bg-black px-6 py-3 text-white"
+                className="mt-8 inline-block border border-[#efb1aa] px-8 py-3 text-[15px] text-[#ef6b61] transition hover:bg-[#ef6b61] hover:text-white"
               >
-                Continue Shopping
+                Continue shopping
               </button>
             </div>
           ) : (
-            <div className="grid gap-8 lg:grid-cols-[1.6fr_0.9fr]">
-              
-              {/* LEFT SIDE */}
-              <div className="space-y-5">
-                {cart.map((item) => (
-                  <div
-                    key={item.slug}
-                    className="rounded-3xl border border-black/10 bg-white p-5 shadow-sm"
-                  >
-                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-4">
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={120}
-                          height={120}
-                          className="h-28 w-28 rounded-2xl object-cover"
-                        />
-                        <div>
-                          <h2 className="text-xl font-semibold">{item.name}</h2>
-                          <p className="mt-1 text-gray-600">{item.price}</p>
-                          <p className="mt-1 text-sm text-gray-500">
-                            Premium selection for your order
+            <>
+              {/* TOP HEADER */}
+              <div className="flex items-start justify-between gap-6">
+                <h1 className="text-[42px] font-normal leading-none text-[#ef6b61]">
+                  Your cart
+                </h1>
+
+                <button
+                  onClick={() => router.push("/shop")}
+                  className="text-[14px] underline underline-offset-4 text-[#ef6b61]"
+                >
+                  Continue shopping
+                </button>
+              </div>
+
+              {/* TABLE HEADER */}
+              <div className="mt-10 hidden grid-cols-[1.8fr_0.8fr_0.7fr] border-b border-[#f2d5d1] pb-4 md:grid">
+                <div className="text-[11px] uppercase tracking-[0.22em] text-[#efb1aa]">
+                  Product
+                </div>
+                <div className="text-center text-[11px] uppercase tracking-[0.22em] text-[#efb1aa]">
+                  Quantity
+                </div>
+                <div className="text-right text-[11px] uppercase tracking-[0.22em] text-[#efb1aa]">
+                  Total
+                </div>
+              </div>
+
+              {/* CART ITEMS */}
+              <div className="mt-2 border-b border-[#f2d5d1]">
+                {cart.map((item) => {
+                  const itemPrice = getNumericPrice(item.price);
+                  const itemTotal = itemPrice * item.quantity;
+
+                  return (
+                    <div
+                      key={item.slug}
+                      className="grid gap-6 border-t border-[#f8e7e4] py-8 md:grid-cols-[1.8fr_0.8fr_0.7fr] md:items-start"
+                    >
+                      {/* PRODUCT */}
+                      <div className="flex gap-5">
+                        <div className="relative h-[108px] w-[108px] shrink-0 overflow-hidden bg-[#f6f6f6]">
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+
+                        <div className="pt-1">
+                          <h2 className="text-[28px] leading-tight text-[#ef6b61] md:text-[18px]">
+                            {item.name}
+                          </h2>
+                          <p className="mt-3 text-[16px] text-[#ef6b61] md:text-[14px]">
+                            Rs. {itemPrice.toFixed(2)}
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 shrink-0">
-                        <div className="flex items-center rounded-full border border-black/10 bg-[#f7f7f5] px-2 py-1">
+                      {/* QUANTITY */}
+                      <div className="flex items-center md:justify-center">
+                        <div className="flex h-[46px] w-[142px] items-center justify-between border border-[#efb1aa] px-5 text-[#ef6b61]">
                           <button
                             onClick={() =>
                               decreaseQuantity(item.slug, item.quantity)
                             }
-                            className="px-3 py-1 text-lg"
+                            className="text-[24px] leading-none"
+                            aria-label={`Decrease quantity of ${item.name}`}
                           >
                             -
                           </button>
 
-                          <span className="min-w-[32px] text-center font-medium">
-                            {item.quantity}
-                          </span>
+                          <span className="text-[18px]">{item.quantity}</span>
 
                           <button
                             onClick={() =>
                               increaseQuantity(item.slug, item.quantity)
                             }
-                            className="px-3 py-1 text-lg"
+                            className="text-[24px] leading-none"
+                            aria-label={`Increase quantity of ${item.name}`}
                           >
                             +
                           </button>
@@ -122,67 +164,54 @@ export default function CartPage() {
 
                         <button
                           onClick={() => removeItem(item.slug)}
-                          className="rounded-full border border-black/10 px-4 py-2 text-sm"
+                          className="ml-6 text-[18px] text-[#ef6b61]"
+                          aria-label={`Remove ${item.name}`}
                         >
-                          Remove
+                          🗑
                         </button>
                       </div>
+
+                      {/* TOTAL */}
+                      <div className="flex items-center justify-between md:block md:text-right">
+                        <span className="text-[12px] uppercase tracking-[0.2em] text-[#efb1aa] md:hidden">
+                          Total
+                        </span>
+                        <span className="text-[18px] text-[#ef6b61] md:text-[16px]">
+                          Rs. {itemTotal.toFixed(2)}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
-              {/* RIGHT SIDE */}
-              <aside className="h-fit rounded-3xl border border-black/10 bg-white p-6 shadow-sm">
-                <h2 className="mb-6 text-2xl font-semibold">Order Summary</h2>
-
-                <div className="space-y-4 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Subtotal</span>
-                    <span className="font-medium">
-                      ₹{subtotal.toFixed(2)}
-                    </span>
+              {/* BOTTOM SUMMARY */}
+              <div className="flex justify-end pt-14">
+                <div className="w-full max-w-[350px] text-right">
+                  <div className="flex items-center justify-between text-[18px] text-[#ef6b61]">
+                    <span>Subtotal</span>
+                    <span>Rs. {subtotal.toFixed(2)}</span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium">
-                      Calculated at checkout
-                    </span>
-                  </div>
+                  <p className="mt-6 text-[14px] text-[#ef9b93]">
+                    Taxes and shipping calculated at checkout
+                  </p>
 
-                  <div className="border-t border-black/10 pt-4">
-                    <div className="flex justify-between text-base">
-                      <span className="font-semibold">Total</span>
-                      <span className="text-xl font-semibold">
-                        ₹{total.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
+                  <button
+                    onClick={() => router.push("/checkout")}
+                    className="mt-8 w-full rounded-full bg-black px-6 py-4 text-[18px] text-white transition hover:opacity-90"
+                  >
+                    Check out
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => router.push("/checkout")}
-                  className="mt-8 w-full rounded-full bg-black px-6 py-3 text-white"
-                >
-                  Proceed to Checkout
-                </button>
-
-                <button
-                  onClick={() => router.push("/shop")}
-                  className="mt-3 w-full rounded-full border border-black/10 px-6 py-3"
-                >
-                  Continue Shopping
-                </button>
-              </aside>
-            </div>
+              </div>
+            </>
           )}
         </div>
       </main>
 
-      {/* ✅ FOOTER */}
+      {/* FOOTER */}
       <section className="w-full border-b border-black bg-[#f3f3f3]">
-        
         <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
           <div className="px-5 py-6 sm:px-8 lg:border-r lg:border-black">
             <p className="mb-4 text-[16px] leading-7">
@@ -207,9 +236,16 @@ export default function CartPage() {
 
           <div className="px-5 py-8 sm:px-8">
             <div className="space-y-3 text-[16px] leading-8">
-              <p><span className="font-semibold">Contact</span> : +91 9775534553</p>
-              <p><span className="font-semibold">Email</span> : support@bongomithai.com</p>
-              <p><span className="font-semibold">Location</span> : Kolkata</p>
+              <p>
+                <span className="font-semibold">Contact</span> : +91 9775534553
+              </p>
+              <p>
+                <span className="font-semibold">Email</span> :
+                support@bongomithai.com
+              </p>
+              <p>
+                <span className="font-semibold">Location</span> : Kolkata
+              </p>
             </div>
           </div>
         </div>
@@ -226,7 +262,6 @@ export default function CartPage() {
             © 2026 BongoMithai. All rights reserved.
           </p>
         </div>
-
       </section>
     </>
   );
