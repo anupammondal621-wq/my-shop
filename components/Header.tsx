@@ -15,10 +15,7 @@ export default function Header() {
   useEffect(() => {
     const updateCartCount = async () => {
       const cart: CartItem[] = await loadCart();
-      const totalItems = cart.reduce(
-        (total, item) => total + item.quantity,
-        0
-      );
+      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
       setCartCount(totalItems);
     };
 
@@ -51,19 +48,23 @@ export default function Header() {
     <>
       <header className="fixed left-0 right-0 top-0 z-50 h-[70px] border-b border-black bg-white text-black">
         <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
-          {/* LEFT: HAMBURGER */}
-<button
-  type="button"
-  onClick={() => setMenuOpen(true)}
-  aria-label="Open menu"
-  className="flex h-10 w-10 items-center justify-center"
->
-  <div className="flex flex-col justify-between h-4 w-5">
-    <span className="block h-[2px] w-full bg-black rounded" />
-    <span className="block h-[2px] w-full bg-black rounded" />
-    <span className="block h-[2px] w-full bg-black rounded" />
-  </div>
-</button>
+          {/* LEFT: HAMBURGER / CLOSE */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            className="flex h-10 w-10 items-center justify-center"
+          >
+            {menuOpen ? (
+              <span className="text-3xl leading-none">×</span>
+            ) : (
+              <div className="flex h-4 w-5 flex-col justify-between">
+                <span className="block h-[2px] w-full rounded bg-black" />
+                <span className="block h-[2px] w-full rounded bg-black" />
+                <span className="block h-[2px] w-full rounded bg-black" />
+              </div>
+            )}
+          </button>
 
           {/* MIDDLE: LOGO + BRAND */}
           <Link
@@ -75,85 +76,71 @@ export default function Header() {
               alt="Logo"
               className="h-14 w-auto sm:h-16"
             />
-            <span className="text-lg font-bold sm:text-xl">
-              BongoMithai
-            </span>
+            <span className="text-lg font-bold sm:text-xl">BongoMithai</span>
           </Link>
 
           {/* RIGHT: SEARCH + CART */}
           <div className="flex items-center gap-4">
             {/* SEARCH */}
-<button
-  type="button"
-  onClick={() => (window.location.href = "/search")}
-  aria-label="Search"
-  className="shrink-0"
->
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-6 w-6"  // 👈 slightly smaller again
-  >
-    <circle cx="11" cy="11" r="7" />
-    <path d="M20 20L15.8 15.8" /> {/* slightly longer but not too much */}
-  </svg>
-</button>
+            <button
+              type="button"
+              onClick={() => (window.location.href = "/search")}
+              aria-label="Search"
+              className="shrink-0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-6 w-6"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="M20 20L15.8 15.8" />
+              </svg>
+            </button>
 
-<Link href="/cart" className="relative shrink-0" aria-label="Cart">
-  {/* CART ICON */}
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="black"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="h-7 w-7"
-  >
-    <path d="M9 7a3 3 0 0 1 6 0" />
-    <path d="M5 8h14l-1.2 10.5a2 2 0 0 1-2 1.5H8.2a2 2 0 0 1-2-1.5L5 8Z" />
-  </svg>
+            {/* CART */}
+            <Link href="/cart" className="relative shrink-0" aria-label="Cart">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-7 w-7"
+              >
+                <path d="M9 7a3 3 0 0 1 6 0" />
+                <path d="M5 8h14l-1.2 10.5a2 2 0 0 1-2 1.5H8.2a2 2 0 0 1-2-1.5L5 8Z" />
+              </svg>
 
-  {/* BADGE → moved inside */}
-  {cartCount > 0 && (
-    <span className="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
-      {cartCount}
-    </span>
-  )}
-</Link>
+              {cartCount > 0 && (
+                <span className="absolute bottom-0 right-0 flex h-5 w-5 translate-x-1/4 translate-y-1/4 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
           </div>
         </div>
       </header>
 
-      {/* SIDE MENU */}
+      {/* OVERLAY UNDER HEADER */}
       {menuOpen && (
         <div
-          className="fixed inset-0 z-[60] bg-black/30"
+          className="fixed inset-x-0 bottom-0 top-[70px] z-40 bg-black/30"
           onClick={() => setMenuOpen(false)}
         >
+          {/* SIDE MENU UNDER HEADER */}
           <div
             className="h-full w-[82%] max-w-[320px] border-r border-black bg-white p-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-8 flex items-center justify-between">
-              <span className="text-lg font-semibold">Menu</span>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                aria-label="Close menu"
-                className="text-2xl leading-none"
-              >
-                ×
-              </button>
-            </div>
-
-            <nav className="flex flex-col gap-5 text-base">
+            <nav className="mt-2 flex flex-col gap-5 text-base">
               <Link href="/" onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
