@@ -92,16 +92,13 @@ export default function Header() {
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.8"
+    strokeWidth="1.6"
     strokeLinecap="round"
     strokeLinejoin="round"
-    className="h-7 w-7"  // 👈 same as cart
+    className="h-6 w-6"  // 👈 slightly smaller again
   >
-    {/* circle */}
     <circle cx="11" cy="11" r="7" />
-
-    {/* longer handle */}
-    <path d="M20.5 20.5L15.5 15.5" />
+    <path d="M20 20L15.8 15.8" /> {/* slightly longer but not too much */}
   </svg>
 </button>
 
