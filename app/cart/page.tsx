@@ -117,8 +117,8 @@ export default function CartPage() {
                     >
                       {/* MOBILE VIEW */}
                       <div className="block md:hidden">
-                        {/* IMAGE + DETAILS */}
                         <div className="flex items-start gap-4">
+                          {/* IMAGE */}
                           <div className="relative h-[95px] w-[95px] shrink-0 overflow-hidden bg-[#f5f5f5]">
                             <Image
                               src={item.image}
@@ -128,84 +128,85 @@ export default function CartPage() {
                             />
                           </div>
 
-                          <div className="min-w-0 flex-1 pt-1">
-                            <h2 className="text-[15px] font-light leading-[1.4] tracking-[0.06em] text-[#d26a6a] uppercase">
-                              {item.name}
-                            </h2>
+                          {/* RIGHT SIDE */}
+                          <div className="min-w-0 flex-1">
+                            {/* TOP ROW: TEXT + TOTAL PRICE */}
+                            <div className="flex items-start justify-between gap-4">
+                              <div className="min-w-0 flex-1">
+                                <h2 className="text-[15px] font-light leading-[1.4] tracking-[0.06em] text-[#d26a6a] uppercase">
+                                  {item.name}
+                                </h2>
 
-                            <p className="mt-3 text-[15px] font-light tracking-[0.05em] text-[#d26a6a]">
-                              Rs. {itemPrice.toFixed(2)}
-                            </p>
+                                <p className="mt-3 text-[15px] font-light tracking-[0.05em] text-[#d26a6a]">
+                                  Rs. {itemPrice.toFixed(2)}
+                                </p>
 
-                            {item.pack ? (
-                              <p className="mt-4 text-[14px] font-light tracking-[0.05em] text-[#d26a6a]">
-                                {item.pack}
-                              </p>
-                            ) : null}
+                                {item.pack ? (
+                                  <p className="mt-4 text-[14px] font-light tracking-[0.05em] text-[#d26a6a]">
+                                    {item.pack}
+                                  </p>
+                                ) : null}
+                              </div>
+
+                              <div className="shrink-0 pt-1">
+                                <p className="whitespace-nowrap text-[15px] font-light tracking-[0.05em] text-[#d26a6a]">
+                                  Rs. {itemTotal.toFixed(2)}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* QUANTITY + DELETE */}
+                            <div className="mt-5 flex items-center gap-5">
+                              <div className="flex h-[52px] w-[170px] items-center justify-between border border-[#d26a6a]/60 px-5 text-[#d26a6a]">
+                                <button
+                                  onClick={() =>
+                                    decreaseQuantity(item.slug, item.quantity)
+                                  }
+                                  className="text-[24px] font-light leading-none"
+                                  aria-label={`Decrease quantity of ${item.name}`}
+                                >
+                                  -
+                                </button>
+
+                                <span className="text-[18px] font-light leading-none">
+                                  {item.quantity}
+                                </span>
+
+                                <button
+                                  onClick={() =>
+                                    increaseQuantity(item.slug, item.quantity)
+                                  }
+                                  className="text-[24px] font-light leading-none"
+                                  aria-label={`Increase quantity of ${item.name}`}
+                                >
+                                  +
+                                </button>
+                              </div>
+
+                              <button
+                                onClick={() => removeItem(item.slug)}
+                                aria-label={`Remove ${item.name}`}
+                                className="shrink-0 text-[#d26a6a]"
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1.7"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="h-6 w-6"
+                                >
+                                  <path d="M3 6h18" />
+                                  <path d="M8 6V4h8v2" />
+                                  <path d="M19 6l-1 14H6L5 6" />
+                                  <path d="M10 11v6" />
+                                  <path d="M14 11v6" />
+                                </svg>
+                              </button>
+                            </div>
                           </div>
-                        </div>
-
-                        {/* QUANTITY + DELETE */}
-                        <div className="mt-6 flex items-center gap-6">
-                          <div className="flex h-[52px] w-[220px] items-center justify-between border border-[#d26a6a]/60 px-6 text-[#d26a6a]">
-                            <button
-                              onClick={() =>
-                                decreaseQuantity(item.slug, item.quantity)
-                              }
-                              className="text-[24px] font-light leading-none"
-                              aria-label={`Decrease quantity of ${item.name}`}
-                            >
-                              -
-                            </button>
-
-                            <span className="text-[18px] font-light leading-none">
-                              {item.quantity}
-                            </span>
-
-                            <button
-                              onClick={() =>
-                                increaseQuantity(item.slug, item.quantity)
-                              }
-                              className="text-[24px] font-light leading-none"
-                              aria-label={`Increase quantity of ${item.name}`}
-                            >
-                              +
-                            </button>
-                          </div>
-
-                          <button
-                            onClick={() => removeItem(item.slug)}
-                            aria-label={`Remove ${item.name}`}
-                            className="shrink-0 text-[#d26a6a]"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.7"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              className="h-6 w-6"
-                            >
-                              <path d="M3 6h18" />
-                              <path d="M8 6V4h8v2" />
-                              <path d="M19 6l-1 14H6L5 6" />
-                              <path d="M10 11v6" />
-                              <path d="M14 11v6" />
-                            </svg>
-                          </button>
-                        </div>
-
-                        {/* TOTAL */}
-                        <div className="mt-5 flex items-center justify-between">
-                          <span className="text-[13px] uppercase tracking-[0.18em] text-[#d26a6a]">
-                            Total
-                          </span>
-
-                          <span className="whitespace-nowrap text-[16px] font-light tracking-[0.05em] text-[#d26a6a]">
-                            Rs. {itemTotal.toFixed(2)}
-                          </span>
                         </div>
                       </div>
 
