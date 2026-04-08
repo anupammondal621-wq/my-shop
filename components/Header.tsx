@@ -116,9 +116,9 @@ export default function Header() {
     <path d="M5 8h14l-1.2 10.5a2 2 0 0 1-2 1.5H8.2a2 2 0 0 1-2-1.5L5 8Z" />
   </svg>
 
-  {/* BADGE → moved to bottom-right */}
+  {/* BADGE → moved inside */}
   {cartCount > 0 && (
-    <span className="absolute -right-2 -bottom-2 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+    <span className="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
       {cartCount}
     </span>
   )}
