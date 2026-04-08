@@ -15,7 +15,10 @@ export default function Header() {
   useEffect(() => {
     const updateCartCount = async () => {
       const cart: CartItem[] = await loadCart();
-      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+      const totalItems = cart.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
       setCartCount(totalItems);
     };
 
@@ -46,8 +49,10 @@ export default function Header() {
 
   return (
     <>
+      {/* HEADER */}
       <header className="fixed left-0 right-0 top-0 z-50 h-[70px] border-b border-black bg-white text-black">
         <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+          
           {/* LEFT: HAMBURGER / CLOSE */}
           <button
             type="button"
@@ -66,7 +71,7 @@ export default function Header() {
             )}
           </button>
 
-          {/* MIDDLE: LOGO + BRAND */}
+          {/* LOGO */}
           <Link
             href="/"
             className="absolute left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap"
@@ -76,7 +81,9 @@ export default function Header() {
               alt="Logo"
               className="h-14 w-auto sm:h-16"
             />
-            <span className="text-lg font-bold sm:text-xl">BongoMithai</span>
+            <span className="text-lg font-bold sm:text-xl">
+              BongoMithai
+            </span>
           </Link>
 
           {/* RIGHT: SEARCH + CART */}
@@ -86,7 +93,6 @@ export default function Header() {
               type="button"
               onClick={() => (window.location.href = "/search")}
               aria-label="Search"
-              className="shrink-0"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +110,7 @@ export default function Header() {
             </button>
 
             {/* CART */}
-            <Link href="/cart" className="relative shrink-0" aria-label="Cart">
+            <Link href="/cart" className="relative" aria-label="Cart">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -120,7 +126,7 @@ export default function Header() {
               </svg>
 
               {cartCount > 0 && (
-                <span className="absolute bottom-0 right-0 flex h-5 w-5 translate-x-1/4 translate-y-1/4 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
+                <span className="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
                   {cartCount}
                 </span>
               )}
@@ -135,50 +141,64 @@ export default function Header() {
           className="fixed inset-x-0 bottom-0 top-[70px] z-40 bg-black/30"
           onClick={() => setMenuOpen(false)}
         >
-          {/* SIDE MENU UNDER HEADER */}
+          {/* SIDEBAR */}
           <div
-            className="h-full w-[82%] max-w-[320px] border-r border-black bg-white p-6"
+            className="h-full w-[82%] max-w-[320px] border-r border-black bg-white pt-6"
             onClick={(e) => e.stopPropagation()}
           >
-            <nav className="mt-2 flex flex-col gap-5 text-base">
-              <Link href="/" onClick={() => setMenuOpen(false)}>
-                Home
-              </Link>
+            {/* ALIGN WRAPPER */}
+            <div className="px-6">
+              
+              {/* CLOSE ICON aligned */}
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                className="mb-6 text-2xl leading-none"
+              >
+                ×
+              </button>
 
-              <Link href="/shop" onClick={() => setMenuOpen(false)}>
-                Shop
-              </Link>
+              {/* MENU */}
+              <nav className="flex flex-col gap-5 text-base">
+                <Link href="/" onClick={() => setMenuOpen(false)}>
+                  Home
+                </Link>
 
-              <Link href="/cart" onClick={() => setMenuOpen(false)}>
-                Cart
-              </Link>
+                <Link href="/shop" onClick={() => setMenuOpen(false)}>
+                  Shop
+                </Link>
 
-              {!user ? (
-                <>
-                  <Link href="/login" onClick={() => setMenuOpen(false)}>
-                    Login
-                  </Link>
+                <Link href="/cart" onClick={() => setMenuOpen(false)}>
+                  Cart
+                </Link>
 
-                  <Link href="/signup" onClick={() => setMenuOpen(false)}>
-                    Sign Up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link href="/account" onClick={() => setMenuOpen(false)}>
-                    Account
-                  </Link>
+                {!user ? (
+                  <>
+                    <Link href="/login" onClick={() => setMenuOpen(false)}>
+                      Login
+                    </Link>
 
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="text-left"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </nav>
+                    <Link href="/signup" onClick={() => setMenuOpen(false)}>
+                      Sign Up
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/account" onClick={() => setMenuOpen(false)}>
+                      Account
+                    </Link>
+
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      className="text-left"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+              </nav>
+            </div>
           </div>
         </div>
       )}
