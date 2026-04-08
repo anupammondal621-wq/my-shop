@@ -215,7 +215,7 @@ export default function Home() {
         {/* EXACT STYLE BUTTON */}
         <div className="absolute bottom-7 left-1/2 -translate-x-1/2 sm:bottom-10">
           <button
-            onClick={() => router.push("/product/product-one")}
+            onClick={() => router.push("/shop")}
             className="flex h-[48px] min-w-[124px] items-center justify-center rounded-full border-2 border-white bg-transparent px-8 text-[17px] font-normal leading-none text-white transition duration-300 hover:bg-white hover:text-black"
           >
             Shop
