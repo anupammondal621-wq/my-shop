@@ -90,7 +90,7 @@ export default function CartPage() {
           ) : (
             <>
               {/* TABLE HEADER */}
-              <div className="hidden grid-cols-[1.8fr_0.8fr_0.7fr] border-b border-black/20 py-4 md:grid">
+              <div className="hidden grid-cols-[1.8fr_0.8fr_0.7fr] border-b border-black py-4 md:grid">
                 <div className="text-[11px] uppercase tracking-[0.22em]">
                   Product
                 </div>
