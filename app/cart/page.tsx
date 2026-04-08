@@ -10,13 +10,17 @@ import {
 } from "@/utils/cart";
 import { useRouter } from "next/navigation";
 
+type CartItemWithPack = CartItem & {
+  pack?: string;
+};
+
 export default function CartPage() {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cart, setCart] = useState<CartItemWithPack[]>([]);
   const router = useRouter();
 
   const refreshCart = async () => {
     const data = await loadCart();
-    setCart(data);
+    setCart(data as CartItemWithPack[]);
   };
 
   useEffect(() => {
@@ -49,7 +53,7 @@ export default function CartPage() {
     return Number(String(price).replace(/[^\d.]/g, ""));
   };
 
-  const subtotal: number = cart.reduce((total: number, item: CartItem) => {
+  const subtotal: number = cart.reduce((total: number, item) => {
     const numericPrice = getNumericPrice(item.price);
     return total + numericPrice * item.quantity;
   }, 0);
@@ -133,7 +137,7 @@ export default function CartPage() {
                               Rs. {itemPrice.toFixed(2)}
                             </p>
 
-                            {"pack" in item && item.pack ? (
+                            {item.pack ? (
                               <p className="mt-3 text-[14px] text-black/70">
                                 {item.pack}
                               </p>
@@ -226,7 +230,7 @@ export default function CartPage() {
                               Rs. {itemPrice.toFixed(2)}
                             </p>
 
-                            {"pack" in item && item.pack ? (
+                            {item.pack ? (
                               <p className="mt-3 text-[15px] text-black/70">
                                 {item.pack}
                               </p>
