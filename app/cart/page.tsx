@@ -105,17 +105,17 @@ export default function CartPage() {
               </div>
 
 {/* MOBILE HEADER */}
-<div className="block md:hidden px-1 pb-4 mb-6 border-b border-black/20">
+<div className="block md:hidden pb-4 mb-6 border-b border-[#d26a6a]/40">
   <div className="flex items-center justify-between">
-    <span className="text-[10px] uppercase tracking-[0.25em] text-black/60">
+    <span className="text-[11px] uppercase tracking-[0.25em] text-[#d26a6a]">
       Product
     </span>
 
-    <span className="text-[10px] uppercase tracking-[0.25em] text-black/60">
+    <span className="text-[11px] uppercase tracking-[0.25em] text-[#d26a6a]">
       Total
     </span>
   </div>
-</div>              
+</div>            
 
               {/* CART ITEMS */}
               <div>
