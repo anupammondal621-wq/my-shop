@@ -96,7 +96,7 @@ export default function Header() {
               alt="Logo"
               className="h-14 w-auto sm:h-16"
             />
-            <span className="text-lg font-bold sm:text-xl">
+            <span className="text-xl sm:text-2xl font-bold leading-none">
               BongoMithai
             </span>
           </Link>
