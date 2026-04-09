@@ -11,6 +11,7 @@ export default function Header() {
   const [user, setUser] = useState<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [cartAnimate, setCartAnimate] = useState(false);
 
   const supabase = createClient();
 
@@ -21,7 +22,22 @@ export default function Header() {
         (total, item) => total + item.quantity,
         0
       );
-      setCartCount(totalItems);
+
+      setCartCount((prev) => {
+        if (totalItems > prev) {
+          setCartAnimate(false);
+
+          setTimeout(() => {
+            setCartAnimate(true);
+          }, 10);
+
+          setTimeout(() => {
+            setCartAnimate(false);
+          }, 700);
+        }
+
+        return totalItems;
+      });
     };
 
     const getUser = async () => {
@@ -51,10 +67,103 @@ export default function Header() {
 
   return (
     <>
+      {/* local animation style */}
+      <style jsx>{`
+        @keyframes cartPop {
+          0% {
+            transform: translate(25%, 25%) scale(1);
+          }
+          25% {
+            transform: translate(25%, 25%) scale(1.35);
+          }
+          50% {
+            transform: translate(25%, 25%) scale(0.92);
+          }
+          75% {
+            transform: translate(25%, 25%) scale(1.12);
+          }
+          100% {
+            transform: translate(25%, 25%) scale(1);
+          }
+        }
+
+        @keyframes sparkleOne {
+          0% {
+            opacity: 0;
+            transform: translate(0, 0) scale(0.4);
+          }
+          30% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+            transform: translate(-8px, -10px) scale(1);
+          }
+        }
+
+        @keyframes sparkleTwo {
+          0% {
+            opacity: 0;
+            transform: translate(0, 0) scale(0.4);
+          }
+          30% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+            transform: translate(10px, -8px) scale(1);
+          }
+        }
+
+        @keyframes sparkleThree {
+          0% {
+            opacity: 0;
+            transform: translate(0, 0) scale(0.4);
+          }
+          30% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0;
+            transform: translate(0, 10px) scale(1);
+          }
+        }
+
+        .cart-badge-animate {
+          animation: cartPop 0.6s ease;
+        }
+
+        .sparkle {
+          position: absolute;
+          pointer-events: none;
+          color: #facc15;
+          font-size: 10px;
+          font-weight: bold;
+          opacity: 0;
+        }
+
+        .sparkle-1 {
+          right: 2px;
+          top: -2px;
+          animation: sparkleOne 0.6s ease-out;
+        }
+
+        .sparkle-2 {
+          right: -6px;
+          top: 8px;
+          animation: sparkleTwo 0.6s ease-out;
+        }
+
+        .sparkle-3 {
+          right: 10px;
+          top: 10px;
+          animation: sparkleThree 0.6s ease-out;
+        }
+      `}</style>
+
       {/* HEADER */}
       <header className="fixed left-0 right-0 top-0 z-50 h-[70px] border-b border-black bg-white text-black">
         <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
-          
           {/* LEFT: HAMBURGER / CLOSE */}
           <button
             type="button"
@@ -99,7 +208,7 @@ export default function Header() {
             <img
               src="/logo2.svg"
               alt="Logo 2"
-              className="h-10 sm:h-12 w-auto"
+              className="h-10 w-auto sm:h-12"
             />
           </Link>
 
@@ -143,9 +252,23 @@ export default function Header() {
               </svg>
 
               {cartCount > 0 && (
-                <span className="absolute right-0 bottom-0 translate-x-1/4 translate-y-1/4 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white">
-                  {cartCount}
-                </span>
+                <>
+                  <span
+                    className={`absolute right-0 bottom-0 flex h-5 w-5 translate-x-1/4 translate-y-1/4 items-center justify-center rounded-full bg-red-500 text-[10px] font-semibold text-white ${
+                      cartAnimate ? "cart-badge-animate" : ""
+                    }`}
+                  >
+                    {cartCount}
+                  </span>
+
+                  {cartAnimate && (
+                    <>
+                      <span className="sparkle sparkle-1">✦</span>
+                      <span className="sparkle sparkle-2">✦</span>
+                      <span className="sparkle sparkle-3">✦</span>
+                    </>
+                  )}
+                </>
               )}
             </Link>
           </div>
@@ -169,7 +292,6 @@ export default function Header() {
             className="h-full w-[82%] max-w-[320px] border-r border-black bg-white pt-6"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* SAME PADDING AS HEADER → PERFECT ALIGNMENT */}
             <div className="px-4 sm:px-6 lg:px-8">
               <nav className="flex flex-col gap-5 text-base">
                 <Link href="/" onClick={() => setMenuOpen(false)}>
