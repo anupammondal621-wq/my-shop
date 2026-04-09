@@ -1,7 +1,8 @@
 "use client";
 
-import { use, useState } from "react";
+import { use, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
 import BuyNowButton from "@/components/BuyNowButton";
 import { useRouter } from "next/navigation";
@@ -83,6 +84,12 @@ export default function ProductPage({
   const { slug } = use(params);
   const product = products[slug as keyof typeof products];
 
+  const relatedProducts = useMemo(() => {
+    return Object.values(products)
+      .filter((item) => item.slug !== slug)
+      .slice(0, 4);
+  }, [slug]);
+
   if (!product) {
     return <main className="p-6">Product not found.</main>;
   }
@@ -90,6 +97,8 @@ export default function ProductPage({
   return (
     <main className="min-h-screen bg-white text-black pt-[0px]">
       <div className="grid min-h-[calc(100vh-70px)] grid-cols-1 lg:grid-cols-2">
+        
+        {/* IMAGE */}
         <div className="relative border-b border-r border-black lg:border-b-0">
           <div className="relative h-[500px] w-full lg:h-[calc(100vh-70px)]">
             <Image
@@ -103,22 +112,68 @@ export default function ProductPage({
           </div>
         </div>
 
+        {/* RIGHT SIDE */}
         <div>
-          <div className="px-5 py-4 text-sm">
-            {product.brand}
+
+          {/* BRAND + SHARE */}
+          <div className="px-5 py-4 flex items-center justify-between text-sm">
+            <span>{product.brand}</span>
+
+            <button
+              onClick={() => {
+                if (navigator.share) {
+                  navigator.share({
+                    title: product.name,
+                    text: product.name,
+                    url: window.location.href,
+                  });
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert("Link copied!");
+                }
+              }}
+              className="flex items-center gap-2 text-black text-sm hover:opacity-70"
+              aria-label="Share"
+            >
+              {/* ICON */}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="black"
+                strokeWidth="1.6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="h-4 w-4"
+              >
+                <path d="M12 16V4" />
+                <path d="M8 8l4-4 4 4" />
+                <path d="M4 20h16" />
+              </svg>
+
+              <span>Share</span>
+            </button>
           </div>
 
+          {/* TITLE */}
           <div className="border-b border-black px-5 py-4">
-            <h1 className="text-2xl uppercase tracking-wide">{product.name}</h1>
+            <h1 className="text-2xl uppercase tracking-wide">
+              {product.name}
+            </h1>
           </div>
 
+          {/* DESCRIPTION */}
           <button
             type="button"
             onClick={() => setIsDescriptionOpen(!isDescriptionOpen)}
             className="flex w-full items-center justify-between border-b border-black px-5 py-4 text-left"
           >
-            <span className="text-sm uppercase tracking-wide">DESCRIPTION</span>
-            <span className="text-sm">{isDescriptionOpen ? "▼" : "▲"}</span>
+            <span className="text-sm uppercase tracking-wide">
+              DESCRIPTION
+            </span>
+            <span className="text-sm">
+              {isDescriptionOpen ? "▼" : "▲"}
+            </span>
           </button>
 
           {isDescriptionOpen && (
@@ -133,12 +188,16 @@ export default function ProductPage({
             </div>
           )}
 
+          {/* PRICE */}
           <div className="px-5 py-8">
             <p className="text-3xl font-medium">{product.price}</p>
           </div>
 
+          {/* PACK SIZE */}
           <div className="px-5 pb-8">
-            <label className="mb-3 block text-xl font-semibold">Pack Size</label>
+            <label className="mb-3 block text-xl font-semibold">
+              Pack Size
+            </label>
             <select className="w-full border border-black px-4 py-4 text-lg outline-none">
               {product.packSizes.map((size) => (
                 <option key={size}>{size}</option>
@@ -146,6 +205,7 @@ export default function ProductPage({
             </select>
           </div>
 
+          {/* BUTTONS */}
           <div className="px-5 pb-5">
             <div className="mb-3 w-full">
               <AddToCartButton product={product} fullWidth />
@@ -158,75 +218,115 @@ export default function ProductPage({
         </div>
       </div>
 
-      <section className="w-full border-b border-black bg-[#f3f3f3]">
-        <div className="border-b border-black py-4 text-center">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-sm font-semibold uppercase tracking-[0.15em]"
-          >
-            Back to Top
-          </button>
+      {/* YOU MAY ALSO LIKE */}
+      <section className="w-full bg-white">
+        <div className="border-b border-t border-black px-6 py-4">
+          <h2 className="text-sm uppercase tracking-widest">
+            You may also like
+          </h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 border-b border-black">
-          <div className="px-5 py-8 sm:px-8 lg:border-r lg:border-black">
-            <div className="space-y-6 text-[16px] leading-8">
-              <p>
-                <span className="font-semibold">Contact</span> : +91 9775534553
-              </p>
-              <p>
-                <span className="font-semibold">Email</span> : support@bongomithai.com
-              </p>
-              <p>
-                <span className="font-semibold">Location</span> : Kolkata
-              </p>
+        <div className="grid grid-cols-2 lg:grid-cols-4">
+          {relatedProducts.map((item) => (
+            <div
+              key={item.slug}
+              className="group relative border-b border-r border-black"
+            >
+              <Link href={`/product/${item.slug}`} className="block">
+                <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                <div className="min-h-[110px] p-4">
+                  <h3 className="text-[14px] uppercase tracking-wide">
+                    {item.name}
+                  </h3>
+                  <p className="mt-3 text-[14px]">{item.price}</p>
+                </div>
+              </Link>
             </div>
-          </div>
-
-          <div className="px-5 py-6 sm:px-8">
-            <p className="mb-4 text-[16px] leading-7">
-              Get 10% off your next purchase. Subscribe to our newsletter.
-            </p>
-
-            <form className="space-y-2">
-              <input
-                type="email"
-                placeholder="your@email.address"
-                className="w-full border border-black bg-[#f3f3f3] px-4 py-3 text-[16px] outline-none placeholder:text-black"
-              />
-
-              <button
-                type="submit"
-                className="w-full bg-black px-4 py-3 text-[18px] font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-        </div>
-
-        <div className="border-b border-black px-5 py-6 sm:px-8">
-          <div className="flex flex-wrap gap-8 text-[16px]">
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Search
-            </button>
-
-            <button
-              onClick={() => router.push("/returns")}
-              className="hover:underline"
-            >
-              Returns
-            </button>
-          </div>
-        </div>
-
-        <div className="px-5 py-4 sm:px-8">
-          <p className="text-[16px]">© 2026 BongoMithai. All rights reserved.</p>
+          ))}
         </div>
       </section>
+
+      {/* BACK TO TOP + FOOTER */}
+<section className="w-full border-b border-black bg-[#f3f3f3]">
+  <div className="border-b border-black py-4 text-center">
+    <button
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="text-sm font-semibold uppercase tracking-[0.15em]"
+    >
+      Back to Top
+    </button>
+  </div>
+
+  <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
+    <div className="px-5 py-8 sm:px-8 lg:border-r lg:border-black">
+      <div className="space-y-6 text-[16px] leading-8">
+        <p>
+          <span className="font-semibold">Contact</span> : +91 9775534553
+        </p>
+        <p>
+          <span className="font-semibold">Email</span> :
+          support@bongomithai.com
+        </p>
+        <p>
+          <span className="font-semibold">Location</span> : Kolkata
+        </p>
+      </div>
+    </div>
+
+    <div className="px-5 py-6 sm:px-8">
+      <p className="mb-4 text-[16px] leading-7">
+        Get 10% off your next purchase. Subscribe to our newsletter.
+      </p>
+
+      <form className="space-y-2">
+        <input
+          type="email"
+          placeholder="your@email.address"
+          className="w-full border border-black bg-[#f3f3f3] px-4 py-3 text-[16px] outline-none placeholder:text-black"
+        />
+
+        <button
+          type="submit"
+          className="w-full bg-black px-4 py-3 text-[18px] font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
+        >
+          Subscribe
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div className="border-b border-black px-5 py-6 sm:px-8">
+    <div className="flex flex-wrap gap-8 text-[16px]">
+      <button
+        onClick={() => router.push("/search")}
+        className="hover:underline"
+      >
+        Search
+      </button>
+
+      <button
+        onClick={() => router.push("/returns")}
+        className="hover:underline"
+      >
+        Returns
+      </button>
+    </div>
+  </div>
+
+  <div className="px-5 py-4 sm:px-8">
+    <p className="text-[16px]">
+      © 2026 BongoMithai. All rights reserved.
+    </p>
+  </div>
+</section>
     </main>
   );
 }

@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { loadCart, CartItem } from "@/utils/cart";
+import SearchOverlay from "@/components/SearchOverlay";
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const supabase = createClient();
 
@@ -54,52 +56,51 @@ export default function Header() {
         <div className="relative flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
           
           {/* LEFT: HAMBURGER / CLOSE */}
-<button
-
-  type="button"
-  onClick={() => setMenuOpen(!menuOpen)}
-  aria-label="Menu"
-  className="flex h-10 w-10 items-center justify-start"
->
-  {menuOpen ? (
-    // ✅ BIGGER SVG CROSS (matches hamburger width)
-    <div className="flex h-4 w-5 items-center justify-center">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="black"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        className="h-5 w-5"   // 👈 increased from h-4 w-4
-      >
-        <path d="M5 5L19 19" />
-        <path d="M5 19L19 5" />
-      </svg>
-    </div>
-  ) : (
-    // ✅ HAMBURGER
-    <div className="flex h-4 w-5 flex-col justify-between">
-      <span className="block h-[2px] w-full rounded bg-black" />
-      <span className="block h-[2px] w-full rounded bg-black" />
-      <span className="block h-[2px] w-full rounded bg-black" />
-    </div>
-  )}
-</button>
+          <button
+            type="button"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+            className="flex h-10 w-10 items-center justify-start"
+          >
+            {menuOpen ? (
+              <div className="flex h-4 w-5 items-center justify-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="black"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  className="h-5 w-5"
+                >
+                  <path d="M5 5L19 19" />
+                  <path d="M5 19L19 5" />
+                </svg>
+              </div>
+            ) : (
+              <div className="flex h-4 w-5 flex-col justify-between">
+                <span className="block h-[2px] w-full rounded bg-black" />
+                <span className="block h-[2px] w-full rounded bg-black" />
+                <span className="block h-[2px] w-full rounded bg-black" />
+              </div>
+            )}
+          </button>
 
           {/* LOGO */}
           <Link
             href="/"
-            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-3 whitespace-nowrap"
+            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-0.5 whitespace-nowrap"
           >
             <img
               src="/logo_vector.svg"
               alt="Logo"
               className="h-14 w-auto sm:h-16"
             />
-            <span className="text-xl sm:text-2xl font-bold leading-none">
-              BongoMithai
-            </span>
+            <img
+              src="/logo2.svg"
+              alt="Logo 2"
+              className="h-10 sm:h-12 w-auto"
+            />
           </Link>
 
           {/* RIGHT: SEARCH + CART */}
@@ -107,7 +108,7 @@ export default function Header() {
             {/* SEARCH */}
             <button
               type="button"
-              onClick={() => (window.location.href = "/search")}
+              onClick={() => setSearchOpen(true)}
               aria-label="Search"
             >
               <svg
@@ -151,6 +152,12 @@ export default function Header() {
         </div>
       </header>
 
+      {/* SEARCH OVERLAY */}
+      <SearchOverlay
+        open={searchOpen}
+        onClose={() => setSearchOpen(false)}
+      />
+
       {/* OVERLAY UNDER HEADER */}
       {menuOpen && (
         <div
@@ -164,7 +171,6 @@ export default function Header() {
           >
             {/* SAME PADDING AS HEADER → PERFECT ALIGNMENT */}
             <div className="px-4 sm:px-6 lg:px-8">
-
               <nav className="flex flex-col gap-5 text-base">
                 <Link href="/" onClick={() => setMenuOpen(false)}>
                   Home
