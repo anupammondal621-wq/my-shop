@@ -482,7 +482,7 @@ export default function Home() {
               alt="Vogue"
               width={160}
               height={60}
-              className="w-[120px] object-contain"
+              className="w-[190px] object-contain"
             />
           </div>
 
