@@ -488,7 +488,7 @@ export default function Home() {
 
           <div className="flex items-center justify-center px-6 py-10">
             <Image
-              src="/logos/sharktank.png"
+              src="/logos/sharktank.jpeg"
               alt="Shark Tank India"
               width={160}
               height={60}
@@ -508,7 +508,7 @@ export default function Home() {
 
           <div className="flex items-center justify-center px-6 py-10">
             <Image
-              src="/logos/nykaa.png"
+              src="/logos/nykaa.jpeg"
               alt="Nykaa"
               width={140}
               height={60}
@@ -518,7 +518,7 @@ export default function Home() {
 
           <div className="col-span-2 flex items-center justify-center px-6 py-10 md:col-span-1">
             <Image
-              src="/logos/ikea.png"
+              src="/logos/ikea.jpeg"
               alt="IKEA"
               width={140}
               height={60}
