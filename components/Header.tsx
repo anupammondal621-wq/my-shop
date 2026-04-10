@@ -198,9 +198,9 @@ export default function Header() {
 {/* LOGO */}
 <Link
   href="/"
-  className="absolute left-1/2 -translate-x-1/2 flex items-center whitespace-nowrap"
+  className="absolute left-1/2 -translate-x-[59%] flex items-center whitespace-nowrap"
 >
-  <div className="flex items-center gap-0.8">
+  <div className="flex items-center gap-0.9">
     <img
       src="/logo_vector.svg"
       alt="Logo"
