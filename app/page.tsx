@@ -502,7 +502,7 @@ export default function Home() {
               alt="Puma"
               width={140}
               height={60}
-              className="w-[260px] object-contain"
+              className="w-[190px] object-contain"
             />
           </div>
 
