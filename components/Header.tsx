@@ -198,7 +198,7 @@ export default function Header() {
           {/* LOGO */}
           <Link
             href="/"
-            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-0.5 whitespace-nowrap"
+            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap"
           >
             <img
               src="/logo_vector.svg"
@@ -206,9 +206,9 @@ export default function Header() {
               className="h-14 w-auto sm:h-16"
             />
             <img
-              src="/logo2.svg"
-              alt="Logo 2"
-              className="h-10 w-auto sm:h-12"
+              src="/logo3.png"
+              alt="Logo 3"
+              className="h-9.5 w-auto sm:h-11.5"
             />
           </Link>
 
