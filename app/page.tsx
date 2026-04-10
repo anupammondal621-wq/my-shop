@@ -492,7 +492,7 @@ export default function Home() {
               alt="Shark Tank India"
               width={160}
               height={60}
-              className="w-[190px] object-contain"
+              className="w-[200px] object-contain"
             />
           </div>
 
@@ -502,17 +502,17 @@ export default function Home() {
               alt="Puma"
               width={140}
               height={60}
-              className="w-[150px] object-contain"
+              className="w-[200px] object-contain"
             />
           </div>
 
           <div className="flex items-center justify-center px-6 py-10">
             <Image
-              src="/logos/nykaa.jpeg"
+              src="/logos/nykaa.png"
               alt="Nykaa"
               width={140}
               height={60}
-              className="w-[400px] object-contain"
+              className="w-[200px] object-contain"
             />
           </div>
 
@@ -522,7 +522,7 @@ export default function Home() {
               alt="IKEA"
               width={140}
               height={60}
-              className="w-[110px] object-contain"
+              className="w-[200px] object-contain"
             />
           </div>
         </div>
