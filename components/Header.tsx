@@ -200,7 +200,7 @@ export default function Header() {
   href="/"
   className="absolute left-1/2 -translate-x-[59%] flex items-center whitespace-nowrap"
 >
-  <div className="flex items-center gap-0.9">
+  <div className="flex items-center gap-1">
     <img
       src="/logo_vector.svg"
       alt="Logo"
