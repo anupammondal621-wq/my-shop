@@ -488,7 +488,7 @@ export default function Home() {
 
           <div className="flex items-center justify-center px-6 py-10">
             <Image
-              src="/logos/sharktank.jpeg"
+              src="/logos/sharktank.png"
               alt="Shark Tank India"
               width={160}
               height={60}
