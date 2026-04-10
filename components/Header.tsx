@@ -195,22 +195,24 @@ export default function Header() {
             )}
           </button>
 
-          {/* LOGO */}
-          <Link
-            href="/"
-            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap"
-          >
-            <img
-              src="/logo_vector.svg"
-              alt="Logo"
-              className="h-14 w-auto sm:h-16"
-            />
-            <img
-              src="/logo3.png"
-              alt="Logo 3"
-              className="h-9.5 w-auto sm:h-11.5"
-            />
-          </Link>
+{/* LOGO */}
+<Link
+  href="/"
+  className="absolute left-1/2 -translate-x-1/2 flex items-center whitespace-nowrap"
+>
+  <div className="flex items-center gap-0.8">
+    <img
+      src="/logo_vector.svg"
+      alt="Logo"
+      className="h-14 w-auto sm:h-16"
+    />
+    <img
+      src="/logo3.png"
+      alt="Logo 3"
+      className="h-9.5 w-auto sm:h-11.5"
+    />
+  </div>
+</Link>
 
           {/* RIGHT: SEARCH + CART */}
           <div className="flex items-center gap-4">
