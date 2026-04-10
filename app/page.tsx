@@ -482,7 +482,7 @@ export default function Home() {
               alt="Vogue"
               width={160}
               height={60}
-              className="w-[200px] object-contain"
+              className="w-[110px] object-contain"
             />
           </div>
 
@@ -492,7 +492,7 @@ export default function Home() {
               alt="Shark Tank India"
               width={160}
               height={60}
-              className="w-[200px] object-contain"
+              className="w-[110px] object-contain"
             />
           </div>
 
@@ -502,7 +502,7 @@ export default function Home() {
               alt="Puma"
               width={140}
               height={60}
-              className="w-[200px] object-contain"
+              className="w-[110px] object-contain"
             />
           </div>
 
@@ -512,7 +512,7 @@ export default function Home() {
               alt="Nykaa"
               width={140}
               height={60}
-              className="w-[200px] object-contain"
+              className="w-[110px] object-contain"
             />
           </div>
 
@@ -522,7 +522,7 @@ export default function Home() {
               alt="IKEA"
               width={140}
               height={60}
-              className="w-[200px] object-contain"
+              className="w-[110px] object-contain"
             />
           </div>
         </div>
