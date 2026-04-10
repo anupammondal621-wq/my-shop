@@ -512,7 +512,7 @@ export default function Home() {
               alt="Nykaa"
               width={140}
               height={60}
-              className="w-[190px] object-contain"
+              className="w-[250px] object-contain"
             />
           </div>
 
