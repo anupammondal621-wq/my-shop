@@ -18,10 +18,11 @@ export default function CartPage() {
   const [cart, setCart] = useState<CartItemWithPack[]>([]);
   const router = useRouter();
 
-  const refreshCart = async () => {
-    const data = await loadCart();
-    setCart(data as CartItemWithPack[]);
-  };
+const refreshCart = async () => {
+  const data = await loadCart();
+  console.log("CART DATA:", data);
+  setCart(data as CartItemWithPack[]);
+};
 
   useEffect(() => {
     refreshCart();
@@ -49,9 +50,14 @@ export default function CartPage() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-  const getNumericPrice = (price: string | number) => {
-    return Number(String(price).replace(/[^\d.]/g, ""));
-  };
+const getNumericPrice = (price: string | number | undefined | null) => {
+  if (price === undefined || price === null) return 0;
+
+  const cleaned = String(price).replace(/[^\d.]/g, "");
+  const parsed = Number(cleaned);
+
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
 
   const subtotal: number = cart.reduce((total: number, item) => {
     const numericPrice = getNumericPrice(item.price);

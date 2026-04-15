@@ -13,7 +13,7 @@ const products = {
     slug: "product-one",
     brand: "BongoMithai",
     name: "Kaju Katli - Box of 18",
-    price: "Rs. 499.00",
+    price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
     description: [
@@ -26,7 +26,7 @@ const products = {
     slug: "product-two",
     brand: "BongoMithai",
     name: "Kaju Katli - Box of 36",
-    price: "Rs. 899.00",
+    price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-2.jpg",
     description: [
@@ -39,7 +39,7 @@ const products = {
     slug: "product-three",
     brand: "BongoMithai",
     name: "Mysore Pak - Box of 6",
-    price: "Rs. 399.00",
+    price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
     description: ["A curated box of assorted mithai.", "Shelf life : 7 days"],
@@ -49,7 +49,7 @@ const products = {
     slug: "product-four",
     brand: "BongoMithai",
     name: "Mysore Pak - Box of 12",
-    price: "Rs. 749.00",
+    price: 749,
     buttonPrice: "Rs. 749",
     image: "/product-4.jpg",
     description: [
@@ -62,7 +62,7 @@ const products = {
     slug: "product-five",
     brand: "BongoMithai",
     name: "Pistabarfi - Box of 6",
-    price: "Rs. 899.00",
+    price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
@@ -72,47 +72,47 @@ const products = {
     slug: "product-six",
     brand: "BongoMithai",
     name: "Pistabarfi - Box of 12",
-    price: "Rs. 1699.00",
+    price: 1699,
     buttonPrice: "Rs. 1699",
     image: "/product-6.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
   },
   "product-seven": {
-    slug: "product-six",
+    slug: "product-seven",
     brand: "BongoMithai",
     name: "Khajur Barfi - Box of 6",
-    price: "Rs. 399.00",
+    price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
   },
   "product-eight": {
-    slug: "product-six",
+    slug: "product-eight",
     brand: "BongoMithai",
     name: "Khajur Barfi - Box of 12",
-    price: "Rs. 749.00",
+    price: 749,
     buttonPrice: "Rs. 749",
     image: "/product-6.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
   },
   "product-nine": {
-    slug: "product-six",
+    slug: "product-nine",
     brand: "BongoMithai",
     name: "Matichur Laddu - Box of 6",
-    price: "Rs. 739.00",
+    price: 739,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
   },
   "product-ten": {
-    slug: "product-six",
+    slug: "product-ten",
     brand: "BongoMithai",
     name: "Matichur Laddu - Box of 12",
-    price: "Rs. 749.00",
+    price: 749,
     buttonPrice: "Rs. 749",
     image: "/product-6.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
@@ -239,7 +239,7 @@ export default function ProductPage({
 
           {/* PRICE */}
 <div className="px-5 py-6">
-  <p className="text-2xl font-medium">{product.price}</p>
+  <p className="text-2xl font-medium"> Rs. {product.price.toFixed(2)}</p>
 
   <p className="mt-2 text-sm text-gray-600">
     Shipping calculated at checkout.
@@ -277,17 +277,36 @@ export default function ProductPage({
           {/* BUTTONS */}
 <div className="px-5 pb-5">
   <div className="mb-3 w-full">
-    <AddToCartButton product={{ ...product, quantity }} fullWidth />
+    <AddToCartButton
+      product={{
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity,
+      }}
+      fullWidth
+    />
   </div>
 
   <div className="w-full">
-    <BuyNowButton product={{ ...product, quantity }} fullWidth dark />
+    <BuyNowButton
+      product={{
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity,
+      }}
+      fullWidth
+      dark
+    />
   </div>
 
   <p className="mt-3 text-sm text-gray-600 text-center">
     Additional delivery cost will apply at checkout.
   </p>
-  </div>
+</div>
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import { createClient } from "@/utils/supabase/client";
 export type ProductForCart = {
   slug: string;
   name: string;
-  price: string;
+  price: number;
   image: string;
   quantity?: number;
 };
@@ -13,7 +13,7 @@ export type CartItem = {
   user_id?: string;
   slug: string;
   name: string;
-  price: string;
+  price: number;
   image: string;
   quantity: number;
   created_at?: string;
@@ -64,14 +64,18 @@ export async function addToCart(product: ProductForCart) {
       (item) => item.slug === product.slug
     );
 
-    if (existingProductIndex !== -1) {
-      cart[existingProductIndex].quantity += quantityToAdd;
-    } else {
-      cart.push({
-        ...product,
-        quantity: quantityToAdd,
-      });
-    }
+if (existingProductIndex !== -1) {
+  cart[existingProductIndex].quantity += quantityToAdd;
+  cart[existingProductIndex].price = product.price; 
+} else {
+  cart.push({
+    slug: product.slug,
+    name: product.name,
+    price: product.price, 
+    image: product.image,
+    quantity: quantityToAdd,
+  });
+}
 
     localStorage.setItem("cart", JSON.stringify(cart));
     window.dispatchEvent(new Event("cartUpdated"));
@@ -93,7 +97,10 @@ export async function addToCart(product: ProductForCart) {
   if (existingItem) {
     const { error } = await supabase
       .from("cart_items")
-      .update({ quantity: existingItem.quantity + quantityToAdd })
+      .update({
+        quantity: existingItem.quantity + quantityToAdd,
+        price: String(product.price),
+      })
       .eq("id", existingItem.id);
 
     if (error) {
@@ -105,7 +112,7 @@ export async function addToCart(product: ProductForCart) {
       user_id: user.id,
       slug: product.slug,
       name: product.name,
-      price: product.price,
+      price: String(product.price),
       image: product.image,
       quantity: quantityToAdd,
     });
@@ -200,7 +207,10 @@ export async function mergeGuestCartIntoUserCart() {
     if (existingItem) {
       const { error: updateError } = await supabase
         .from("cart_items")
-        .update({ quantity: existingItem.quantity + localItem.quantity })
+        .update({
+          quantity: existingItem.quantity + localItem.quantity,
+          price: String(localItem.price),
+        })
         .eq("id", existingItem.id);
 
       if (updateError) {
@@ -211,7 +221,7 @@ export async function mergeGuestCartIntoUserCart() {
         user_id: user.id,
         slug: localItem.slug,
         name: localItem.name,
-        price: localItem.price,
+        price: String(localItem.price),
         image: localItem.image,
         quantity: localItem.quantity,
       });

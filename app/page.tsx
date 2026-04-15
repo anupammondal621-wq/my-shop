@@ -12,7 +12,7 @@ import { addToCart } from "@/utils/cart";
 type ProductType = {
   slug: string;
   name: string;
-  price: string;
+  price: number;
   buttonPrice: string;
   pack?: string;
   image: string;
@@ -22,28 +22,28 @@ const specials: ProductType[] = [
   {
     slug: "product-one",
     name: "Kaju Katli - Box of 18",
-    price: "Rs. 499.00",
+    price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
   },
   {
     slug: "product-three",
     name: "Mysore Pak - Box of 6",
-    price: "Rs. 399.00",
+    price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
   },
   {
     slug: "product-five",
     name: "Pistabarfi - Box of 6",
-    price: "Rs. 899.00",
+    price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
   },
   {
     slug: "product-seven",
     name: "Khajur Barfi - Box of 6",
-    price: "Rs. 399.00",
+    price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
   },
@@ -53,28 +53,28 @@ const allProducts: ProductType[] = [
   {
     slug: "product-one",
     name: "Kaju Katli - Box of 18",
-    price: "Rs. 499.00",
+    price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
   },
   {
     slug: "product-three",
     name: "Mysore Pak - Box of 6",
-    price: "Rs. 399.00",
+    price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
   },
   {
     slug: "product-five",
     name: "Pistabarfi - Box of 6",
-    price: "Rs. 899.00",
+    price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
   },
   {
     slug: "product-seven",
     name: "Khajur Barfi - Box of 6",
-    price: "Rs. 399.00",
+    price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
   },
@@ -139,7 +139,7 @@ const ProductCard = memo(function ProductCard({
             <h3 className="text-[14px] tracking-wide">
               {product.name}
             </h3>
-            <p className="mt-3 text-[14px]">{product.price}</p>
+            <p className="mt-3 text-[14px]"> Rs. {product.price.toFixed(2)}</p>
           </div>
         </div>
       </Link>
@@ -163,7 +163,7 @@ export default function Home() {
     await addToCart({
       slug: product.slug,
       name: product.name,
-      price: product.buttonPrice,
+      price: product.price,
       image: product.image,
     });
 

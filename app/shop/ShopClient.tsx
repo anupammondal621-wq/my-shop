@@ -86,7 +86,7 @@ export default function ShopClient({ search }: { search: string }) {
                     <h2 className="text-[14px] tracking-wide">
                       {product.name}
                     </h2>
-                    <p className="mt-3 text-[14px]">{product.price}</p>
+                    <p className="mt-3 text-[14px]"> Rs. {product.price.toFixed(2)}</p>
                   </div>
                 </Link>
               </div>
