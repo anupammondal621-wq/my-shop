@@ -5,6 +5,7 @@ export type ProductForCart = {
   name: string;
   price: string;
   image: string;
+  quantity?: number;
 };
 
 export type CartItem = {
@@ -53,6 +54,7 @@ export async function loadCart(): Promise<CartItem[]> {
 export async function addToCart(product: ProductForCart) {
   const supabase = createClient();
   const user = await getLoggedInUser();
+  const quantityToAdd = product.quantity ?? 1;
 
   if (!user) {
     const existingCart = localStorage.getItem("cart");
@@ -63,11 +65,11 @@ export async function addToCart(product: ProductForCart) {
     );
 
     if (existingProductIndex !== -1) {
-      cart[existingProductIndex].quantity += 1;
+      cart[existingProductIndex].quantity += quantityToAdd;
     } else {
       cart.push({
         ...product,
-        quantity: 1,
+        quantity: quantityToAdd,
       });
     }
 
@@ -91,7 +93,7 @@ export async function addToCart(product: ProductForCart) {
   if (existingItem) {
     const { error } = await supabase
       .from("cart_items")
-      .update({ quantity: existingItem.quantity + 1 })
+      .update({ quantity: existingItem.quantity + quantityToAdd })
       .eq("id", existingItem.id);
 
     if (error) {
@@ -105,7 +107,7 @@ export async function addToCart(product: ProductForCart) {
       name: product.name,
       price: product.price,
       image: product.image,
-      quantity: 1,
+      quantity: quantityToAdd,
     });
 
     if (error) {

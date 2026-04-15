@@ -1,10 +1,13 @@
 import type { ProductForCart } from "@/utils/cart";
 
 export function saveBuyNowProduct(product: ProductForCart) {
-  localStorage.setItem("buy_now_product", JSON.stringify({
-    ...product,
-    quantity: 1,
-  }));
+  localStorage.setItem(
+    "buy_now_product",
+    JSON.stringify({
+      ...product,
+      quantity: product.quantity ?? 1,
+    })
+  );
 }
 
 export function getBuyNowProduct() {
