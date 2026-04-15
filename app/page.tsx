@@ -26,7 +26,7 @@ const specials: ProductType[] = [
     price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
-    inStock: false,
+    //inStock: false,
   },
   {
     slug: "product-three",
@@ -61,7 +61,7 @@ const allProducts: ProductType[] = [
     price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
-    inStock: false,
+    //inStock: false,
   },
   {
     slug: "product-three",
