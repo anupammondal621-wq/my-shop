@@ -144,7 +144,7 @@ const ProductCard = memo(function ProductCard({
             />
 
               {product.inStock === false && (
-    <div className="absolute bottom-3 left-3 z-10 bg-black text-white text-[11px] px-3 py-[4px] rounded-full leading-none">
+    <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
       Sold out
     </div>
   )}

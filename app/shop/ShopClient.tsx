@@ -83,7 +83,7 @@ export default function ShopClient({ search }: { search: string }) {
 
                       {/* SOLD OUT BADGE */}
 {product.inStock === false && (
-  <div className="absolute bottom-3 left-3 z-10 bg-black text-white text-xs px-4 py-1.5 rounded-full">
+  <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
     Sold out
   </div>
 )}

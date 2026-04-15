@@ -15,7 +15,7 @@ export const products: Product[] = [
     price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
-    inStock: false,
+    //inStock: false,
   },
   {
     slug: "product-two",
