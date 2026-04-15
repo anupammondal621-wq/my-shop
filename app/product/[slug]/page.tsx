@@ -7,6 +7,7 @@ import AddToCartButton from "@/components/AddToCartButton";
 import BuyNowButton from "@/components/BuyNowButton";
 import { useRouter } from "next/navigation";
 
+
 const products = {
   "product-one": {
     slug: "product-one",
@@ -127,6 +128,7 @@ export default function ProductPage({
 }) {
   const router = useRouter();
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   const { slug } = use(params);
   const product = products[slug as keyof typeof products];
@@ -242,6 +244,34 @@ export default function ProductPage({
   <p className="mt-2 text-sm text-gray-600">
     Shipping calculated at checkout.
   </p>
+
+  <div className="mt-6">
+    <p className="mb-2 text-sm text-black">
+      Quantity ({quantity} in cart)
+    </p>
+
+    <div className="flex h-[46px] w-[140px] items-center justify-between border border-black px-4">
+      <button
+        type="button"
+        onClick={() => setQuantity((prev) => Math.max(1, prev - 1))}
+        className="text-[20px] leading-none text-black"
+      >
+        -
+      </button>
+
+      <span className="text-[14px] leading-none text-black">
+        {quantity}
+      </span>
+
+      <button
+        type="button"
+        onClick={() => setQuantity((prev) => prev + 1)}
+        className="text-[20px] leading-none text-black"
+      >
+        +
+      </button>
+    </div>
+  </div>
 </div>
 
           {/* BUTTONS */}
@@ -257,7 +287,7 @@ export default function ProductPage({
   <p className="mt-3 text-sm text-gray-600 text-center">
     Additional delivery cost will apply at checkout.
   </p>
-</div>
+  </div>
         </div>
       </div>
 
