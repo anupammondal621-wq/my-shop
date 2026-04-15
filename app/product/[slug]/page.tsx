@@ -11,11 +11,12 @@ const products = {
   "product-one": {
     slug: "product-one",
     brand: "BongoMithai",
-    name: "MITHAI BAR - KAJU KATLI",
-    price: "₹249",
+    name: "Kaju Katli - Box of 18",
+    price: "Rs. 499.00",
+    buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
     description: [
-      "1 x bar of kajukatli made out of cashewnuts & sugar",
+      "18 pieces of bite sized , mini Kaju katli made out of Cashewnuts & Suga",
       "Shelf life : 7 days",
     ],
     packSizes: ["Pack of 1"],
@@ -23,8 +24,9 @@ const products = {
   "product-two": {
     slug: "product-two",
     brand: "BongoMithai",
-    name: "ASSORTED MITHAI - BOX OF 16",
-    price: "₹1149",
+    name: "Kaju Katli - Box of 36",
+    price: "Rs. 899.00",
+    buttonPrice: "Rs. 899",
     image: "/product-2.jpg",
     description: [
       "A premium assorted mithai selection for festive gifting.",
@@ -35,8 +37,9 @@ const products = {
   "product-three": {
     slug: "product-three",
     brand: "BongoMithai",
-    name: "ASSORTED MITHAI - BOX OF 8",
-    price: "₹649",
+    name: "Mysore Pak - Box of 6",
+    price: "Rs. 399.00",
+    buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
     description: ["A curated box of assorted mithai.", "Shelf life : 7 days"],
     packSizes: ["Box of 8"],
@@ -44,8 +47,9 @@ const products = {
   "product-four": {
     slug: "product-four",
     brand: "BongoMithai",
-    name: "GAJAR HALWA IN CAN",
-    price: "₹199",
+    name: "Mysore Pak - Box of 12",
+    price: "Rs. 749.00",
+    buttonPrice: "Rs. 749",
     image: "/product-4.jpg",
     description: [
       "Classic gajar halwa packed for convenience.",
@@ -56,8 +60,9 @@ const products = {
   "product-five": {
     slug: "product-five",
     brand: "BongoMithai",
-    name: "PRODUCT FIVE",
-    price: "₹299",
+    name: "Pistabarfi - Box of 6",
+    price: "Rs. 899.00",
+    buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -65,12 +70,54 @@ const products = {
   "product-six": {
     slug: "product-six",
     brand: "BongoMithai",
-    name: "PRODUCT SIX",
-    price: "₹399",
+    name: "Pistabarfi - Box of 12",
+    price: "Rs. 1699.00",
+    buttonPrice: "Rs. 1699",
     image: "/product-6.jpg",
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
   },
+  "product-seven": {
+    slug: "product-six",
+    brand: "BongoMithai",
+    name: "Khajur Barfi - Box of 6",
+    price: "Rs. 399.00",
+    buttonPrice: "Rs. 399",
+    image: "/product-6.jpg",
+    description: ["Premium sweet selection.", "Shelf life : 7 days"],
+    packSizes: ["Pack of 1"],
+  },
+  "product-eight": {
+    slug: "product-six",
+    brand: "BongoMithai",
+    name: "Khajur Barfi - Box of 12",
+    price: "Rs. 749.00",
+    buttonPrice: "Rs. 749",
+    image: "/product-6.jpg",
+    description: ["Premium sweet selection.", "Shelf life : 7 days"],
+    packSizes: ["Pack of 1"],
+  },
+  "product-nine": {
+    slug: "product-six",
+    brand: "BongoMithai",
+    name: "Matichur Laddu - Box of 6",
+    price: "Rs. 739.00",
+    buttonPrice: "Rs. 399",
+    image: "/product-6.jpg",
+    description: ["Premium sweet selection.", "Shelf life : 7 days"],
+    packSizes: ["Pack of 1"],
+  },
+  "product-ten": {
+    slug: "product-six",
+    brand: "BongoMithai",
+    name: "Matichur Laddu - Box of 12",
+    price: "Rs. 749.00",
+    buttonPrice: "Rs. 749",
+    image: "/product-6.jpg",
+    description: ["Premium sweet selection.", "Shelf life : 7 days"],
+    packSizes: ["Pack of 1"],
+  },
+
 };
 
 export default function ProductPage({
@@ -157,7 +204,7 @@ export default function ProductPage({
 
           {/* TITLE */}
           <div className="border-b border-black px-5 py-4">
-            <h1 className="text-2xl uppercase tracking-wide">
+            <h1 className="text-2xl tracking-wide">
               {product.name}
             </h1>
           </div>
@@ -168,11 +215,11 @@ export default function ProductPage({
             onClick={() => setIsDescriptionOpen(!isDescriptionOpen)}
             className="flex w-full items-center justify-between border-b border-black px-5 py-4 text-left"
           >
-            <span className="text-sm uppercase tracking-wide">
-              DESCRIPTION
+            <span className="text-sm tracking-wide">
+              Description
             </span>
             <span className="text-sm">
-              {isDescriptionOpen ? "▼" : "▲"}
+              {isDescriptionOpen ? "▲" : "▼"}
             </span>
           </button>
 
@@ -189,39 +236,35 @@ export default function ProductPage({
           )}
 
           {/* PRICE */}
-          <div className="px-5 py-8">
-            <p className="text-3xl font-medium">{product.price}</p>
-          </div>
+<div className="px-5 py-6">
+  <p className="text-2xl font-medium">{product.price}</p>
 
-          {/* PACK SIZE */}
-          <div className="px-5 pb-8">
-            <label className="mb-3 block text-xl font-semibold">
-              Pack Size
-            </label>
-            <select className="w-full border border-black px-4 py-4 text-lg outline-none">
-              {product.packSizes.map((size) => (
-                <option key={size}>{size}</option>
-              ))}
-            </select>
-          </div>
+  <p className="mt-2 text-sm text-gray-600">
+    Shipping calculated at checkout.
+  </p>
+</div>
 
           {/* BUTTONS */}
-          <div className="px-5 pb-5">
-            <div className="mb-3 w-full">
-              <AddToCartButton product={product} fullWidth />
-            </div>
+<div className="px-5 pb-5">
+  <div className="mb-3 w-full">
+    <AddToCartButton product={product} fullWidth />
+  </div>
 
-            <div className="w-full">
-              <BuyNowButton product={product} fullWidth dark />
-            </div>
-          </div>
+  <div className="w-full">
+    <BuyNowButton product={product} fullWidth dark />
+  </div>
+
+  <p className="mt-3 text-sm text-gray-600 text-center">
+    Additional delivery cost will apply at checkout.
+  </p>
+</div>
         </div>
       </div>
 
       {/* YOU MAY ALSO LIKE */}
       <section className="w-full bg-white">
         <div className="border-b border-t border-black px-6 py-4">
-          <h2 className="text-sm uppercase tracking-widest">
+          <h2 className="text-sm tracking-widest">
             You may also like
           </h2>
         </div>
@@ -243,7 +286,7 @@ export default function ProductPage({
                 </div>
 
                 <div className="min-h-[110px] p-4">
-                  <h3 className="text-[14px] uppercase tracking-wide">
+                  <h3 className="text-[14px] tracking-wide">
                     {item.name}
                   </h3>
                   <p className="mt-3 text-[14px]">{item.price}</p>

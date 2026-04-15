@@ -20,69 +20,63 @@ type ProductType = {
 
 const specials: ProductType[] = [
   {
-    slug: "product-five",
-    name: "HAMPER BOX",
-    price: "Rs. 999.00",
-    buttonPrice: "Rs. 999.00",
-    image: "/product-5.jpg",
-  },
-  {
-    slug: "product-six",
-    name: "MITHAI BAR - KAJU KATLI",
-    price: "From Rs. 249.00",
-    buttonPrice: "Rs. 249.00",
-    pack: "Pack of 1 - Rs. 249.00",
-    image: "/product-6.jpg",
-  },
-  {
     slug: "product-one",
-    name: "AAM PAPAD STRIPS",
-    price: "From Rs. 249.00",
-    buttonPrice: "Rs. 249.00",
-    pack: "Pack of 1 - Rs. 249.00",
+    name: "Kaju Katli - Box of 18",
+    price: "Rs. 499.00",
+    buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
   },
   {
-    slug: "product-four",
-    name: "MYSORE PAK IN AN EASY OPEN CAN",
-    price: "From Rs. 249.00",
-    buttonPrice: "Rs. 199.00",
-    pack: "Can of 1 - Rs. 199.00",
-    image: "/product-4.jpg",
+    slug: "product-three",
+    name: "Mysore Pak - Box of 6",
+    price: "Rs. 399.00",
+    buttonPrice: "Rs. 399",
+    image: "/product-3.jpg",
+  },
+  {
+    slug: "product-five",
+    name: "Pistabarfi - Box of 6",
+    price: "Rs. 899.00",
+    buttonPrice: "Rs. 899",
+    image: "/product-5.jpg",
+  },
+  {
+    slug: "product-seven",
+    name: "Khajur Barfi - Box of 6",
+    price: "Rs. 399.00",
+    buttonPrice: "Rs. 399",
+    image: "/product-6.jpg",
   },
 ];
 
 const allProducts: ProductType[] = [
   {
     slug: "product-one",
-    name: "PISTABARFI - BOX OF 6",
-    price: "Rs. 899.00",
-    buttonPrice: "Rs. 899.00",
+    name: "Kaju Katli - Box of 18",
+    price: "Rs. 499.00",
+    buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
   },
   {
-    slug: "product-six",
-    name: "KAJU KATLI - BOX OF 18",
-    price: "Rs. 499.00",
-    buttonPrice: "Rs. 499.00",
-    pack: "Box of 18 - Rs. 499.00",
-    image: "/product-6.jpg",
+    slug: "product-three",
+    name: "Mysore Pak - Box of 6",
+    price: "Rs. 399.00",
+    buttonPrice: "Rs. 399",
+    image: "/product-3.jpg",
   },
   {
     slug: "product-five",
-    name: "GUR LADOO - BOX OF 6",
-    price: "Rs. 399.00",
-    buttonPrice: "Rs. 399.00",
-    pack: "Box of 6 - Rs. 399.00",
+    name: "Pistabarfi - Box of 6",
+    price: "Rs. 899.00",
+    buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
   },
   {
-    slug: "product-four",
-    name: "MYSORE PAK - BOX OF 12",
-    price: "Rs. 749.00",
-    buttonPrice: "Rs. 749.00",
-    pack: "Box of 12 - Rs. 749.00",
-    image: "/product-4.jpg",
+    slug: "product-seven",
+    name: "Khajur Barfi - Box of 6",
+    price: "Rs. 399.00",
+    buttonPrice: "Rs. 399",
+    image: "/product-6.jpg",
   },
 ];
 
@@ -142,7 +136,7 @@ const ProductCard = memo(function ProductCard({
           </div>
 
           <div className="flex-1 min-h-[110px] p-4">
-            <h3 className="text-[14px] uppercase tracking-wide">
+            <h3 className="text-[14px] tracking-wide">
               {product.name}
             </h3>
             <p className="mt-3 text-[14px]">{product.price}</p>
@@ -188,7 +182,7 @@ export default function Home() {
   return (
     <main className="w-full bg-white text-black">
 {/* HERO */}
-<section className="h-[62vh] w-full sm:h-[75vh] lg:h-screen">
+<section className="h-[62vh] w-full sm:h-[75vh] lg:h-[80vh]">
   <Swiper
     modules={[Autoplay]}
     autoplay={{ delay: 3000, disableOnInteraction: false }}
@@ -274,8 +268,8 @@ export default function Home() {
 {/* PISTABARFI SPECIALS */}
 <section className="w-full">
   <div className="border-b border-black px-6 py-4">
-    <h2 className="text-sm uppercase tracking-widest">
-      Pistabarfi Specials
+    <h2 className="text-sm tracking-widest">
+      BongoMithai Specials
     </h2>
   </div>
 
@@ -298,7 +292,7 @@ export default function Home() {
 {/* ALL PRODUCTS */}
 <section className="w-full overflow-hidden">
   <div className="flex items-center justify-between border-b border-black px-6 py-4">
-    <h2 className="text-sm uppercase tracking-widest">All Products</h2>
+    <h2 className="text-sm tracking-widest">All Products</h2>
 
     <div className="flex items-center gap-4 lg:hidden">
       <button

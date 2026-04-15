@@ -83,7 +83,7 @@ export default function ShopClient({ search }: { search: string }) {
                   </div>
 
                   <div className="min-h-[110px] p-4">
-                    <h2 className="text-[14px] uppercase tracking-wide">
+                    <h2 className="text-[14px] tracking-wide">
                       {product.name}
                     </h2>
                     <p className="mt-3 text-[14px]">{product.price}</p>

@@ -23,13 +23,15 @@ export default function BuyNowButton({
   };
 
   return (
-    <button
-      onClick={handleBuyNow}
-      className={`px-6 py-4 text-center text-lg font-semibold uppercase tracking-wide ${
-        dark ? "bg-black text-white" : "border border-black bg-white text-black"
-      } ${fullWidth ? "w-full" : "w-fit rounded-full"}`}
-    >
-      Buy It Now
-    </button>
+<button
+  onClick={handleBuyNow}
+  className={`h-[48px] rounded-full text-[16px] font-medium transition ${
+    dark
+      ? "bg-black text-white hover:opacity-90"
+      : "bg-white text-black border border-black hover:bg-black hover:text-white"
+  } ${fullWidth ? "w-full" : "px-6"}`}
+>
+  Buy it now
+</button>
   );
 }

@@ -4,12 +4,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const productNameMap: Record<string, string> = {
-  "product-one": "MITHAI BAR - KAJU KATLI",
-  "product-two": "ASSORTED MITHAI - BOX OF 16",
-  "product-three": "ASSORTED MITHAI - BOX OF 8",
-  "product-four": "GAJAR HALWA IN CAN",
-  "product-five": "PRODUCT FIVE",
-  "product-six": "PRODUCT SIX",
+  "product-one": "Kaju Katli - Box of 18",
+  "product-two": "Kaju Katli - Box of 36",
+  "product-three": "Mysore Pak - Box of 6",
+  "product-four": "Mysore Pak - Box of 12",
+  "product-five": "Pistabarfi - Box of 6",
+  "product-six": "Pistabarfi - Box of 12",
+  "product-seven": "Khajur Barfi - Box of 6",
+  "product-eight": "Khajur Barfi - Box of 12",
+  "product-nine": "Matichur Laddu - Box of 6",
+  "product-ten": "Matichur Laddu - Box of 12",
 };
 
 export default function Breadcrumb() {

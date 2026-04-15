@@ -16,13 +16,13 @@ export default function AddToCartButton({
   };
 
   return (
-    <button
-      onClick={handleAddToCart}
-      className={`border border-black bg-white px-6 py-4 text-center text-lg font-semibold uppercase tracking-wide text-black ${
-        fullWidth ? "w-full" : "w-fit rounded-full"
-      }`}
-    >
-      Add to Cart
-    </button>
+<button
+  onClick={handleAddToCart}
+  className={`h-[48px] rounded-full bg-white text-black border border-black text-[16px] font-medium transition hover:bg-black hover:text-white ${
+    fullWidth ? "w-full" : "px-6"
+  }`}
+>
+  Add to cart
+</button>
   );
 }
