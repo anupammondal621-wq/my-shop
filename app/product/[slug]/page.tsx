@@ -277,11 +277,11 @@ export default function ProductPage({
           {/* BUTTONS */}
 <div className="px-5 pb-5">
   <div className="mb-3 w-full">
-    <AddToCartButton product={product} fullWidth />
+    <AddToCartButton product={{ ...product, quantity }} fullWidth />
   </div>
 
   <div className="w-full">
-    <BuyNowButton product={product} fullWidth dark />
+    <BuyNowButton product={{ ...product, quantity }} fullWidth dark />
   </div>
 
   <p className="mt-3 text-sm text-gray-600 text-center">
