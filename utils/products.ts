@@ -5,6 +5,7 @@ export type Product = {
   buttonPrice: string;
   image: string;
   pack?: string;
+  inStock?: boolean;
 };
 
 export const products: Product[] = [
@@ -14,6 +15,7 @@ export const products: Product[] = [
     price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
+    inStock: false,
   },
   {
     slug: "product-two",
@@ -21,6 +23,7 @@ export const products: Product[] = [
     price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-2.jpg",
+    inStock: false,
   },
   {
     slug: "product-three",
@@ -28,6 +31,7 @@ export const products: Product[] = [
     price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
+    inStock: false,
   },
   {
     slug: "product-four",
@@ -35,6 +39,7 @@ export const products: Product[] = [
     price: 749,
     buttonPrice: "Rs. 749",
     image: "/product-4.jpg",
+    inStock: false,
   },
   {
     slug: "product-five",
@@ -42,6 +47,7 @@ export const products: Product[] = [
     price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
+    inStock: false,
   },
   {
     slug: "product-six",
@@ -49,6 +55,7 @@ export const products: Product[] = [
     price: 1699,
     buttonPrice: "Rs. 1699",
     image: "/product-6.jpg",
+    inStock: false,
   },
   {
     slug: "product-seven",
@@ -56,6 +63,7 @@ export const products: Product[] = [
     price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
+    inStock: false,
   },
   {
     slug: "product-eight",
@@ -63,6 +71,7 @@ export const products: Product[] = [
     price: 749,
     buttonPrice: "Rs. 749",
     image: "/product-6.jpg",
+    inStock: false,
   },
   {
     slug: "product-nine",
@@ -70,6 +79,7 @@ export const products: Product[] = [
     price: 739,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
+    inStock: false,
   },
   {
     slug: "product-ten",
@@ -77,6 +87,7 @@ export const products: Product[] = [
     price: 749,
     buttonPrice: "Rs. 749.00",
     image: "/product-6.jpg",
+    inStock: false,
   },
 ];
 

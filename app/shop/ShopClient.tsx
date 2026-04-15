@@ -80,6 +80,13 @@ export default function ShopClient({ search }: { search: string }) {
                       sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
                       className="object-cover transition duration-300 group-hover:scale-105"
                     />
+
+                      {/* SOLD OUT BADGE */}
+{product.inStock === false && (
+  <div className="absolute bottom-3 left-3 z-10 bg-black text-white text-xs px-4 py-1.5 rounded-full">
+    Sold out
+  </div>
+)}
                   </div>
 
                   <div className="min-h-[110px] p-4">

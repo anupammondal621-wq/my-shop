@@ -16,6 +16,7 @@ type ProductType = {
   buttonPrice: string;
   pack?: string;
   image: string;
+  inStock?: boolean;
 };
 
 const specials: ProductType[] = [
@@ -25,6 +26,7 @@ const specials: ProductType[] = [
     price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
+    inStock: false,
   },
   {
     slug: "product-three",
@@ -32,6 +34,7 @@ const specials: ProductType[] = [
     price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
+    inStock: false,
   },
   {
     slug: "product-five",
@@ -39,6 +42,7 @@ const specials: ProductType[] = [
     price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
+    inStock: false,
   },
   {
     slug: "product-seven",
@@ -46,6 +50,7 @@ const specials: ProductType[] = [
     price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
+    inStock: false,
   },
 ];
 
@@ -56,6 +61,7 @@ const allProducts: ProductType[] = [
     price: 499,
     buttonPrice: "Rs. 499",
     image: "/product-1.jpg",
+    inStock: false,
   },
   {
     slug: "product-three",
@@ -63,6 +69,7 @@ const allProducts: ProductType[] = [
     price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-3.jpg",
+    inStock: false,
   },
   {
     slug: "product-five",
@@ -70,6 +77,7 @@ const allProducts: ProductType[] = [
     price: 899,
     buttonPrice: "Rs. 899",
     image: "/product-5.jpg",
+    inStock: false,
   },
   {
     slug: "product-seven",
@@ -77,6 +85,7 @@ const allProducts: ProductType[] = [
     price: 399,
     buttonPrice: "Rs. 399",
     image: "/product-6.jpg",
+    inStock: false,
   },
 ];
 
@@ -133,6 +142,12 @@ const ProductCard = memo(function ProductCard({
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
               className="object-cover transition duration-300 group-hover:scale-105"
             />
+
+              {product.inStock === false && (
+    <div className="absolute bottom-3 left-3 z-10 bg-black text-white text-[11px] px-3 py-[4px] rounded-full leading-none">
+      Sold out
+    </div>
+  )}
           </div>
 
           <div className="flex-1 min-h-[110px] p-4">
