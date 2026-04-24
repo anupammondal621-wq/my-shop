@@ -202,7 +202,7 @@ export default function Header() {
 >
   <div className="flex items-center gap-1">
     <img
-      src="/logo_vector.svg"
+      src="/ANU_ultra_smooth.png"
       alt="Logo"
       className="h-14 w-auto sm:h-16"
     />
