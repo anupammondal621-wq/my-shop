@@ -121,7 +121,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
-                  className="h-4 w-4"
+                  className="h-6 w-6"
                 >
                   <circle cx="11" cy="11" r="7" />
                   <path d="M20 20L15.8 15.8" />
@@ -136,7 +136,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.5"
-                  className="h-4 w-4"
+                  className="h-6 w-6"
                 >
                   <path d="M6 6L18 18" />
                   <path d="M18 6L6 18" />
