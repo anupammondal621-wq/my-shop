@@ -68,11 +68,12 @@ export default function SearchOverlay({ open, onClose }: Props) {
     <div className="fixed inset-0 z-[100] bg-black/10">
       <div className="w-full bg-white">
 
-        {/* ✅ SHORTER SEARCH BAR */}
-        <div className="mx-auto flex h-[70px] w-[65%] max-w-[700px] items-center">
-          <div className="flex max-h-[38px] w-full items-center border border-black px-3 py-1">
-            
-            <div className="flex-1">
+        {/* 🔥 RESPONSIVE SEARCH BAR */}
+        <div className="mx-auto flex h-[70px] w-[92%] max-w-[700px] items-center sm:w-[65%]">
+          <div className="flex h-[44px] w-full items-center overflow-hidden border border-black px-3">
+
+            {/* INPUT */}
+            <div className="min-w-0 flex-1">
               <label className="block text-[9px] leading-none text-black/50">
                 Search
               </label>
@@ -82,13 +83,17 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="mt-0.5 w-full border-none bg-transparent text-[16px] leading-none text-black outline-none placeholder:text-black/30"
+                autoComplete="off"
+                autoCorrect="off"
+                spellCheck={false}
+                className="mt-0.5 block w-full min-w-0 border-none bg-transparent text-[18px] leading-tight text-black outline-none placeholder:text-black/30"
               />
             </div>
 
-            <div className="ml-3 flex items-center gap-3">
-              {/* SEARCH */}
-              <button className="text-black">
+            {/* ICONS */}
+            <div className="ml-3 flex shrink-0 items-center gap-3">
+              {/* SEARCH ICON */}
+              <button type="button" className="shrink-0 text-black">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -102,8 +107,8 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 </svg>
               </button>
 
-              {/* CLOSE */}
-              <button onClick={onClose} className="text-black">
+              {/* CLOSE ICON */}
+              <button onClick={onClose} className="shrink-0 text-black">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -122,8 +127,9 @@ export default function SearchOverlay({ open, onClose }: Props) {
 
         {/* RESULTS */}
         {normalized && (
-          <div className="mx-auto mt-4 grid w-[65%] max-w-[700px] grid-cols-1 gap-10 pb-8 md:grid-cols-2">
-            
+          <div className="mx-auto mt-4 grid w-[92%] max-w-[700px] grid-cols-1 gap-10 pb-8 sm:w-[65%] md:grid-cols-2">
+
+            {/* SUGGESTIONS */}
             <div>
               <h3 className="mb-3 text-[11px] uppercase tracking-[0.2em] text-black/50">
                 Suggestions
@@ -152,6 +158,7 @@ export default function SearchOverlay({ open, onClose }: Props) {
               </Link>
             </div>
 
+            {/* PRODUCTS */}
             <div>
               <h3 className="mb-3 text-[11px] uppercase tracking-[0.2em] text-black/50">
                 Products
