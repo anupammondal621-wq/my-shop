@@ -216,9 +216,22 @@ export default function ShopClient() {
               onClick={() => router.push("/search")}
               className="hover:underline"
             >
-              
-              Returns
+              Returns Policy
             </button>
+
+            <button
+              onClick={() => router.push("/search")}
+              className="hover:underline"
+            >
+              Refund Policy
+            </button>
+
+            <button
+              onClick={() => router.push("/search")}
+              className="hover:underline"
+            >
+              Terms of Servic
+            </button>            
           </div>
         </div>
 
