@@ -220,7 +220,7 @@ export default function ShopClient() {
       Returns policy
     </button>
 
-    <span className="mx-2">•</span>
+    <span className="mx-0">•</span>
 
     <button
       onClick={() => router.push("/search")}
@@ -229,7 +229,7 @@ export default function ShopClient() {
       Refund policy
     </button>
 
-    <span className="mx-2">•</span>
+    <span className="mx-0">•</span>
 
     <button
       onClick={() => router.push("/search")}
@@ -238,7 +238,7 @@ export default function ShopClient() {
       Terms of service
     </button>
 
-    <span className="mx-2">•</span>
+    <span className="mx-0">•</span>
 
     <button
       onClick={() => router.push("/search")}
@@ -247,7 +247,7 @@ export default function ShopClient() {
       Shipping policy
     </button>
 
-    <span className="mx-2">•</span>
+    <span className="mx-0">•</span>
 
     <button
       onClick={() => router.push("/search")}
