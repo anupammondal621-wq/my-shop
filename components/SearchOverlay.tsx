@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { products, websiteSuggestions } from "@/utils/products";
 
 type Props = {
@@ -13,6 +14,7 @@ type Props = {
 export default function SearchOverlay({ open, onClose }: Props) {
   const [query, setQuery] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (open) {
@@ -29,6 +31,18 @@ export default function SearchOverlay({ open, onClose }: Props) {
   }, [open]);
 
   const normalized = query.trim().toLowerCase();
+
+  const goToSearch = () => {
+    const cleanQuery = query.trim();
+
+    if (!cleanQuery) {
+      router.push("/shop");
+    } else {
+      router.push(`/shop?search=${encodeURIComponent(cleanQuery)}`);
+    }
+
+    onClose();
+  };
 
   const filteredProducts = useMemo(() => {
     if (!normalized) return [];
@@ -67,11 +81,9 @@ export default function SearchOverlay({ open, onClose }: Props) {
   return (
     <div className="fixed inset-0 z-[100] bg-black/10">
       <div className="w-full bg-white">
-
         {/* 🔥 RESPONSIVE SEARCH BAR */}
         <div className="mx-auto flex h-[70px] w-[92%] max-w-[700px] items-center sm:w-[65%]">
           <div className="flex h-[44px] w-full items-center overflow-hidden border border-black px-3">
-
             {/* INPUT */}
             <div className="min-w-0 flex-1">
               <label className="block text-[9px] leading-none text-black/50">
@@ -83,6 +95,11 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    goToSearch();
+                  }
+                }}
                 autoComplete="off"
                 autoCorrect="off"
                 spellCheck={false}
@@ -93,7 +110,11 @@ export default function SearchOverlay({ open, onClose }: Props) {
             {/* ICONS */}
             <div className="ml-3 flex shrink-0 items-center gap-3">
               {/* SEARCH ICON */}
-              <button type="button" className="shrink-0 text-black">
+              <button
+                type="button"
+                onClick={goToSearch}
+                className="shrink-0 text-black"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -128,7 +149,6 @@ export default function SearchOverlay({ open, onClose }: Props) {
         {/* RESULTS */}
         {normalized && (
           <div className="mx-auto mt-4 grid w-[92%] max-w-[700px] grid-cols-1 gap-10 pb-8 sm:w-[65%] md:grid-cols-2">
-
             {/* SUGGESTIONS */}
             <div>
               <h3 className="mb-3 text-[11px] uppercase tracking-[0.2em] text-black/50">
@@ -148,14 +168,14 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 ))}
               </div>
 
-<Link
-  href={`/shop?search=${encodeURIComponent(query.trim())}`}
-  onClick={onClose}
-  className="mt-6 flex justify-between border-t border-black/20 pt-3 text-[14px]"
->
-  <span>Search for “{query}”</span>
-  <span>→</span>
-</Link>
+              <button
+                type="button"
+                onClick={goToSearch}
+                className="mt-6 flex w-full justify-between border-t border-black/20 pt-3 text-left text-[14px]"
+              >
+                <span>Search for “{query}”</span>
+                <span>→</span>
+              </button>
             </div>
 
             {/* PRODUCTS */}
