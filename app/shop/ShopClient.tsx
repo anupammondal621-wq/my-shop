@@ -216,22 +216,36 @@ export default function ShopClient() {
               onClick={() => router.push("/search")}
               className="hover:underline"
             >
-              Returns Policy
+              Returns policy
             </button>
 
             <button
               onClick={() => router.push("/search")}
               className="hover:underline"
             >
-              Refund Policy
+              Refund policy
             </button>
 
             <button
               onClick={() => router.push("/search")}
               className="hover:underline"
             >
-              Terms of Servic
-            </button>            
+              Terms of service
+            </button>
+
+            <button
+              onClick={() => router.push("/search")}
+              className="hover:underline"
+            >
+              Shipping policy
+            </button>
+
+            <button
+              onClick={() => router.push("/search")}
+              className="hover:underline"
+            >
+              Contact information
+            </button>                                      
           </div>
         </div>
 
