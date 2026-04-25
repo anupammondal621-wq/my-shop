@@ -39,9 +39,9 @@ const goToSearch = () => {
   onClose();
 
   if (!cleanQuery) {
-    router.push("/shop");
+    window.location.href = "/shop";
   } else {
-    router.push(`/shop?search=${encodeURIComponent(cleanQuery)}`);
+    window.location.href = `/shop?search=${encodeURIComponent(cleanQuery)}`;
   }
 };
 
