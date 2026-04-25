@@ -148,14 +148,14 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 ))}
               </div>
 
-              <Link
-                href={`/shop?search=${encodeURIComponent(query)}`}
-                onClick={onClose}
-                className="mt-6 flex justify-between border-t border-black/20 pt-3 text-[14px]"
-              >
-                <span>Search for “{query}”</span>
-                <span>→</span>
-              </Link>
+<Link
+  href={`/shop?search=${encodeURIComponent(query.trim())}`}
+  onClick={onClose}
+  className="mt-6 flex justify-between border-t border-black/20 pt-3 text-[14px]"
+>
+  <span>Search for “{query}”</span>
+  <span>→</span>
+</Link>
             </div>
 
             {/* PRODUCTS */}

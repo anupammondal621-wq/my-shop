@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { addToCart } from "@/utils/cart";
 import { products } from "@/utils/products";
 
 const PRODUCTS_PER_PAGE = 8;
@@ -13,27 +12,36 @@ export default function ShopClient({ search }: { search: string }) {
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  const filteredProducts = useMemo(() => {
-    if (!search) return products;
+  const normalizedSearch = search.toLowerCase().trim();
 
-    return products.filter((product) =>
-      [product.name, product.slug, product.pack]
-        .filter((field): field is string => typeof field === "string")
-        .some((field) => field.toLowerCase().includes(search))
-    );
-  }, [search]);
+  const filteredProducts = useMemo(() => {
+    if (!normalizedSearch) return products;
+
+    return products.filter((product) => {
+      const searchableText = [
+        product.name,
+        product.slug,
+        product.pack,
+        "category" in product ? product.category : "",
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return searchableText.includes(normalizedSearch);
+    });
+  }, [normalizedSearch]);
 
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
 
   const currentProducts = useMemo(() => {
     const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
-    const endIndex = startIndex + PRODUCTS_PER_PAGE;
-    return filteredProducts.slice(startIndex, endIndex);
+    return filteredProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
   }, [currentPage, filteredProducts]);
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [search]);
+  }, [normalizedSearch]);
 
   const goToPage = (page: number) => {
     setCurrentPage(page);
@@ -44,7 +52,9 @@ export default function ShopClient({ search }: { search: string }) {
     <main className="min-h-screen bg-white text-black">
       <div className="border-b border-black px-6 py-4">
         <h1 className="text-sm uppercase tracking-widest">
-          {search ? `Search Results for "${search}"` : "Products"}
+          {normalizedSearch
+            ? `Search Results for "${normalizedSearch}"`
+            : "Products"}
         </h1>
       </div>
 
@@ -53,9 +63,11 @@ export default function ShopClient({ search }: { search: string }) {
           <h2 className="text-lg font-medium uppercase tracking-wide">
             No products found
           </h2>
+
           <p className="mt-3 text-[14px]">
-            We could not find any product matching "{search}".
+            We could not find any product matching "{normalizedSearch}".
           </p>
+
           <button
             onClick={() => router.push("/shop")}
             className="mt-6 border border-black px-5 py-3 text-sm uppercase tracking-wider transition hover:bg-black hover:text-white"
@@ -81,19 +93,21 @@ export default function ShopClient({ search }: { search: string }) {
                       className="object-cover transition duration-300 group-hover:scale-105"
                     />
 
-                      {/* SOLD OUT BADGE */}
-{product.inStock === false && (
-  <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
-    Sold out
-  </div>
-)}
+                    {product.inStock === false && (
+                      <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
+                        Sold out
+                      </div>
+                    )}
                   </div>
 
                   <div className="min-h-[110px] p-4">
                     <h2 className="text-[14px] tracking-wide">
                       {product.name}
                     </h2>
-                    <p className="mt-3 text-[14px]"> Rs. {product.price.toFixed(2)}</p>
+
+                    <p className="mt-3 text-[14px]">
+                      Rs. {product.price.toFixed(2)}
+                    </p>
                   </div>
                 </Link>
               </div>
