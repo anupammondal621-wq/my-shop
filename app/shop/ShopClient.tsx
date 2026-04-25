@@ -210,44 +210,46 @@ export default function ShopClient() {
           </div>
         </div>
 
-        <div className="border-b border-black px-5 py-6 sm:px-8">
-          <div className="flex flex-wrap gap-8 text-[16px]">
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Returns policy
-            </button>
+<div className="border-b border-black px-5 py-6 sm:px-8">
+  <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[16px] sm:justify-start sm:gap-8">
+    
+    <button
+      onClick={() => router.push("/search")}
+      className="hover:underline"
+    >
+      Returns policy
+    </button>
 
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Refund policy
-            </button>
+    <button
+      onClick={() => router.push("/search")}
+      className="hover:underline"
+    >
+      Refund policy
+    </button>
 
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Terms of service
-            </button>
+    <button
+      onClick={() => router.push("/search")}
+      className="hover:underline"
+    >
+      Terms of service
+    </button>
 
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Shipping policy
-            </button>
+    <button
+      onClick={() => router.push("/search")}
+      className="hover:underline"
+    >
+      Shipping policy
+    </button>
 
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Contact information
-            </button>                                      
-          </div>
-        </div>
+    <button
+      onClick={() => router.push("/search")}
+      className="hover:underline"
+    >
+      Contact information
+    </button>
+
+  </div>
+</div>
 
         <div className="px-5 py-4 sm:px-8">
           <p className="text-[16px]">© 2026 BongoMithai. All rights reserved.</p>
