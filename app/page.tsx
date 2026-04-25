@@ -712,7 +712,7 @@ export default function Home() {
         </div>
 
         <div className="px-5 py-4 sm:px-8">
-          <p className="text-right text-[16px]">
+          <p className="text-[16px]">
             © 2026 BongoMithai. All rights reserved.
           </p>
         </div>
