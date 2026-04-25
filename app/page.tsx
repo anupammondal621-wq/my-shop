@@ -700,21 +700,19 @@ export default function Home() {
         </div>
 
         <div className="border-b border-black px-5 py-6 sm:px-8">
-          <div className="flex flex-wrap justify-end gap-8 text-[16px]">
+          <div className="flex flex-wrap gap-8 text-[16px]">
             <button
               onClick={() => router.push("/search")}
               className="hover:underline"
             >
-
+              
               Returns
             </button>
           </div>
         </div>
 
         <div className="px-5 py-4 sm:px-8">
-          <p className="text-[16px]">
-            © 2026 BongoMithai. All rights reserved.
-          </p>
+          <p className="text-[16px]">© 2026 BongoMithai. All rights reserved.</p>
         </div>
       </section>
     </main>
