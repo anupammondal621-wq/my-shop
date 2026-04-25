@@ -3,13 +3,16 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { products } from "@/utils/products";
 
 const PRODUCTS_PER_PAGE = 8;
 
-export default function ShopClient({ search }: { search: string }) {
+export default function ShopClient() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const search = searchParams.get("search")?.toLowerCase().trim() || "";
   const [currentPage, setCurrentPage] = useState(1);
 
   const normalizedSearch = search.toLowerCase().trim();
