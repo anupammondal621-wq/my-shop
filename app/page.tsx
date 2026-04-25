@@ -705,13 +705,7 @@ export default function Home() {
               onClick={() => router.push("/search")}
               className="hover:underline"
             >
-              Search
-            </button>
 
-            <button
-              onClick={() => router.push("/returns")}
-              className="hover:underline"
-            >
               Returns
             </button>
           </div>
