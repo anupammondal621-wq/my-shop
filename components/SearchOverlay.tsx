@@ -32,17 +32,18 @@ export default function SearchOverlay({ open, onClose }: Props) {
 
   const normalized = query.trim().toLowerCase();
 
-  const goToSearch = () => {
-    const cleanQuery = query.trim();
+const goToSearch = () => {
+  const cleanQuery = query.trim();
 
-    if (!cleanQuery) {
-      router.push("/shop");
-    } else {
-      router.push(`/shop?search=${encodeURIComponent(cleanQuery)}`);
-    }
+  setQuery("");
+  onClose();
 
-    onClose();
-  };
+  if (!cleanQuery) {
+    router.push("/shop");
+  } else {
+    router.push(`/shop?search=${encodeURIComponent(cleanQuery)}`);
+  }
+};
 
   const filteredProducts = useMemo(() => {
     if (!normalized) return [];
@@ -128,20 +129,26 @@ export default function SearchOverlay({ open, onClose }: Props) {
                 </svg>
               </button>
 
-              {/* CLOSE ICON */}
-              <button onClick={onClose} className="shrink-0 text-black">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="h-6 w-6"
-                >
-                  <path d="M6 6L18 18" />
-                  <path d="M18 6L6 18" />
-                </svg>
-              </button>
+{/* CLOSE ICON */}
+<button
+  onClick={() => {
+    setQuery("");
+    onClose();
+  }}
+  className="shrink-0 text-black"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    className="h-6 w-6"
+  >
+    <path d="M6 6L18 18" />
+    <path d="M18 6L6 18" />
+  </svg>
+</button>
             </div>
           </div>
         </div>
