@@ -137,11 +137,12 @@ export default function CheckoutPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          shippingDetails: form,
-          mode,
-          buyNowProduct,
-        }),
+body: JSON.stringify({
+  shippingDetails: form,
+  mode,
+  buyNowProduct,
+  totalAmount: total,
+}),
       });
 
       const data = await response.json();
