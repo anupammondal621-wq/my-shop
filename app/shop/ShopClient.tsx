@@ -213,27 +213,30 @@ export default function ShopClient() {
         </div>
 
 <div className="border-b border-black px-5 py-6 sm:px-8">
-  <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[16px] sm:justify-start sm:gap-8">
+  <div className="flex flex-wrap justify-center text-[16px] sm:justify-start">
 
-    <button onClick={() => router.push("/search")} className="hover:underline">
-      Returns policy<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
-    </button>
+    {[
+      "Returns policy",
+      "Refund policy",
+      "Terms of service",
+      "Shipping policy",
+      "Contact information",
+    ].map((item, index, arr) => (
+      <div key={item} className="flex items-center">
+        
+        <button
+          onClick={() => router.push("/search")}
+          className="hover:underline"
+        >
+          {item}
+        </button>
 
-    <button onClick={() => router.push("/search")} className="hover:underline">
-      Refund policy<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
-    </button>
+        {index !== arr.length - 1 && (
+          <span className="mx-2 text-black/70">•</span>
+        )}
 
-    <button onClick={() => router.push("/search")} className="hover:underline">
-      Terms of service<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
-    </button>
-
-    <button onClick={() => router.push("/search")} className="hover:underline">
-      Shipping policy<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
-    </button>
-
-    <button onClick={() => router.push("/search")} className="hover:underline">
-      Contact information
-    </button>
+      </div>
+    ))}
 
   </div>
 </div>
