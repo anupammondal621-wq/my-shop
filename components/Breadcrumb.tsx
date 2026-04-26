@@ -65,13 +65,23 @@ export default function Breadcrumb() {
           return (
             <div key={href + index} className="flex items-center gap-2">
               <span>&gt;</span>
-              {isLast ? (
-                <span className="font-medium">{label}</span>
-              ) : (
-                <Link href={href} className="hover:underline">
-                  {label}
-                </Link>
-              )}
+{isLast && label === "Shop" ? (
+  <button
+    type="button"
+    onClick={() => {
+      window.location.href = "/shop";
+    }}
+    className="font-medium hover:underline"
+  >
+    {label}
+  </button>
+) : isLast ? (
+  <span className="font-medium">{label}</span>
+) : (
+  <Link href={href} className="hover:underline">
+    {label}
+  </Link>
+)}
             </div>
           );
         })}
