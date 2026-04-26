@@ -216,19 +216,19 @@ export default function ShopClient() {
   <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-[16px] sm:justify-start sm:gap-8">
 
     <button onClick={() => router.push("/search")} className="hover:underline">
-      Returns policy<span className="ml-1">•</span>
+      Returns policy<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
     </button>
 
     <button onClick={() => router.push("/search")} className="hover:underline">
-      Refund policy<span className="ml-1">•</span>
+      Refund policy<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
     </button>
 
     <button onClick={() => router.push("/search")} className="hover:underline">
-      Terms of service<span className="ml-1">•</span>
+      Terms of service<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
     </button>
 
     <button onClick={() => router.push("/search")} className="hover:underline">
-      Shipping policy<span className="ml-1">•</span>
+      Shipping policy<span className="ml-1 inline-flex items-center text-[12px] leading-none">•</span>
     </button>
 
     <button onClick={() => router.push("/search")} className="hover:underline">
