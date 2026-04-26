@@ -300,9 +300,16 @@ export default function Header() {
                   Home
                 </Link>
 
-                <Link href="/shop" onClick={() => setMenuOpen(false)}>
-                  Shop
-                </Link>
+<button
+  type="button"
+  onClick={() => {
+    setMenuOpen(false);
+    window.location.href = "/shop";
+  }}
+  className="text-left"
+>
+  Shop
+</button>
 
                 <Link href="/cart" onClick={() => setMenuOpen(false)}>
                   Cart

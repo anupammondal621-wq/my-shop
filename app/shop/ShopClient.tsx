@@ -71,12 +71,14 @@ export default function ShopClient() {
             We could not find any product matching "{normalizedSearch}".
           </p>
 
-          <button
-            onClick={() => router.push("/shop")}
-            className="mt-6 border border-black px-5 py-3 text-sm uppercase tracking-wider transition hover:bg-black hover:text-white"
-          >
-            View All Products
-          </button>
+<button
+  onClick={() => {
+    window.location.href = "/shop";
+  }}
+  className="mt-6 border border-black px-5 py-3 text-sm uppercase tracking-wider transition hover:bg-black hover:text-white"
+>
+  View All Products
+</button>
         </div>
       ) : (
         <>
