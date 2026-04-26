@@ -237,7 +237,8 @@ export default function CheckoutPage() {
                 <h2 className="text-2xl font-semibold">Contact</h2>
                 <button
                   type="button"
-                  className="text-sm text-blue-600 underline"
+                  onClick={() => router.push("/login?redirect=/checkout")}
+                  className="text-sm text-black-600 underline"
                 >
                   Sign in
                 </button>
@@ -413,6 +414,17 @@ export default function CheckoutPage() {
               </div>
             </div>
 
+            <div className="mb-8 flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="saveInfo"
+                className="h-5 w-5 rounded border-gray-300"
+              />
+              <label htmlFor="saveInfo" className="text-sm text-gray-700">
+                Save this information for next time
+              </label>
+            </div>
+
             {/* PAYMENT */}
             <div className="mb-8">
               <h2 className="mb-2 text-2xl font-semibold">Payment</h2>
@@ -440,7 +452,7 @@ export default function CheckoutPage() {
               <div className="overflow-hidden rounded-lg border border-gray-300">
                 <label
                   className={`flex cursor-pointer items-center gap-3 px-4 py-4 ${
-                    billingSame ? "border border-black bg-[#f4f6ff]" : ""
+                    billingSame ? "bg-[#f4f6ff]" : "bg-white"
                   }`}
                 >
                   <input
@@ -453,8 +465,8 @@ export default function CheckoutPage() {
                 </label>
 
                 <label
-                  className={`flex cursor-pointer items-center gap-3 border-t px-4 py-4 ${
-                    !billingSame ? "border border-black bg-[#f4f6ff]" : ""
+                  className={`flex cursor-pointer items-center gap-3 border-t border-gray-300 px-4 py-4 ${
+                    !billingSame ? "bg-[#f4f6ff]" : "bg-white"
                   }`}
                 >
                   <input
@@ -467,7 +479,7 @@ export default function CheckoutPage() {
                 </label>
 
                 {!billingSame && (
-                  <div className="space-y-4 bg-[#f4f4f4] p-4">
+                  <div className="space-y-4 border-t border-gray-300 bg-[#f4f4f4] p-4">
                     <select className="w-full rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none">
                       <option>India</option>
                     </select>
