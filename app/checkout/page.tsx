@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { loadCart, CartItem } from "@/utils/cart";
 import { clearBuyNowProduct } from "@/utils/buyNow";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 declare global {
   interface Window {
@@ -16,6 +18,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [billingSame, setBillingSame] = useState(true);
 
   const [form, setForm] = useState({
     email: "",
@@ -64,19 +67,8 @@ export default function CheckoutPage() {
     }, 0);
   }, [cart]);
 
-  const getShippingCost = (postalCode: string) => {
-    if (!postalCode || postalCode.length < 2) return 0;
-
-    const prefix = postalCode.slice(0, 2);
-
-    if (prefix === "11" || prefix === "12") return 40;
-    if (prefix === "40" || prefix === "41") return 60;
-
-    return 90;
-  };
-
-  const shipping = subtotal > 0 ? getShippingCost(form.postalCode) : 0;
-  const estimatedTax = subtotal * 0.18;
+  const shipping = subtotal > 0 && subtotal >= 1400 ? 0 : subtotal > 0 ? 199 : 0;
+  const estimatedTax = subtotal * 0.05;
   const total = subtotal + shipping + estimatedTax;
 
   const handleChange = (
@@ -235,56 +227,67 @@ export default function CheckoutPage() {
 
   return (
     <main className="min-h-screen bg-white text-black">
-      <div className="border-b border-black px-6 py-4">
-        <h1 className="text-sm uppercase tracking-widest">Checkout</h1>
-      </div>
+      <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
+        {/* LEFT CHECKOUT FORM */}
+        <section className="px-6 py-10 sm:px-10 lg:px-12">
+          <div className="max-w-[650px] lg:ml-auto lg:mr-10">
+            {/* CONTACT */}
+            <div className="mb-8">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-2xl font-semibold">Contact</h2>
+                <button
+                  type="button"
+                  className="text-sm text-blue-600 underline"
+                >
+                  Sign in
+                </button>
+              </div>
 
-      <div className="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[1.25fr_0.85fr]">
-        <section className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm md:p-8">
-          <h2 className="mb-8 text-4xl font-semibold tracking-tight">
-            Delivery Details
-          </h2>
-
-          <div className="space-y-8">
-            <div>
-              <h3 className="mb-4 text-xl font-semibold">Contact</h3>
               <input
                 name="email"
                 type="email"
-                placeholder="Email address"
+                placeholder="Email"
                 value={form.email}
                 onChange={handleChange}
-                className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none focus:border-blue-600"
               />
             </div>
 
-            <div>
-              <h3 className="mb-4 text-xl font-semibold">Shipping Address</h3>
+            {/* DELIVERY */}
+            <div className="mb-8">
+              <h2 className="mb-4 text-2xl font-semibold">Delivery</h2>
 
-              <div className="grid gap-4 sm:grid-cols-2">
-                <input
-                  name="firstName"
-                  placeholder="First name"
-                  value={form.firstName}
+              <div className="space-y-4">
+                <select
+                  name="country"
+                  value={form.country}
                   onChange={handleChange}
-                  className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
-                />
-                <input
-                  name="lastName"
-                  placeholder="Last name"
-                  value={form.lastName}
-                  onChange={handleChange}
-                  className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
-                />
-              </div>
+                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
+                >
+                  <option>India</option>
+                </select>
 
-              <div className="mt-4 grid gap-4">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <input
+                    name="firstName"
+                    placeholder="First name"
+                    value={form.firstName}
+                    onChange={handleChange}
+                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
+                  />
+
+                  <input
+                    name="lastName"
+                    placeholder="Last name"
+                    value={form.lastName}
+                    onChange={handleChange}
+                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
+                  />
+                </div>
+
                 <input
-                  name="phone"
-                  placeholder="Phone number"
-                  value={form.phone}
-                  onChange={handleChange}
-                  className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                  placeholder="Company (optional)"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
                 />
 
                 <input
@@ -292,7 +295,7 @@ export default function CheckoutPage() {
                   placeholder="Address"
                   value={form.address}
                   onChange={handleChange}
-                  className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
                 />
 
                 <input
@@ -300,7 +303,7 @@ export default function CheckoutPage() {
                   placeholder="Apartment, suite, etc. (optional)"
                   value={form.apartment}
                   onChange={handleChange}
-                  className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
                 />
 
                 <div className="grid gap-4 sm:grid-cols-3">
@@ -309,150 +312,364 @@ export default function CheckoutPage() {
                     placeholder="City"
                     value={form.city}
                     onChange={handleChange}
-                    className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
                   />
-                  <input
+
+                  <select
                     name="state"
-                    placeholder="State"
                     value={form.state}
                     onChange={handleChange}
-                    className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                    className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                  >
+                    <option value="">Select State</option>
+                    <option>Andhra Pradesh</option>
+                    <option>Arunachal Pradesh</option>
+                    <option>Assam</option>
+                    <option>Bihar</option>
+                    <option>Chhattisgarh</option>
+                    <option>Goa</option>
+                    <option>Gujarat</option>
+                    <option>Haryana</option>
+                    <option>Himachal Pradesh</option>
+                    <option>Jharkhand</option>
+                    <option>Karnataka</option>
+                    <option>Kerala</option>
+                    <option>Madhya Pradesh</option>
+                    <option>Maharashtra</option>
+                    <option>Manipur</option>
+                    <option>Meghalaya</option>
+                    <option>Mizoram</option>
+                    <option>Nagaland</option>
+                    <option>Odisha</option>
+                    <option>Punjab</option>
+                    <option>Rajasthan</option>
+                    <option>Sikkim</option>
+                    <option>Tamil Nadu</option>
+                    <option>Telangana</option>
+                    <option>Tripura</option>
+                    <option>Uttar Pradesh</option>
+                    <option>Uttarakhand</option>
+                    <option>West Bengal</option>
+                    <option>Andaman and Nicobar Islands</option>
+                    <option>Chandigarh</option>
+                    <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                    <option>Delhi</option>
+                    <option>Jammu and Kashmir</option>
+                    <option>Ladakh</option>
+                    <option>Lakshadweep</option>
+                    <option>Puducherry</option>
+                  </select>
+
+                  <input
+                    name="postalCode"
+                    placeholder="PIN code"
+                    value={form.postalCode}
+                    onChange={handleChange}
+                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
                   />
-                  <div>
-                    <input
-                      name="postalCode"
-                      placeholder="PIN code"
-                      value={form.postalCode}
-                      onChange={handleChange}
-                      className="w-full rounded-2xl border border-black/10 px-4 py-3 outline-none"
-                    />
-                    <p className="mt-2 text-xs text-gray-500">
-                      Shipping and estimated tax are calculated based on your PIN
-                      code.
-                    </p>
-                  </div>
                 </div>
 
-                <select
-                  name="country"
-                  value={form.country}
-                  onChange={handleChange}
-                  className="rounded-2xl border border-black/10 px-4 py-3 outline-none"
+                <div className="relative group">
+                  <PhoneInput
+                    country={"in"}
+                    value={form.phone}
+                    onChange={(phone) => {
+                      const updated = { ...form, phone };
+                      setForm(updated);
+                      localStorage.setItem(
+                        "checkout_shipping",
+                        JSON.stringify(updated)
+                      );
+                    }}
+                    inputProps={{
+                      name: "phone",
+                      required: true,
+                    }}
+                    inputClass="!w-full !h-[58px] !rounded-lg !border !border-gray-300 !pl-14 !pr-12 !text-base !outline-none"
+                    buttonClass="!rounded-l-lg !border-gray-300"
+                    dropdownClass="!text-black"
+                  />
+
+                  <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
+                    ?
+                  </span>
+
+                  <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
+                    In case we need to contact you about your order
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SHIPPING METHOD */}
+            <div className="mb-8">
+              <h2 className="mb-4 text-xl font-semibold">Shipping method</h2>
+
+              <div className="flex items-center justify-between rounded-lg border border-black bg-[#f4f6ff] px-4 py-4">
+                <span>{shipping === 0 ? "Free Shipping" : "Standard"}</span>
+                <span className="font-semibold">
+                  {shipping === 0 ? "FREE" : `₹${shipping.toFixed(2)}`}
+                </span>
+              </div>
+            </div>
+
+            {/* PAYMENT */}
+            <div className="mb-8">
+              <h2 className="mb-2 text-2xl font-semibold">Payment</h2>
+              <p className="mb-4 text-sm text-gray-600">
+                All transactions are secure and encrypted.
+              </p>
+
+              <div className="overflow-hidden rounded-lg border border-black">
+                <div className="flex items-center justify-between bg-[#f4f6ff] px-4 py-4">
+                  <span>Razorpay Payment Gateway (UPI, Cards & NetBanking)</span>
+                  <span className="text-sm font-semibold">UPI</span>
+                </div>
+
+                <div className="bg-gray-50 px-4 py-5 text-center text-sm">
+                  You'll be redirected to Razorpay Payment Gateway to complete
+                  your purchase.
+                </div>
+              </div>
+            </div>
+
+            {/* BILLING ADDRESS */}
+            <div className="mb-10">
+              <h2 className="mb-4 text-xl font-semibold">Billing address</h2>
+
+              <div className="overflow-hidden rounded-lg border border-gray-300">
+                <label
+                  className={`flex cursor-pointer items-center gap-3 px-4 py-4 ${
+                    billingSame ? "border border-black bg-[#f4f6ff]" : ""
+                  }`}
                 >
-                  <option>India</option>
-                </select>
+                  <input
+                    type="radio"
+                    name="billingAddress"
+                    checked={billingSame}
+                    onChange={() => setBillingSame(true)}
+                  />
+                  Same as shipping address
+                </label>
+
+                <label
+                  className={`flex cursor-pointer items-center gap-3 border-t px-4 py-4 ${
+                    !billingSame ? "border border-black bg-[#f4f6ff]" : ""
+                  }`}
+                >
+                  <input
+                    type="radio"
+                    name="billingAddress"
+                    checked={!billingSame}
+                    onChange={() => setBillingSame(false)}
+                  />
+                  Use a different billing address
+                </label>
+
+                {!billingSame && (
+                  <div className="space-y-4 bg-[#f4f4f4] p-4">
+                    <select className="w-full rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none">
+                      <option>India</option>
+                    </select>
+
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <input
+                        placeholder="First name"
+                        className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                      />
+                      <input
+                        placeholder="Last name"
+                        className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                      />
+                    </div>
+
+                    <input
+                      placeholder="Company (optional)"
+                      className="w-full rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                    />
+
+                    <input
+                      placeholder="Address"
+                      className="w-full rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                    />
+
+                    <input
+                      placeholder="Apartment, suite, etc. (optional)"
+                      className="w-full rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                    />
+
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <input
+                        placeholder="City"
+                        className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                      />
+
+                      <select className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none">
+                        <option value="">Select State</option>
+                        <option>Andhra Pradesh</option>
+                        <option>Arunachal Pradesh</option>
+                        <option>Assam</option>
+                        <option>Bihar</option>
+                        <option>Chhattisgarh</option>
+                        <option>Goa</option>
+                        <option>Gujarat</option>
+                        <option>Haryana</option>
+                        <option>Himachal Pradesh</option>
+                        <option>Jharkhand</option>
+                        <option>Karnataka</option>
+                        <option>Kerala</option>
+                        <option>Madhya Pradesh</option>
+                        <option>Maharashtra</option>
+                        <option>Manipur</option>
+                        <option>Meghalaya</option>
+                        <option>Mizoram</option>
+                        <option>Nagaland</option>
+                        <option>Odisha</option>
+                        <option>Punjab</option>
+                        <option>Rajasthan</option>
+                        <option>Sikkim</option>
+                        <option>Tamil Nadu</option>
+                        <option>Telangana</option>
+                        <option>Tripura</option>
+                        <option>Uttar Pradesh</option>
+                        <option>Uttarakhand</option>
+                        <option>West Bengal</option>
+                        <option>Andaman and Nicobar Islands</option>
+                        <option>Chandigarh</option>
+                        <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option>Delhi</option>
+                        <option>Jammu and Kashmir</option>
+                        <option>Ladakh</option>
+                        <option>Lakshadweep</option>
+                        <option>Puducherry</option>
+                      </select>
+
+                      <input
+                        placeholder="PIN code"
+                        className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+                      />
+                    </div>
+
+                    <div className="relative group">
+                      <PhoneInput
+                        country={"in"}
+                        value={form.phone}
+                        onChange={(phone) => {
+                          const updated = { ...form, phone };
+                          setForm(updated);
+                          localStorage.setItem(
+                            "checkout_shipping",
+                            JSON.stringify(updated)
+                          );
+                        }}
+                        inputProps={{
+                          name: "phone",
+                          required: true,
+                        }}
+                        inputClass="!w-full !h-[58px] !rounded-lg !border !border-gray-300 !pl-14 !pr-12 !text-base !outline-none"
+                        buttonClass="!rounded-l-lg !border-gray-300"
+                        dropdownClass="!text-black"
+                      />
+
+                      <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
+                        ?
+                      </span>
+
+                      <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
+                        In case we need to contact you about your order
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </section>
 
-        <aside className="h-fit rounded-3xl border border-black/10 bg-white p-6 shadow-sm md:p-8">
-          <h2 className="mb-6 text-2xl font-semibold">Order Summary</h2>
+        {/* RIGHT ORDER SUMMARY */}
+        <aside className="border-l border-gray-200 bg-[#f5f5f5] px-6 py-10 sm:px-10 lg:px-12">
+          <div className="max-w-[520px] lg:mr-auto">
+            <div className="space-y-5">
+              {cart.map((item) => (
+                <div
+                  key={item.slug}
+                  className="flex items-center justify-between gap-4"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={72}
+                        height={72}
+                        className="h-[72px] w-[72px] rounded-lg border object-cover"
+                      />
+                      <span className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-black text-xs text-white">
+                        {item.quantity}
+                      </span>
+                    </div>
 
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <div
-                key={item.slug}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-black/10 p-3"
-              >
-                <div className="flex items-center gap-3">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={72}
-                    height={72}
-                    className="h-16 w-16 rounded-xl object-cover"
-                  />
-                  <div>
-                    <h3 className="font-medium">{item.name}</h3>
-                    <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                    <p>{item.name}</p>
                   </div>
+
+                  <p>
+                    ₹
+                    {(
+                      Number(String(item.price).replace(/[^\d.]/g, "")) *
+                      item.quantity
+                    ).toFixed(2)}
+                  </p>
                 </div>
-                <p className="font-medium">{item.price}</p>
+              ))}
+            </div>
+
+            <div className="mt-8 flex gap-3">
+              <input
+                placeholder="Discount code"
+                className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+              />
+              <button className="rounded-lg bg-gray-200 px-6 font-semibold text-gray-600">
+                Apply
+              </button>
+            </div>
+
+            <div className="mt-8 space-y-3">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>₹{subtotal.toFixed(2)}</span>
               </div>
-            ))}
-          </div>
 
-          <div className="mt-8 space-y-4 text-sm">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">₹{subtotal.toFixed(2)}</span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Shipping</span>
-              <span className="font-medium">₹{shipping.toFixed(2)}</span>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Estimated Tax</span>
-              <span className="font-medium">₹{estimatedTax.toFixed(2)}</span>
-            </div>
-
-            <div className="border-t border-black/10 pt-4">
-              <div className="flex items-center justify-between text-base">
-                <span className="font-semibold">Total</span>
-                <span className="text-xl font-semibold">
-                  ₹{total.toFixed(2)}
+              <div className="flex justify-between">
+                <span>Shipping</span>
+                <span>
+                  {shipping === 0 ? "FREE" : `₹${shipping.toFixed(2)}`}
                 </span>
               </div>
+
+              <div className="flex justify-between">
+                <span>Estimated taxes</span>
+                <span>₹{estimatedTax.toFixed(2)}</span>
+              </div>
+
+              <div className="flex justify-between pt-5 text-2xl font-semibold">
+                <span>Total</span>
+                <span>₹{total.toFixed(2)}</span>
+              </div>
+
+              <button
+                onClick={handleContinueToPayment}
+                disabled={loading || cart.length === 0}
+                className="mt-8 w-full rounded-lg bg-black px-6 py-4 text-lg font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+              >
+                {loading ? "Processing..." : "Pay now"}
+              </button>
             </div>
           </div>
-
-          <button
-            onClick={handleContinueToPayment}
-            disabled={loading || cart.length === 0}
-            className="mt-8 w-full rounded-full bg-black px-6 py-3 text-white disabled:opacity-50"
-          >
-            {loading ? "Processing..." : "Continue to Payment"}
-          </button>
-
-          <p className="mt-4 text-sm text-gray-500">
-            Secure payment powered by Razorpay.
-          </p>
         </aside>
       </div>
 
       {/* FOOTER SECTION */}
-      <section className="w-full border-b border-black bg-[#f3f3f3]">
-        <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
-          <div className="px-5 py-6 sm:px-8 lg:border-r lg:border-black">
-            <p className="mb-4 text-[16px] leading-7">
-              Get 10% off your next purchase. Subscribe to our newsletter.
-            </p>
-
-            <form className="space-y-2">
-              <input
-                type="email"
-                placeholder="your@email.address"
-                className="w-full border border-black bg-[#f3f3f3] px-4 py-3 text-[16px] outline-none placeholder:text-black"
-              />
-
-              <button
-                type="submit"
-                className="w-full bg-black px-4 py-3 text-[18px] font-semibold uppercase tracking-wide text-white transition hover:opacity-90"
-              >
-                Subscribe
-              </button>
-            </form>
-          </div>
-
-          <div className="px-5 py-8 sm:px-8">
-            <div className="space-y-3 text-[16px] leading-8">
-              <p>
-                <span className="font-semibold">Contact</span> : +91 9775534553
-              </p>
-              <p>
-                <span className="font-semibold">Email</span> :
-                support@bongomithai.com
-              </p>
-              <p>
-                <span className="font-semibold">Location</span> : Kolkata
-              </p>
-            </div>
-          </div>
-        </div>
-
+      <section className="w-full border-t border-black bg-[#f3f3f3]">
         <div className="border-b border-black px-5 py-6 sm:px-8">
           <div className="flex flex-wrap justify-center text-[16px] sm:justify-start">
             {[
