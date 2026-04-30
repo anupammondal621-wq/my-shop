@@ -275,7 +275,7 @@ const handleLogout = async () => {
           <div className="max-w-[650px] lg:ml-auto lg:mr-10">
 {/* CONTACT */}
 {isLoggedIn ? (
-    <div className="mb-8 border-b border-gray-300 pb-5">
+    <div className="mb-8 pb-5">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3 no-underline">
         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300">
