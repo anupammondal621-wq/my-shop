@@ -7,6 +7,7 @@ import { loadCart, CartItem } from "@/utils/cart";
 import { clearBuyNowProduct } from "@/utils/buyNow";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { createClient } from "@/utils/supabase/client";
 
 declare global {
   interface Window {
@@ -19,6 +20,10 @@ export default function CheckoutPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [billingSame, setBillingSame] = useState(true);
+  const [userEmail, setUserEmail] = useState("");
+  const [showManualAddress, setShowManualAddress] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -33,32 +38,57 @@ export default function CheckoutPage() {
     country: "India",
   });
 
-  useEffect(() => {
-    const getProductsForCheckout = async () => {
-      const params = new URLSearchParams(window.location.search);
-      const mode = params.get("mode");
+useEffect(() => {
+  const getProductsForCheckout = async () => {
+    const params = new URLSearchParams(window.location.search);
+    const mode = params.get("mode");
 
-      if (mode === "buy-now") {
-        const raw = localStorage.getItem("buy_now_product");
-        const buyNowProduct = raw ? JSON.parse(raw) : null;
+    if (mode === "buy-now") {
+      const raw = localStorage.getItem("buy_now_product");
+      const buyNowProduct = raw ? JSON.parse(raw) : null;
 
-        if (buyNowProduct) {
-          setCart([buyNowProduct]);
-          return;
-        }
+      if (buyNowProduct) {
+        setCart([buyNowProduct]);
+        return;
       }
-
-      const data = await loadCart();
-      setCart(data);
-    };
-
-    getProductsForCheckout();
-
-    const savedShipping = localStorage.getItem("checkout_shipping");
-    if (savedShipping) {
-      setForm(JSON.parse(savedShipping));
     }
-  }, []);
+
+    const data = await loadCart();
+    setCart(data);
+  };
+
+  const getCheckoutAddress = async () => {
+    const res = await fetch("/api/user/checkout-address");
+    const data = await res.json();
+
+    if (data?.user?.email) {
+      setIsLoggedIn(true);
+      setUserEmail(data.user.email);
+
+      if (data.shippingDetails?.address) {
+        setForm(data.shippingDetails);
+        setShowManualAddress(false);
+      } else {
+        setForm((prev) => ({
+          ...prev,
+          email: data.user.email,
+        }));
+        setShowManualAddress(true);
+      }
+    } else {
+      setIsLoggedIn(false);
+      setShowManualAddress(true);
+
+      const savedShipping = localStorage.getItem("checkout_shipping");
+      if (savedShipping) {
+        setForm(JSON.parse(savedShipping));
+      }
+    }
+  };
+
+  getProductsForCheckout();
+  getCheckoutAddress();
+}, []);
 
   const subtotal: number = useMemo(() => {
     return cart.reduce((total: number, item: CartItem) => {
@@ -226,182 +256,257 @@ body: JSON.stringify({
     }
   };
 
+const handleLogout = async () => {
+  const supabase = createClient();
+
+  await supabase.auth.signOut();
+
+  localStorage.removeItem("checkout_shipping");
+
+  router.refresh();
+  router.push("/");
+};
+
   return (
     <main className="min-h-screen bg-white text-black">
       <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[1.05fr_0.95fr]">
         {/* LEFT CHECKOUT FORM */}
         <section className="px-6 py-10 sm:px-10 lg:px-12">
           <div className="max-w-[650px] lg:ml-auto lg:mr-10">
-            {/* CONTACT */}
-            <div className="mb-8">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-2xl font-semibold">Contact</h2>
-                <button
-                  type="button"
-                  onClick={() => router.push("/login?redirect=/checkout")}
-                  className="text-sm text-black-600 underline"
-                >
-                  Sign in
-                </button>
-              </div>
+{/* CONTACT */}
+{isLoggedIn ? (
+    <div className="mb-8 border-b border-gray-300 pb-5">
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300">
+          {userEmail.charAt(0).toUpperCase()}
+        </div>
 
-              <input
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={form.email}
-                onChange={handleChange}
-                className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none focus:border-blue-600"
-              />
-            </div>
+        <p className="text-sm">{userEmail}</p>
+      </div>
 
-            {/* DELIVERY */}
-            <div className="mb-8">
-              <h2 className="mb-4 text-2xl font-semibold">Delivery</h2>
+<div className="relative">
+  <button
+    type="button"
+    onClick={() => setShowMenu(!showMenu)}
+    className="text-xl"
+  >
+    ⋮
+  </button>
 
-              <div className="space-y-4">
-                <select
-                  name="country"
-                  value={form.country}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                >
-                  <option>India</option>
-                </select>
+  {showMenu && (
+    <div className="absolute right-0 mt-2 w-32 rounded-lg border bg-white shadow-lg">
+      <button
+        onClick={handleLogout}
+        className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100"
+      >
+        Sign out
+      </button>
+    </div>
+  )}
+</div>
+    </div>
+  </div>
+) : (
+  <div className="mb-8">
+    <div className="mb-4 flex items-center justify-between">
+      <h2 className="text-2xl font-semibold">Contact</h2>
+      <button
+        type="button"
+        onClick={() => router.push("/login?redirect=/checkout")}
+        className="text-sm text-black-600 underline"
+      >
+        Sign in
+      </button>
+    </div>
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <input
-                    name="firstName"
-                    placeholder="First name"
-                    value={form.firstName}
-                    onChange={handleChange}
-                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                  />
+    <input
+      name="email"
+      type="email"
+      placeholder="Email"
+      value={form.email}
+      onChange={handleChange}
+      className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none focus:border-blue-600"
+    />
+  </div>
+)}
 
-                  <input
-                    name="lastName"
-                    placeholder="Last name"
-                    value={form.lastName}
-                    onChange={handleChange}
-                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                  />
-                </div>
+{/* DELIVERY */}
+{isLoggedIn && !showManualAddress ? (
+  <div className="mb-8">
+    <p className="mb-2 text-sm text-gray-600">Ship to</p>
 
-                <input
-                  placeholder="Company (optional)"
-                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                />
+    <div className="rounded-lg bg-[#f4f6ff] p-4 text-sm">
+      <p>
+        {form.firstName} {form.lastName}, {form.address}
+        {form.apartment ? `, ${form.apartment}` : ""}
+      </p>
 
-                <input
-                  name="address"
-                  placeholder="Address"
-                  value={form.address}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                />
+      <p>
+        {form.postalCode} {form.city} {form.state}, IN
+      </p>
 
-                <input
-                  name="apartment"
-                  placeholder="Apartment, suite, etc. (optional)"
-                  value={form.apartment}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                />
+      <span className="mt-2 inline-block rounded-full bg-gray-600 px-2 py-1 text-xs text-white">
+        Default
+      </span>
+    </div>
 
-                <div className="grid gap-4 sm:grid-cols-3">
-                  <input
-                    name="city"
-                    placeholder="City"
-                    value={form.city}
-                    onChange={handleChange}
-                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                  />
+    <button
+      type="button"
+      onClick={() => setShowManualAddress(true)}
+      className="mt-5 text-sm text-blue-600"
+    >
+      + Use a different address
+    </button>
+  </div>
+) : (
+  <div className="mb-8">
+    <h2 className="mb-4 text-2xl font-semibold">Delivery</h2>
 
-                  <select
-                    name="state"
-                    value={form.state}
-                    onChange={handleChange}
-                    className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
-                  >
-                    <option value="">Select State</option>
-                    <option>Andhra Pradesh</option>
-                    <option>Arunachal Pradesh</option>
-                    <option>Assam</option>
-                    <option>Bihar</option>
-                    <option>Chhattisgarh</option>
-                    <option>Goa</option>
-                    <option>Gujarat</option>
-                    <option>Haryana</option>
-                    <option>Himachal Pradesh</option>
-                    <option>Jharkhand</option>
-                    <option>Karnataka</option>
-                    <option>Kerala</option>
-                    <option>Madhya Pradesh</option>
-                    <option>Maharashtra</option>
-                    <option>Manipur</option>
-                    <option>Meghalaya</option>
-                    <option>Mizoram</option>
-                    <option>Nagaland</option>
-                    <option>Odisha</option>
-                    <option>Punjab</option>
-                    <option>Rajasthan</option>
-                    <option>Sikkim</option>
-                    <option>Tamil Nadu</option>
-                    <option>Telangana</option>
-                    <option>Tripura</option>
-                    <option>Uttar Pradesh</option>
-                    <option>Uttarakhand</option>
-                    <option>West Bengal</option>
-                    <option>Andaman and Nicobar Islands</option>
-                    <option>Chandigarh</option>
-                    <option>Dadra and Nagar Haveli and Daman and Diu</option>
-                    <option>Delhi</option>
-                    <option>Jammu and Kashmir</option>
-                    <option>Ladakh</option>
-                    <option>Lakshadweep</option>
-                    <option>Puducherry</option>
-                  </select>
+    <div className="space-y-4">
+      <select
+        name="country"
+        value={form.country}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
+      >
+        <option>India</option>
+      </select>
 
-                  <input
-                    name="postalCode"
-                    placeholder="PIN code"
-                    value={form.postalCode}
-                    onChange={handleChange}
-                    className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
-                  />
-                </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <input
+          name="firstName"
+          placeholder="First name"
+          value={form.firstName}
+          onChange={handleChange}
+          className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
+        />
 
-                <div className="relative group">
-                  <PhoneInput
-                    country={"in"}
-                    value={form.phone}
-                    onChange={(phone) => {
-                      const updated = { ...form, phone };
-                      setForm(updated);
-                      localStorage.setItem(
-                        "checkout_shipping",
-                        JSON.stringify(updated)
-                      );
-                    }}
-                    inputProps={{
-                      name: "phone",
-                      required: true,
-                    }}
-                    inputClass="!w-full !h-[58px] !rounded-lg !border !border-gray-300 !pl-14 !pr-12 !text-base !outline-none"
-                    buttonClass="!rounded-l-lg !border-gray-300"
-                    dropdownClass="!text-black"
-                  />
+        <input
+          name="lastName"
+          placeholder="Last name"
+          value={form.lastName}
+          onChange={handleChange}
+          className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
+        />
+      </div>
 
-                  <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
-                    ?
-                  </span>
+      <input
+        placeholder="Company (optional)"
+        className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
+      />
 
-                  <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
-                    In case we need to contact you about your order
-                  </div>
-                </div>
-              </div>
-            </div>
+      <input
+        name="address"
+        placeholder="Address"
+        value={form.address}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
+      />
+
+      <input
+        name="apartment"
+        placeholder="Apartment, suite, etc. (optional)"
+        value={form.apartment}
+        onChange={handleChange}
+        className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
+      />
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <input
+          name="city"
+          placeholder="City"
+          value={form.city}
+          onChange={handleChange}
+          className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
+        />
+
+        <select
+          name="state"
+          value={form.state}
+          onChange={handleChange}
+          className="rounded-lg border border-gray-300 bg-white px-4 py-4 outline-none"
+        >
+          <option value="">Select State</option>
+          <option>Andhra Pradesh</option>
+          <option>Arunachal Pradesh</option>
+          <option>Assam</option>
+          <option>Bihar</option>
+          <option>Chhattisgarh</option>
+          <option>Goa</option>
+          <option>Gujarat</option>
+          <option>Haryana</option>
+          <option>Himachal Pradesh</option>
+          <option>Jharkhand</option>
+          <option>Karnataka</option>
+          <option>Kerala</option>
+          <option>Madhya Pradesh</option>
+          <option>Maharashtra</option>
+          <option>Manipur</option>
+          <option>Meghalaya</option>
+          <option>Mizoram</option>
+          <option>Nagaland</option>
+          <option>Odisha</option>
+          <option>Punjab</option>
+          <option>Rajasthan</option>
+          <option>Sikkim</option>
+          <option>Tamil Nadu</option>
+          <option>Telangana</option>
+          <option>Tripura</option>
+          <option>Uttar Pradesh</option>
+          <option>Uttarakhand</option>
+          <option>West Bengal</option>
+          <option>Andaman and Nicobar Islands</option>
+          <option>Chandigarh</option>
+          <option>Dadra and Nagar Haveli and Daman and Diu</option>
+          <option>Delhi</option>
+          <option>Jammu and Kashmir</option>
+          <option>Ladakh</option>
+          <option>Lakshadweep</option>
+          <option>Puducherry</option>
+        </select>
+
+        <input
+          name="postalCode"
+          placeholder="PIN code"
+          value={form.postalCode}
+          onChange={handleChange}
+          className="rounded-lg border border-gray-300 px-4 py-4 outline-none"
+        />
+      </div>
+
+      <div className="relative group">
+        <PhoneInput
+          country={"in"}
+          value={form.phone}
+          onChange={(phone) => {
+            const updated = { ...form, phone };
+            setForm(updated);
+            localStorage.setItem(
+              "checkout_shipping",
+              JSON.stringify(updated)
+            );
+          }}
+          inputProps={{
+            name: "phone",
+            required: true,
+          }}
+          inputClass="!w-full !h-[58px] !rounded-lg !border !border-gray-300 !pl-14 !pr-12 !text-base !outline-none"
+          buttonClass="!rounded-l-lg !border-gray-300"
+          dropdownClass="!text-black"
+        />
+
+        <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
+          ?
+        </span>
+
+        <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
+          In case we need to contact you about your order
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
             {/* SHIPPING METHOD */}
             <div className="mb-8">
