@@ -277,14 +277,20 @@ const handleLogout = async () => {
 {isLoggedIn ? (
     <div className="mb-8 border-b border-gray-300 pb-5">
     <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 no-underline">
         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300">
           {userEmail.charAt(0).toUpperCase()}
         </div>
 
-        <p className="text-sm no-underline break-all">
+<span
+  className="text-sm break-all"
+  style={{
+    textDecoration: "none",
+    WebkitTextDecorationLine: "none",
+  }}
+>
   {userEmail}
-</p>
+</span>
       </div>
 
 <div className="relative">
