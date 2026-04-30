@@ -47,23 +47,32 @@ export default function Header() {
       setUser(user);
     };
 
-    updateCartCount();
-    getUser();
+updateCartCount();
+getUser();
 
-    window.addEventListener("cartUpdated", updateCartCount);
+const {
+  data: { subscription },
+} = supabase.auth.onAuthStateChange((_event, session) => {
+  setUser(session?.user ?? null);
+});
 
-    return () => {
-      window.removeEventListener("cartUpdated", updateCartCount);
-    };
+window.addEventListener("cartUpdated", updateCartCount);
+
+return () => {
+  subscription.unsubscribe();
+  window.removeEventListener("cartUpdated", updateCartCount);
+};
   }, [supabase]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setMenuOpen(false);
-    window.dispatchEvent(new Event("cartUpdated"));
-    window.location.href = "/";
-  };
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+
+  setUser(null);
+  setMenuOpen(false);
+
+  window.dispatchEvent(new Event("cartUpdated"));
+  window.location.href = "/";
+};
 
   return (
     <>

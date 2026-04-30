@@ -71,3 +71,22 @@ a {
 .swiper-slide {
   flex-shrink: 0;
 }
+
+/* 🚨 FIX: iOS auto email underline */
+a[href^="mailto:"],
+a[href^="tel:"],
+a[href^="sms:"] {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* Force remove underline everywhere */
+* {
+  -webkit-text-decoration-skip: none !important;
+}
+
+/* Extra protection for email text */
+.email-text {
+  text-decoration: none !important;
+  color: inherit !important;
+}

@@ -282,13 +282,7 @@ const handleLogout = async () => {
           {userEmail.charAt(0).toUpperCase()}
         </div>
 
-<span
-  className="text-sm break-all"
-  style={{
-    textDecoration: "none",
-    WebkitTextDecorationLine: "none",
-  }}
->
+<span className="text-sm break-all email-text">
   {userEmail}
 </span>
       </div>

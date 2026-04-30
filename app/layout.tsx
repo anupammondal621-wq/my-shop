@@ -14,6 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="format-detection" content="telephone=no, email=no, address=no" />
+      </head>
+
       <body className="bg-white text-black">
         <Header />
         <div className="pt-[70px]">
