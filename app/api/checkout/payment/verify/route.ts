@@ -23,6 +23,7 @@ export async function POST(req: NextRequest) {
       mode,
       buyNowProduct,
       totalAmount,
+      shippingDetails,
     } = body;
 
     const generatedSignature = crypto
@@ -36,6 +37,21 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+
+    if (shippingDetails) {
+  await supabase.from("profiles").upsert({
+    id: user.id,
+    first_name: shippingDetails.firstName,
+    last_name: shippingDetails.lastName,
+    phone: shippingDetails.phone,
+    address: shippingDetails.address,
+    apartment: shippingDetails.apartment,
+    city: shippingDetails.city,
+    state: shippingDetails.state,
+    postal_code: shippingDetails.postalCode,
+    country: shippingDetails.country || "India",
+  });
+}
 
     const { data: existingOrder } = await supabase
       .from("orders")
