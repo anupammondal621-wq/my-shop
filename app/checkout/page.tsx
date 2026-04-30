@@ -27,6 +27,7 @@ export default function CheckoutPage() {
   const [showAddressModal, setShowAddressModal] = useState(false);
   const [showAddressMenu, setShowAddressMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showPhoneHint, setShowPhoneHint] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -539,13 +540,18 @@ const handleLogout = async () => {
           dropdownClass="!text-black"
         />
 
-        <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
-          ?
-        </span>
+<span
+  onClick={() => setShowPhoneHint(!showPhoneHint)}
+  className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600"
+>
+  ?
+</span>
 
-        <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
-          In case we need to contact you about your order
-        </div>
+{showPhoneHint && (
+  <div className="absolute right-0 -top-16 z-20 w-52 rounded-lg bg-black p-2 text-xs text-white">
+    In case we need to contact you about your order
+  </div>
+)}
       </div>
     </div>
   </div>
@@ -732,13 +738,18 @@ const handleLogout = async () => {
                         dropdownClass="!text-black"
                       />
 
-                      <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
-                        ?
-                      </span>
+<span
+  onClick={() => setShowPhoneHint(!showPhoneHint)}
+  className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600"
+>
+  ?
+</span>
 
-                      <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
-                        In case we need to contact you about your order
-                      </div>
+{showPhoneHint && (
+  <div className="absolute right-0 -top-16 z-20 w-52 rounded-lg bg-black p-2 text-xs text-white">
+    In case we need to contact you about your order
+  </div>
+)}
                     </div>
                   </div>
                 )}
@@ -1006,13 +1017,18 @@ const handleLogout = async () => {
     dropdownClass="!text-black"
   />
 
-  <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
-    ?
-  </span>
+<span
+  onClick={() => setShowPhoneHint(!showPhoneHint)}
+  className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600"
+>
+  ?
+</span>
 
-  <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
+{showPhoneHint && (
+  <div className="absolute right-0 -top-16 z-20 w-52 rounded-lg bg-black p-2 text-xs text-white">
     In case we need to contact you about your order
   </div>
+)}
 </div>
 
         <label className="flex items-center gap-3 text-sm">
