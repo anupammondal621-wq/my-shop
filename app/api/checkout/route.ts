@@ -11,7 +11,10 @@ export async function POST(req: NextRequest) {
     const totalAmount = Number(body?.totalAmount || 0);
 
     if (!totalAmount || totalAmount <= 0) {
-      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid amount" },
+        { status: 400 }
+      );
     }
 
     const razorpay = new Razorpay({
@@ -20,7 +23,7 @@ export async function POST(req: NextRequest) {
     });
 
     const order = await razorpay.orders.create({
-      amount: Math.round(totalAmount * 100),
+      amount: Math.round(totalAmount * 100), // paisa
       currency: "INR",
       receipt: `receipt_${Date.now()}`,
       notes: {
@@ -31,12 +34,8 @@ export async function POST(req: NextRequest) {
         shipping_state: shippingDetails?.state || "",
         shipping_address: shippingDetails?.address || "",
         shipping_phone: shippingDetails?.phone || "",
-        buy_now_slug: mode === "buy-now" ? buyNowProduct?.slug || "" : "",
-        buy_now_name: mode === "buy-now" ? buyNowProduct?.name || "" : "",
-        buy_now_price: mode === "buy-now" ? buyNowProduct?.price || "" : "",
-        buy_now_image: mode === "buy-now" ? buyNowProduct?.image || "" : "",
-        buy_now_quantity:
-          mode === "buy-now" ? String(buyNowProduct?.quantity || 1) : "",
+        buy_now_slug:
+          mode === "buy-now" ? buyNowProduct?.slug || "" : "",
       },
     });
 

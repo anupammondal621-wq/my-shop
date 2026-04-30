@@ -15,6 +15,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
+    console.log("VERIFY BODY:", body);
 
     const {
       razorpay_order_id,
@@ -38,19 +39,33 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    if (shippingDetails) {
-  await supabase.from("profiles").upsert({
-    id: user.id,
-    first_name: shippingDetails.firstName,
-    last_name: shippingDetails.lastName,
-    phone: shippingDetails.phone,
-    address: shippingDetails.address,
-    apartment: shippingDetails.apartment,
-    city: shippingDetails.city,
-    state: shippingDetails.state,
-    postal_code: shippingDetails.postalCode,
-    country: shippingDetails.country || "India",
-  });
+if (shippingDetails?.address) {
+  const { error: profileError } = await supabase.from("profiles").upsert(
+    {
+      id: user.id,
+      first_name: shippingDetails.firstName,
+      last_name: shippingDetails.lastName,
+      phone: shippingDetails.phone,
+      address: shippingDetails.address,
+      apartment: shippingDetails.apartment,
+      city: shippingDetails.city,
+      state: shippingDetails.state,
+      postal_code: shippingDetails.postalCode,
+      country: shippingDetails.country || "India",
+    },
+    { onConflict: "id" }
+  );
+
+  console.log("PROFILE SAVE ERROR:", profileError);
+
+  if (profileError) {
+    return NextResponse.json(
+      { error: "Failed to save shipping address" },
+      { status: 500 }
+    );
+  }
+} else {
+  console.log("NO SHIPPING DETAILS RECEIVED:", shippingDetails);
 }
 
     const { data: existingOrder } = await supabase

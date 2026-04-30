@@ -24,6 +24,9 @@ export default function CheckoutPage() {
   const [showManualAddress, setShowManualAddress] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showAddressMenu, setShowAddressMenu] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -339,28 +342,65 @@ const handleLogout = async () => {
   <div className="mb-8">
     <p className="mb-2 text-sm text-gray-600">Ship to</p>
 
-    <div className="rounded-lg bg-[#f4f6ff] p-4 text-sm">
-      <p>
-        {form.firstName} {form.lastName}, {form.address}
-        {form.apartment ? `, ${form.apartment}` : ""}
-      </p>
+    <div className="relative rounded-lg bg-[#f4f6ff] p-4 text-sm">
+  {/* 3 DOT BUTTON */}
+  <button
+    type="button"
+    onClick={() => setShowAddressMenu(!showAddressMenu)}
+    className="absolute right-4 top-3 text-xl"
+  >
+    ⋮
+  </button>
 
-      <p>
-        {form.postalCode} {form.city} {form.state}, IN
-      </p>
+  {/* DROPDOWN MENU */}
+  {showAddressMenu && (
+    <div className="absolute right-3 top-10 z-20 w-24 rounded-lg border bg-white py-2 shadow-lg">
+      <button
+        type="button"
+        onClick={() => {
+          setShowAddressMenu(false);
+          setShowAddressModal(true);
+        }}
+        className="block w-full px-4 py-2 text-left text-sm text-blue-600"
+      >
+        Edit
+      </button>
 
-      <span className="mt-2 inline-block rounded-full bg-gray-600 px-2 py-1 text-xs text-white">
-        Default
-      </span>
+<button
+  type="button"
+  onClick={() => {
+    setShowAddressMenu(false);
+    setShowDeleteConfirm(true);
+  }}
+  className="block w-full px-4 py-2 text-left text-sm text-red-600"
+>
+  Delete
+</button>
     </div>
+  )}
 
-    <button
-      type="button"
-      onClick={() => setShowManualAddress(true)}
-      className="mt-5 text-sm text-blue-600"
-    >
-      + Use a different address
-    </button>
+  {/* ADDRESS TEXT */}
+  <p>
+    {form.firstName} {form.lastName}, {form.address}
+    {form.apartment ? `, ${form.apartment}` : ""}
+  </p>
+
+  <p>
+    {form.postalCode} {form.city} {form.state}, IN
+  </p>
+
+  <span className="mt-2 inline-block rounded-full bg-gray-600 px-2 py-1 text-xs text-white">
+    Default
+  </span>
+</div>
+
+<button
+  type="button"
+  onClick={() => setShowAddressModal(true)}
+  className="mt-5 text-sm text-blue-600"
+>
+  + Use a different address
+</button>
   </div>
 ) : (
   <div className="mb-8">
@@ -820,6 +860,273 @@ const handleLogout = async () => {
           <p className="text-[16px]">© 2026 BongoMithai. All rights reserved.</p>
         </div>
       </section>
+
+{showAddressModal && (
+  <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 px-3">
+    <div className="w-full max-w-[640px] rounded-xl bg-white p-5 shadow-xl">
+      <div className="mb-4 flex items-center justify-between">
+        <h2 className="text-2xl font-semibold">Add address</h2>
+
+        <button
+          type="button"
+          onClick={() => setShowAddressModal(false)}
+          className="text-3xl leading-none text-gray-600"
+        >
+          ×
+        </button>
+      </div>
+
+      <div className="space-y-4">
+        <select
+          name="country"
+          value={form.country}
+          onChange={handleChange}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none"
+        >
+          <option>India</option>
+        </select>
+
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            name="firstName"
+            placeholder="First name"
+            value={form.firstName}
+            onChange={handleChange}
+            className="rounded-lg border border-gray-300 px-4 py-3 outline-none"
+          />
+
+          <input
+            name="lastName"
+            placeholder="Last name"
+            value={form.lastName}
+            onChange={handleChange}
+            className="rounded-lg border border-gray-300 px-4 py-3 outline-none"
+          />
+        </div>
+
+        <input
+          placeholder="Company (optional)"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none"
+        />
+
+        <input
+          name="address"
+          placeholder="Address"
+          value={form.address}
+          onChange={handleChange}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none"
+        />
+
+        <input
+          name="apartment"
+          placeholder="Apartment, suite, etc. (optional)"
+          value={form.apartment}
+          onChange={handleChange}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none"
+        />
+
+        <div className="grid grid-cols-3 gap-3">
+          <input
+            name="city"
+            placeholder="City"
+            value={form.city}
+            onChange={handleChange}
+            className="rounded-lg border border-gray-300 px-4 py-3 outline-none"
+          />
+
+          <select
+            name="state"
+            value={form.state}
+            onChange={handleChange}
+            className="rounded-lg border border-gray-300 bg-white px-4 py-3 outline-none"
+          >
+            <option value="">State</option>
+                        <option>Andhra Pradesh</option>
+                        <option>Arunachal Pradesh</option>
+                        <option>Assam</option>
+                        <option>Bihar</option>
+                        <option>Chhattisgarh</option>
+                        <option>Goa</option>
+                        <option>Gujarat</option>
+                        <option>Haryana</option>
+                        <option>Himachal Pradesh</option>
+                        <option>Jharkhand</option>
+                        <option>Karnataka</option>
+                        <option>Kerala</option>
+                        <option>Madhya Pradesh</option>
+                        <option>Maharashtra</option>
+                        <option>Manipur</option>
+                        <option>Meghalaya</option>
+                        <option>Mizoram</option>
+                        <option>Nagaland</option>
+                        <option>Odisha</option>
+                        <option>Punjab</option>
+                        <option>Rajasthan</option>
+                        <option>Sikkim</option>
+                        <option>Tamil Nadu</option>
+                        <option>Telangana</option>
+                        <option>Tripura</option>
+                        <option>Uttar Pradesh</option>
+                        <option>Uttarakhand</option>
+                        <option>West Bengal</option>
+                        <option>Andaman and Nicobar Islands</option>
+                        <option>Chandigarh</option>
+                        <option>Dadra and Nagar Haveli and Daman and Diu</option>
+                        <option>Delhi</option>
+                        <option>Jammu and Kashmir</option>
+                        <option>Ladakh</option>
+                        <option>Lakshadweep</option>
+                        <option>Puducherry</option>
+          </select>
+
+          <input
+            name="postalCode"
+            placeholder="PIN code"
+            value={form.postalCode}
+            onChange={handleChange}
+            className="rounded-lg border border-gray-300 px-4 py-3 outline-none"
+          />
+        </div>
+
+<div className="relative group">
+  <PhoneInput
+    country={"in"}
+    value={form.phone}
+    onChange={(phone) => {
+      const updated = { ...form, phone };
+      setForm(updated);
+      localStorage.setItem("checkout_shipping", JSON.stringify(updated));
+    }}
+    inputProps={{
+      name: "phone",
+      required: true,
+    }}
+    inputClass="!w-full !h-[52px] !rounded-lg !border !border-gray-300 !pl-14 !pr-12 !text-base !outline-none"
+    buttonClass="!rounded-l-lg !border-gray-300"
+    dropdownClass="!text-black"
+  />
+
+  <span className="absolute right-4 top-1/2 z-10 flex h-5 w-5 -translate-y-1/2 items-center justify-center rounded-full border border-gray-400 text-xs text-gray-600">
+    ?
+  </span>
+
+  <div className="absolute right-0 -top-16 hidden w-52 rounded-lg bg-black p-2 text-xs text-white group-hover:block">
+    In case we need to contact you about your order
+  </div>
+</div>
+
+        <label className="flex items-center gap-3 text-sm">
+          <input type="checkbox" className="h-5 w-5 rounded border-gray-300" />
+          This is my default address
+        </label>
+
+        <div className="grid grid-cols-2 gap-3 pt-1">
+          <button
+            type="button"
+            onClick={() => setShowAddressModal(false)}
+            className="rounded-lg border border-gray-300 px-4 py-4 font-semibold text-black-600"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (
+                !form.firstName ||
+                !form.lastName ||
+                !form.phone ||
+                !form.address ||
+                !form.city ||
+                !form.state ||
+                !form.postalCode
+              ) {
+                alert("Please fill all required fields.");
+                return;
+              }
+
+              setShowManualAddress(false);
+              setShowAddressModal(false);
+            }}
+            className="rounded-lg bg-blue-600 px-4 py-4 font-semibold text-white"
+          >
+            Save address
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
+{showDeleteConfirm && (
+  <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 px-4">
+    <div className="w-full max-w-sm rounded-xl bg-white p-6 text-center shadow-lg">
+      <h3 className="mb-3 text-lg font-semibold">Delete address?</h3>
+
+      <p className="mb-6 text-sm text-gray-600">
+        Are you sure you want to delete this existing address?
+      </p>
+
+      <div className="flex gap-3">
+        <button
+          type="button"
+          onClick={() => setShowDeleteConfirm(false)}
+          className="flex-1 rounded-lg border border-gray-300 py-3"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          onClick={async () => {
+            const supabase = createClient();
+
+            const {
+              data: { user },
+            } = await supabase.auth.getUser();
+
+            if (!user) return;
+
+            await supabase
+              .from("profiles")
+              .update({
+                first_name: null,
+                last_name: null,
+                phone: null,
+                address: null,
+                apartment: null,
+                city: null,
+                state: null,
+                postal_code: null,
+              })
+              .eq("id", user.id);
+
+            setForm({
+              email: user.email || "",
+              firstName: "",
+              lastName: "",
+              phone: "",
+              address: "",
+              apartment: "",
+              city: "",
+              state: "",
+              postalCode: "",
+              country: "India",
+            });
+
+            setShowDeleteConfirm(false);
+            setShowManualAddress(true);
+          }}
+          className="flex-1 rounded-lg bg-red-600 py-3 text-white"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
     </main>
   );
 }
