@@ -282,7 +282,9 @@ const handleLogout = async () => {
           {userEmail.charAt(0).toUpperCase()}
         </div>
 
-        <p className="text-sm">{userEmail}</p>
+        <p className="text-sm no-underline break-all">
+  {userEmail}
+</p>
       </div>
 
 <div className="relative">
