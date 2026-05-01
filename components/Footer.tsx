@@ -2,6 +2,14 @@
 
 import { useRouter } from "next/navigation";
 
+const footerLinks = [
+  { label: "Privacy policy", href: "/privacy-policy" },
+  { label: "Refund policy", href: "/refund-policy" },
+  { label: "Terms of service", href: "/terms-of-service" },
+  { label: "Shipping policy", href: "/shipping-policy" },
+  { label: "Contact information", href: "/contact-information" },
+];
+
 export default function Footer() {
   const router = useRouter();
 
@@ -9,22 +17,16 @@ export default function Footer() {
     <section className="border-t border-black">
       <div className="border-b border-black px-5 py-6 sm:px-8">
         <div className="flex flex-wrap justify-center text-[16px] sm:justify-start">
-          {[
-            "Returns policy",
-            "Refund policy",
-            "Terms of service",
-            "Shipping policy",
-            "Contact information",
-          ].map((item, index, arr) => (
-            <div key={item} className="flex items-center">
+          {footerLinks.map((item, index) => (
+            <div key={item.label} className="flex items-center">
               <button
-                onClick={() => router.push("/search")}
+                onClick={() => router.push(item.href)}
                 className="hover:underline"
               >
-                {item}
+                {item.label}
               </button>
 
-              {index !== arr.length - 1 && (
+              {index !== footerLinks.length - 1 && (
                 <span className="mx-2 text-black/70">•</span>
               )}
             </div>
