@@ -660,8 +660,8 @@ export default function Home() {
       </section>
 
       {/* FOOTER SECTION */}
-      <section className="w-full border-b border-black bg-[#f3f3f3]">
-        <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
+      <section className="w-full bg-[#f3f3f3]">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
           <div className="px-5 py-6 sm:px-8 lg:border-r lg:border-black">
             <p className="mb-4 text-[16px] leading-7">
               Get 10% off your next purchase. Subscribe to our newsletter.
@@ -697,39 +697,6 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-
-<div className="border-b border-black px-5 py-6 sm:px-8">
-  <div className="flex flex-wrap justify-center text-[16px] sm:justify-start">
-
-    {[
-      "Returns policy",
-      "Refund policy",
-      "Terms of service",
-      "Shipping policy",
-      "Contact information",
-    ].map((item, index, arr) => (
-      <div key={item} className="flex items-center">
-        
-        <button
-          onClick={() => router.push("/search")}
-          className="hover:underline"
-        >
-          {item}
-        </button>
-
-        {index !== arr.length - 1 && (
-          <span className="mx-2 text-black/70">•</span>
-        )}
-
-      </div>
-    ))}
-
-  </div>
-</div>
-
-        <div className="px-5 py-4 sm:px-8">
-          <p className="text-[16px]">© 2026 BongoMithai. All rights reserved.</p>
         </div>
       </section>
     </main>

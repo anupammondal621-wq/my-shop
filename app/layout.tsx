@@ -1,6 +1,7 @@
 import "./globals.css";
 import Header from "@/components/Header";
 import Breadcrumb from "@/components/Breadcrumb";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "BongoMithai",
@@ -20,10 +21,13 @@ export default function RootLayout({
 
       <body className="bg-white text-black">
         <Header />
+
         <div className="pt-[70px]">
           <Breadcrumb />
           {children}
         </div>
+
+        <Footer />
       </body>
     </html>
   );
