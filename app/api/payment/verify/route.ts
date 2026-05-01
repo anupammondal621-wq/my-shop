@@ -1,21 +1,42 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
-import { createClient } from "@/utils/supabase/server";
+import { createClient as createServerClient } from "@/utils/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
+
+async function findUserByEmail(admin: any, email: string) {
+  let page = 1;
+
+  while (page <= 10) {
+    const { data, error } = await admin.auth.admin.listUsers({
+      page,
+      perPage: 1000,
+    });
+
+    if (error) return null;
+
+    const found = data.users.find(
+      (u: any) => u.email?.toLowerCase() === email.toLowerCase()
+    );
+
+    if (found) return found;
+    if (data.users.length < 1000) break;
+
+    page++;
+  }
+
+  return null;
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = await createServerClient();
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    const supabaseAdmin = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
 
     const body = await req.json();
-    console.log("VERIFY BODY:", body);
 
     const {
       razorpay_order_id,
@@ -25,6 +46,7 @@ export async function POST(req: NextRequest) {
       buyNowProduct,
       totalAmount,
       shippingDetails,
+      cartItems,
     } = body;
 
     const generatedSignature = crypto
@@ -39,47 +61,91 @@ export async function POST(req: NextRequest) {
       );
     }
 
-if (shippingDetails?.address) {
-  const { error: profileError } = await supabase.from("profiles").upsert(
-    {
-      id: user.id,
-      first_name: shippingDetails.firstName,
-      last_name: shippingDetails.lastName,
-      phone: shippingDetails.phone,
-      address: shippingDetails.address,
-      apartment: shippingDetails.apartment,
-      city: shippingDetails.city,
-      state: shippingDetails.state,
-      postal_code: shippingDetails.postalCode,
-      country: shippingDetails.country || "India",
-    },
-    { onConflict: "id" }
-  );
+    const {
+      data: { user: loggedInUser },
+    } = await supabase.auth.getUser();
 
-  console.log("PROFILE SAVE ERROR:", profileError);
+    const email = loggedInUser?.email || shippingDetails?.email;
 
-  if (profileError) {
-    return NextResponse.json(
-      { error: "Failed to save shipping address" },
-      { status: 500 }
+    if (!email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
+    }
+
+    let userId = loggedInUser?.id;
+    let accountAlreadyExists = !!loggedInUser;
+
+    if (!userId) {
+      const { data: existingProfile } = await supabaseAdmin
+        .from("profiles")
+        .select("id")
+        .eq("email", email)
+        .maybeSingle();
+
+      if (existingProfile?.id) {
+        accountAlreadyExists = true;
+        userId = existingProfile.id;
+      } else {
+        let existingAuthUser = await findUserByEmail(supabaseAdmin, email);
+
+        if (!existingAuthUser) {
+          accountAlreadyExists = false;
+
+          const { data: createdUser, error: createUserError } =
+            await supabaseAdmin.auth.admin.createUser({
+              email,
+              email_confirm: true,
+              user_metadata: {
+                first_name: shippingDetails?.firstName || "",
+                last_name: shippingDetails?.lastName || "",
+              },
+            });
+
+          if (createUserError) {
+            console.error("Create user error:", createUserError);
+            return NextResponse.json(
+              { error: "Failed to create customer account" },
+              { status: 500 }
+            );
+          }
+
+          existingAuthUser = createdUser.user;
+        } else {
+          accountAlreadyExists = true;
+        }
+
+        userId = existingAuthUser.id;
+      }
+    }
+
+    await supabaseAdmin.from("profiles").upsert(
+      {
+        id: userId,
+        email,
+        first_name: shippingDetails?.firstName || "",
+        last_name: shippingDetails?.lastName || "",
+        phone: shippingDetails?.phone || "",
+        address: shippingDetails?.address || "",
+        apartment: shippingDetails?.apartment || "",
+        city: shippingDetails?.city || "",
+        state: shippingDetails?.state || "",
+        postal_code: shippingDetails?.postalCode || "",
+        country: shippingDetails?.country || "India",
+      },
+      { onConflict: "id" }
     );
-  }
-} else {
-  console.log("NO SHIPPING DETAILS RECEIVED:", shippingDetails);
-}
 
-    const { data: existingOrder } = await supabase
+    const { data: existingOrder } = await supabaseAdmin
       .from("orders")
       .select("*")
       .eq("razorpay_order_id", razorpay_order_id)
       .maybeSingle();
 
     if (!existingOrder) {
-      const { data: newOrder, error: orderError } = await supabase
+      const { data: newOrder, error: orderError } = await supabaseAdmin
         .from("orders")
         .insert({
-          user_id: user.id,
-          email: user.email,
+          user_id: userId,
+          email,
           total_amount: totalAmount,
           status: "paid",
           razorpay_order_id,
@@ -97,41 +163,42 @@ if (shippingDetails?.address) {
       }
 
       if (mode === "buy-now" && buyNowProduct) {
-        await supabase.from("order_items").insert({
+        await supabaseAdmin.from("order_items").insert({
           order_id: newOrder.id,
-          user_id: user.id,
+          user_id: userId,
           slug: buyNowProduct.slug,
           name: buyNowProduct.name,
           price: buyNowProduct.price,
           image: buyNowProduct.image,
           quantity: buyNowProduct.quantity || 1,
         });
-      } else {
-        const { data: cartItems, error: cartError } = await supabase
-          .from("cart_items")
-          .select("*")
-          .eq("user_id", user.id);
+      } else if (cartItems && cartItems.length > 0) {
+        const itemsToInsert = cartItems.map((item: any) => ({
+          order_id: newOrder.id,
+          user_id: userId,
+          slug: item.slug,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          quantity: item.quantity,
+        }));
 
-        if (!cartError && cartItems && cartItems.length > 0) {
-          const itemsToInsert = cartItems.map((item) => ({
-            order_id: newOrder.id,
-            user_id: user.id,
-            slug: item.slug,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-            quantity: item.quantity,
-          }));
+        await supabaseAdmin.from("order_items").insert(itemsToInsert);
 
-          await supabase.from("order_items").insert(itemsToInsert);
-          await supabase.from("cart_items").delete().eq("user_id", user.id);
+        if (loggedInUser) {
+          await supabaseAdmin
+            .from("cart_items")
+            .delete()
+            .eq("user_id", loggedInUser.id);
         }
       }
     }
 
     return NextResponse.json({
       success: true,
-      redirectUrl: "/checkout/success",
+      redirectUrl: `/checkout/success?email=${encodeURIComponent(
+        email
+      )}&existing=${accountAlreadyExists ? "true" : "false"}`,
     });
   } catch (error) {
     console.error("Verification error:", error);

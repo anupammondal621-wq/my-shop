@@ -2,14 +2,19 @@
 
 import { useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 export default function SignupPage() {
   const supabase = createClient();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const [email, setEmail] = useState("");
+  // ✅ get email from URL (?email=...)
+  const emailFromUrl = searchParams.get("email") || "";
+
+  // ✅ state
+  const [email, setEmail] = useState(emailFromUrl);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -30,8 +35,11 @@ export default function SignupPage() {
     }
 
     setMessage("Account created successfully. Now login to continue.");
-    router.push("/login");
-    router.refresh();
+
+    setTimeout(() => {
+      router.push("/login");
+      router.refresh();
+    }, 1000);
   };
 
   return (

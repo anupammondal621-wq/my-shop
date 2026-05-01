@@ -226,6 +226,7 @@ body: JSON.stringify({
   buyNowProduct,
   totalAmount: total,
   shippingDetails: form,
+  cartItems: cart,
             }),
           });
 
