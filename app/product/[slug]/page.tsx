@@ -385,7 +385,7 @@ export default function ProductPage({
       </section>
 
       {/* BACK TO TOP + FOOTER */}
-      <section className="w-full border-b border-black bg-[#f3f3f3]">
+      <section>
         <div className="border-b border-black py-4 text-center">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -394,22 +394,12 @@ export default function ProductPage({
             Back to Top
           </button>
         </div>
+ </section>
 
-        <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
-          <div className="space-y-6 px-5 py-8 text-[16px] leading-8 sm:px-8 lg:border-r lg:border-black">
-            <p>
-              <span className="font-semibold">Contact</span> : +91 9775534553
-            </p>
-            <p>
-              <span className="font-semibold">Email</span> :
-              support@bongomithai.com
-            </p>
-            <p>
-              <span className="font-semibold">Location</span> : Kolkata
-            </p>
-          </div>
-
-          <div className="px-5 py-6 sm:px-8">
+      {/* FOOTER SECTION */}
+      <section className="w-full bg-[#f3f3f3]">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <div className="px-5 py-6 sm:px-8 lg:border-r lg:border-black">
             <p className="mb-4 text-[16px] leading-7">
               Get 10% off your next purchase. Subscribe to our newsletter.
             </p>
@@ -429,28 +419,21 @@ export default function ProductPage({
               </button>
             </form>
           </div>
-        </div>
 
-        <div className="border-b border-black px-5 py-6 sm:px-8">
-          <div className="flex flex-wrap gap-8 text-[16px]">
-            <button
-              onClick={() => router.push("/search")}
-              className="hover:underline"
-            >
-              Search
-            </button>
-
-            <button
-              onClick={() => router.push("/returns")}
-              className="hover:underline"
-            >
-              Returns
-            </button>
+          <div className="px-5 py-8 sm:px-8">
+            <div className="space-y-3 text-[16px] leading-8">
+              <p>
+                <span className="font-semibold">Contact</span> : +91 9775534553
+              </p>
+              <p>
+                <span className="font-semibold">Email</span> :
+                support@bongomithai.com
+              </p>
+              <p>
+                <span className="font-semibold">Location</span> : Kolkata
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div className="px-5 py-4 sm:px-8">
-          <p className="text-[16px]">© 2026 BongoMithai. All rights reserved.</p>
         </div>
       </section>
     </main>
