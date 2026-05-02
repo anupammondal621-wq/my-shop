@@ -50,11 +50,23 @@ export default function Header() {
     updateCartCount();
     getUser();
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+const {
+  data: { subscription },
+} = supabase.auth.onAuthStateChange(async (_event, session) => {
+  setUser(session?.user ?? null);
+
+  if (!session?.user) {
+    setCartCount(0);
+    localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("cartUpdated"));
+  } else {
+    await updateCartCount();
+
+    setTimeout(() => {
+      updateCartCount();
+    }, 300);
+  }
+});
 
     window.addEventListener("cartUpdated", updateCartCount);
 
@@ -64,13 +76,21 @@ export default function Header() {
     };
   }, [supabase]);
 
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setMenuOpen(false);
-    window.dispatchEvent(new Event("cartUpdated"));
+const handleLogout = async () => {
+  await supabase.auth.signOut();
+
+  setUser(null);
+  setCartCount(0);
+  setMenuOpen(false);
+
+  localStorage.removeItem("cart");
+
+  window.dispatchEvent(new Event("cartUpdated"));
+
+  setTimeout(() => {
     window.location.href = "/";
-  };
+  }, 100);
+};
 
   return (
     <>
