@@ -258,7 +258,7 @@ export default function Home() {
 </section>
 
       {/* HERO SLIDER NAV */}
-      <div className="flex items-center justify-between border-t border-b border-black px-6 py-3 text-sm">
+      <div className="flex items-center justify-center gap-4 border-t border-b border-black px-6 py-3 text-sm">
         <button
           onClick={() => heroSwiperRef.current?.slidePrev()}
           className="px-2 py-1 hover:opacity-60"
