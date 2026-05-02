@@ -68,19 +68,19 @@ export default function AddToCartButton({
               />
             </div>
 
-            <p className="text-[22px] tracking-wide">{product.name}</p>
+            <p className="text-[16px] tracking-wide">{product.name}</p>
           </div>
 
           <Link
             href="/cart"
-            className="mb-4 flex h-[58px] w-full items-center justify-center rounded-full border-2 border-black-400 text-[22px] tracking-[0.15em] text-black-400"
+            className="mb-4 flex h-[58px] w-full items-center justify-center rounded-full border-2 border-black-400 text-[14px] tracking-wide text-black-400"
           >
             View cart ({cartTotal})
           </Link>
 
           <Link
             href="/cart"
-            className="mb-5 flex h-[58px] w-full items-center justify-center rounded-full bg-black text-[22px] tracking-[0.15em] text-white"
+            className="mb-5 flex h-[58px] w-full items-center justify-center rounded-full bg-black text-[14px] tracking-wide text-white"
           >
             Check out
           </Link>
@@ -88,7 +88,7 @@ export default function AddToCartButton({
           <button
             type="button"
             onClick={() => setPopupOpen(false)}
-            className="block w-full text-center text-[22px] tracking-[0.15em] text-black-400 underline"
+            className="block w-full text-center text-[14px] tracking-wide text-black-400 underline"
           >
             Continue shopping
           </button>
