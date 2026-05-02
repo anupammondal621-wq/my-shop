@@ -9,6 +9,7 @@ import {
   CartItem,
 } from "@/utils/cart";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type CartItemWithPack = CartItem & {
   pack?: string;
@@ -149,9 +150,11 @@ const getNumericPrice = (price: string | number | undefined | null) => {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-4">
                               <div className="min-w-0 flex-1 pt-1">
-                                <h2 className="text-[15px] leading-[1.3] uppercase">
-                                  {item.name}
-                                </h2>
+<Link href={`/product/${item.slug}`}>
+  <h2 className="text-[15px] leading-[1.3] uppercase cursor-pointer">
+    {item.name}
+  </h2>
+</Link>
 
                                 <p className="mt-2 text-[14px]">
                                   Rs. {itemPrice.toFixed(2)}
@@ -238,9 +241,11 @@ const getNumericPrice = (price: string | number | undefined | null) => {
                           </div>
 
                           <div className="pt-1">
-                            <h2 className="text-[18px] leading-snug">
-                              {item.name}
-                            </h2>
+<Link href={`/product/${item.slug}`}>
+  <h2 className="text-[18px] leading-snug cursor-pointer">
+    {item.name}
+  </h2>
+</Link>
 
                             <p className="mt-3 text-[15px]">
                               Rs. {itemPrice.toFixed(2)}
