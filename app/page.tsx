@@ -423,12 +423,12 @@ export default function Home() {
           <div className="flex items-start bg-[#f5f5f5] px-6 py-8 sm:px-8 sm:py-10 lg:px-10 lg:py-12">
             <div className="max-w-[640px]">
               <h2 className="text-[24px] uppercase tracking-wide sm:text-[28px]">
-                Gifting with Pistabarfi
+                Gifting with BongoMithai
               </h2>
 
               <div className="mt-8 space-y-6 text-[16px] leading-8 text-black">
                 <p>
-                  At Pistabarfi, we create thoughtful, customised pieces for
+                  At BongoMithai, we create thoughtful, customised pieces for
                   wedding favours, birth announcements, corporate gifting etc.
                   Everything can be personalised, whether it&apos;s a name, a
                   logo, or a detail that makes it uniquely yours.

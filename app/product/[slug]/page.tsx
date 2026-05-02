@@ -193,6 +193,7 @@ export default function ProductPage({
             <span>{product.brand}</span>
 
             <button
+            
               onClick={() => {
                 if (navigator.share) {
                   navigator.share({
