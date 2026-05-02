@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { addToCart, loadCart, type ProductForCart } from "@/utils/cart";
 
+
 type AddToCartButtonProps = {
   product: ProductForCart;
   fullWidth?: boolean;
