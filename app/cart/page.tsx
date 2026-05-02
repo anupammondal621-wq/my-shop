@@ -25,9 +25,19 @@ const refreshCart = async () => {
   setCart(data as CartItemWithPack[]);
 };
 
-  useEffect(() => {
-    refreshCart();
-  }, []);
+useEffect(() => {
+  refreshCart();
+
+  window.addEventListener("cartUpdated", refreshCart);
+  window.addEventListener("focus", refreshCart);
+  window.addEventListener("pageshow", refreshCart);
+
+  return () => {
+    window.removeEventListener("cartUpdated", refreshCart);
+    window.removeEventListener("focus", refreshCart);
+    window.removeEventListener("pageshow", refreshCart);
+  };
+}, []);
 
   const increaseQuantity = async (slug: string, currentQuantity: number) => {
     await updateCartItemQuantity(slug, currentQuantity + 1);

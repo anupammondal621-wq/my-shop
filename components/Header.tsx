@@ -202,7 +202,17 @@ const handleLogout = async () => {
             </button>
 
             {/* CART */}
-            <Link href="/cart" className="relative" aria-label="Cart">
+            <button
+  type="button"
+  onClick={() => {
+    router.push("/cart");
+    setTimeout(() => {
+      window.dispatchEvent(new Event("cartUpdated"));
+    }, 100);
+  }}
+  className="relative"
+  aria-label="Cart"
+>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-7 w-7">
                 <path d="M9 7a3 3 0 0 1 6 0" />
                 <path d="M5 8h14l-1.2 10.5a2 2 0 0 1-2 1.5H8.2a2 2 0 0 1-2-1.5L5 8Z" />
@@ -227,7 +237,7 @@ const handleLogout = async () => {
                   )}
                 </>
               )}
-            </Link>
+            </button>
           </div>
         </div>
       </header>
