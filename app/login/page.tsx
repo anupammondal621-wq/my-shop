@@ -28,13 +28,14 @@ export default function LoginPage() {
       return;
     }
 
-    await mergeGuestCartIntoUserCart();
+await mergeGuestCartIntoUserCart();
+window.dispatchEvent(new Event("cartUpdated"));
 
-    const params = new URLSearchParams(window.location.search);
-    const redirect = params.get("redirect") || "/account";
+const params = new URLSearchParams(window.location.search);
+const redirect = params.get("redirect") || "/account";
 
-    router.push(redirect);
-    router.refresh();
+router.replace(redirect);
+router.refresh();
   };
 
   return (

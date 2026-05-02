@@ -6,6 +6,7 @@ import { createClient } from "@/utils/supabase/client";
 import { loadCart, CartItem } from "@/utils/cart";
 import SearchOverlay from "@/components/SearchOverlay";
 import { useRouter } from "next/navigation";
+import { clearCartAfterLogout } from "@/utils/cart";
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(0);
@@ -54,16 +55,15 @@ export default function Header() {
 
 const {
   data: { subscription },
-} = supabase.auth.onAuthStateChange(async (_event, session) => {
+} = supabase.auth.onAuthStateChange(async (event, session) => {
   setUser(session?.user ?? null);
 
-  if (!session?.user) {
+  if (event === "SIGNED_OUT") {
     setCartCount(0);
-    localStorage.removeItem("cart");
-    window.dispatchEvent(new Event("cartUpdated"));
-  } else {
-    await updateCartCount();
+    return;
   }
+
+  await updateCartCount();
 });
 
     window.addEventListener("cartUpdated", updateCartCount);
@@ -75,18 +75,22 @@ const {
   }, [supabase]);
 
 const handleLogout = async () => {
-  await supabase.auth.signOut();
+  setMenuOpen(false);
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    console.error("Logout error:", error.message);
+    return;
+  }
 
   setUser(null);
   setCartCount(0);
-  setMenuOpen(false);
 
-  localStorage.removeItem("cart");
+  await clearCartAfterLogout();
 
-  window.dispatchEvent(new Event("cartUpdated"));
-
-router.push("/");
-router.refresh();
+  router.replace("/");
+  router.refresh();
 };
 
   return (
@@ -266,7 +270,16 @@ router.refresh();
                   </>
                 ) : (
                   <>
-                    <Link href="/account" onClick={() => setMenuOpen(false)}>Account</Link>
+                    <button
+  type="button"
+  onClick={() => {
+    setMenuOpen(false);
+    router.push("/account");
+  }}
+  className="text-left"
+>
+  Account
+</button>
                     <button type="button" onClick={handleLogout} className="text-left">Logout</button>
                   </>
                 )}

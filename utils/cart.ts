@@ -13,11 +13,34 @@ export type CartItem = {
   user_id?: string;
   slug: string;
   name: string;
-  price: number;
+  price: number | string;
   image: string;
   quantity: number;
   created_at?: string;
 };
+
+const CART_KEY = "cart";
+
+function notifyCartUpdated() {
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("cartUpdated"));
+  }
+}
+
+function getLocalCart(): CartItem[] {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveLocalCart(cart: CartItem[]) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
 
 export async function getLoggedInUser() {
   const supabase = createClient();
@@ -33,8 +56,7 @@ export async function loadCart(): Promise<CartItem[]> {
   const user = await getLoggedInUser();
 
   if (!user) {
-    const localCart = localStorage.getItem("cart");
-    return localCart ? JSON.parse(localCart) : [];
+    return getLocalCart();
   }
 
   const { data, error } = await supabase
@@ -48,7 +70,7 @@ export async function loadCart(): Promise<CartItem[]> {
     return [];
   }
 
-  return (data as CartItem[]) ?? [];
+  return data ?? [];
 }
 
 export async function addToCart(product: ProductForCart) {
@@ -57,40 +79,37 @@ export async function addToCart(product: ProductForCart) {
   const quantityToAdd = product.quantity ?? 1;
 
   if (!user) {
-    const existingCart = localStorage.getItem("cart");
-    const cart: CartItem[] = existingCart ? JSON.parse(existingCart) : [];
+    const cart = getLocalCart();
 
-    const existingProductIndex = cart.findIndex(
-      (item) => item.slug === product.slug
-    );
+    const existingIndex = cart.findIndex((item) => item.slug === product.slug);
 
-if (existingProductIndex !== -1) {
-  cart[existingProductIndex].quantity += quantityToAdd;
-  cart[existingProductIndex].price = product.price; 
-} else {
-  cart.push({
-    slug: product.slug,
-    name: product.name,
-    price: product.price, 
-    image: product.image,
-    quantity: quantityToAdd,
-  });
-}
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity += quantityToAdd;
+      cart[existingIndex].price = product.price;
+    } else {
+      cart.push({
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        quantity: quantityToAdd,
+      });
+    }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cartUpdated"));
+    saveLocalCart(cart);
+    notifyCartUpdated();
     return;
   }
 
-  const { data: existingItem, error: existingItemError } = await supabase
+  const { data: existingItem, error: existingError } = await supabase
     .from("cart_items")
     .select("*")
     .eq("user_id", user.id)
     .eq("slug", product.slug)
     .maybeSingle();
 
-  if (existingItemError) {
-    console.error("Error checking existing cart item:", existingItemError.message);
+  if (existingError) {
+    console.error("Error checking cart item:", existingError.message);
     return;
   }
 
@@ -99,7 +118,9 @@ if (existingProductIndex !== -1) {
       .from("cart_items")
       .update({
         quantity: existingItem.quantity + quantityToAdd,
-        price: String(product.price),
+        price: product.price,
+        name: product.name,
+        image: product.image,
       })
       .eq("id", existingItem.id);
 
@@ -112,7 +133,7 @@ if (existingProductIndex !== -1) {
       user_id: user.id,
       slug: product.slug,
       name: product.name,
-      price: String(product.price),
+      price: product.price,
       image: product.image,
       quantity: quantityToAdd,
     });
@@ -123,19 +144,15 @@ if (existingProductIndex !== -1) {
     }
   }
 
-  window.dispatchEvent(new Event("cartUpdated"));
+  notifyCartUpdated();
 }
 
-export async function updateCartItemQuantity(
-  slug: string,
-  quantity: number
-) {
+export async function updateCartItemQuantity(slug: string, quantity: number) {
   const supabase = createClient();
   const user = await getLoggedInUser();
 
   if (!user) {
-    const existingCart = localStorage.getItem("cart");
-    const cart: CartItem[] = existingCart ? JSON.parse(existingCart) : [];
+    const cart = getLocalCart();
 
     const updatedCart =
       quantity <= 0
@@ -144,8 +161,8 @@ export async function updateCartItemQuantity(
             item.slug === slug ? { ...item, quantity } : item
           );
 
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event("cartUpdated"));
+    saveLocalCart(updatedCart);
+    notifyCartUpdated();
     return;
   }
 
@@ -168,16 +185,23 @@ export async function updateCartItemQuantity(
       .eq("slug", slug);
 
     if (error) {
-      console.error("Error updating cart quantity:", error.message);
+      console.error("Error updating quantity:", error.message);
       return;
     }
   }
 
-  window.dispatchEvent(new Event("cartUpdated"));
+  notifyCartUpdated();
 }
 
 export async function removeCartItem(slug: string) {
   await updateCartItemQuantity(slug, 0);
+}
+
+export async function clearCartAfterLogout() {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(CART_KEY);
+    notifyCartUpdated();
+  }
 }
 
 export async function mergeGuestCartIntoUserCart() {
@@ -186,52 +210,40 @@ export async function mergeGuestCartIntoUserCart() {
 
   if (!user) return;
 
-  const localCartRaw = localStorage.getItem("cart");
-  const localCart: CartItem[] = localCartRaw ? JSON.parse(localCartRaw) : [];
+  const localCart = getLocalCart();
 
   if (localCart.length === 0) return;
 
   for (const localItem of localCart) {
-    const { data: existingItem, error: fetchError } = await supabase
+    const { data: existingItem } = await supabase
       .from("cart_items")
       .select("*")
       .eq("user_id", user.id)
       .eq("slug", localItem.slug)
       .maybeSingle();
 
-    if (fetchError) {
-      console.error("Error checking cart item during merge:", fetchError.message);
-      continue;
-    }
-
     if (existingItem) {
-      const { error: updateError } = await supabase
+      await supabase
         .from("cart_items")
         .update({
           quantity: existingItem.quantity + localItem.quantity,
-          price: String(localItem.price),
+          price: localItem.price,
+          name: localItem.name,
+          image: localItem.image,
         })
         .eq("id", existingItem.id);
-
-      if (updateError) {
-        console.error("Error updating merged cart item:", updateError.message);
-      }
     } else {
-      const { error: insertError } = await supabase.from("cart_items").insert({
+      await supabase.from("cart_items").insert({
         user_id: user.id,
         slug: localItem.slug,
         name: localItem.name,
-        price: String(localItem.price),
+        price: localItem.price,
         image: localItem.image,
         quantity: localItem.quantity,
       });
-
-      if (insertError) {
-        console.error("Error inserting merged cart item:", insertError.message);
-      }
     }
   }
 
-  localStorage.removeItem("cart");
-  window.dispatchEvent(new Event("cartUpdated"));
+  localStorage.removeItem(CART_KEY);
+  notifyCartUpdated();
 }

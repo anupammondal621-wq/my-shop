@@ -18,17 +18,15 @@ export default function AddToCartButton({
   const [popupOpen, setPopupOpen] = useState(false);
   const [cartTotal, setCartTotal] = useState(0);
 
-  const handleAddToCart = async () => {
-    await addToCart(product);
+const handleAddToCart = async () => {
+  await addToCart(product);
 
-    const cart = await loadCart();
-    const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  const cart = await loadCart();
+  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
-    setCartTotal(totalItems);
-    setPopupOpen(true);
-
-    window.dispatchEvent(new Event("cartUpdated"));
-  };
+  setCartTotal(totalItems);
+  setPopupOpen(true);
+};
 
   return (
     <>
@@ -42,7 +40,7 @@ export default function AddToCartButton({
       </button>
 
       {popupOpen && (
-        <div className="fixed left-0 right-0 top-[70px] z-[999] bg-white px-6 py-5 shadow-lg md:hidden">
+        <div className="fixed left-0 right-0 top-[70px] z-[999] bg-white px-6 py-5 shadow-lg md:left-auto md:right-6 md:w-[380px]">
           <div className="mb-6 flex items-center justify-between">
             <div className="flex items-center gap-3 text-[16px]">
               <span>✓</span>
