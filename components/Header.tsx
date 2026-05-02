@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { loadCart, CartItem } from "@/utils/cart";
 import SearchOverlay from "@/components/SearchOverlay";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [cartCount, setCartCount] = useState(0);
@@ -12,8 +13,9 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [cartAnimate, setCartAnimate] = useState(false);
+  const router = useRouter();
 
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
 
   useEffect(() => {
     const updateCartCount = async () => {
@@ -61,10 +63,6 @@ const {
     window.dispatchEvent(new Event("cartUpdated"));
   } else {
     await updateCartCount();
-
-    setTimeout(() => {
-      updateCartCount();
-    }, 300);
   }
 });
 
@@ -87,9 +85,8 @@ const handleLogout = async () => {
 
   window.dispatchEvent(new Event("cartUpdated"));
 
-  setTimeout(() => {
-    window.location.href = "/";
-  }, 100);
+router.push("/");
+router.refresh();
 };
 
   return (
@@ -253,7 +250,7 @@ const handleLogout = async () => {
                   type="button"
                   onClick={() => {
                     setMenuOpen(false);
-                    window.location.href = "/shop";
+                    router.push("/shop");
                   }}
                   className="text-left"
                 >
