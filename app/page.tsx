@@ -93,12 +93,12 @@ const faqs = [
   {
     question: "Where are you based, and do you have a physical store?",
     answer:
-      "We are based out of Mumbai. At the moment, we operate as a cloud kitchen, which allows us to make everything fresh and to order. We currently do not have a physical retail store.",
+      "We are based out of Kolkata. At the moment, we operate as a cloud kitchen, which allows us to make everything fresh and to order. We currently do not have a physical retail store.",
   },
   {
     question: "Where do you deliver, and how long does delivery take?",
     answer:
-      "We deliver pan-India and also internationally.\n\nMumbai: Delivery within 2 days\nOther cities in India: Delivery within 3–4 days\n\nAll our products are made to order and shipped with care to maintain freshness and quality.",
+      "We deliver pan-India and also internationally.\n\nKolkata: Delivery within 2 days\nOther cities in India: Delivery within 3–4 days\n\nAll our products are made to order and shipped with care to maintain freshness and quality.",
   },
   {
     question: "Do you take bulk, corporate, or B2B orders?",

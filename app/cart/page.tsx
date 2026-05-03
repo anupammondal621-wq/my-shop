@@ -77,7 +77,7 @@ const getNumericPrice = (price: string | number | undefined | null) => {
 
   return (
     <>
-      <main className="min-h-screen bg-white text-black">
+      <main className="bg-white text-black">
         {/* TOP HEADER */}
         <div className="border-b border-black px-6 py-4">
           <div className="flex items-center justify-between gap-4">
@@ -357,7 +357,7 @@ const getNumericPrice = (price: string | number | undefined | null) => {
 
       {/* FOOTER */}
       <section className="w-full bg-[#f3f3f3]">
-        <div className="grid grid-cols-1 border-b border-black lg:grid-cols-2">
+        <div className="grid grid-cols-1 border-t border-black lg:grid-cols-2">
           <div className="px-5 py-6 sm:px-8 lg:border-r lg:border-black">
             <p className="mb-4 text-[16px] leading-7">
               Get 10% off your next purchase. Subscribe to our newsletter.
