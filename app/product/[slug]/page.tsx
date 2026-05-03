@@ -13,11 +13,12 @@ type ProductType = {
   name: string;
   price: number;
   buttonPrice: string;
-  image: string;
+  image: string[];
   inStock?: boolean;
   description: string[];
   packSizes: string[];
 };
+
 
 const products: Record<string, ProductType> = {
   "product-one": {
@@ -26,7 +27,10 @@ const products: Record<string, ProductType> = {
     name: "Kaju Katli - Box of 18",
     price: 499,
     buttonPrice: "Rs. 499",
-    image: "/product-1.jpg",
+    image: ["/Kaju6_1.jpeg",
+      "/Kaju6_1-2.jpeg",
+      "/Kaju6_1-2-3.jpeg",
+    ],
     //inStock: false,
     description: [
       "18 pieces of bite sized , mini Kaju katli made out of Cashewnuts & Suga",
@@ -40,7 +44,7 @@ const products: Record<string, ProductType> = {
     name: "Kaju Katli - Box of 36",
     price: 899,
     buttonPrice: "Rs. 899",
-    image: "/product-2.jpg",
+    image: ["/product-2.jpg",],
     inStock: false,
     description: [
       "A premium assorted mithai selection for festive gifting.",
@@ -54,7 +58,7 @@ const products: Record<string, ProductType> = {
     name: "Mysore Pak - Box of 6",
     price: 399,
     buttonPrice: "Rs. 399",
-    image: "/product-3.jpg",
+    image: ["/product-3.jpg",],
     description: ["A curated box of assorted mithai.", "Shelf life : 7 days"],
     packSizes: ["Box of 8"],
     inStock: false,
@@ -65,7 +69,7 @@ const products: Record<string, ProductType> = {
     name: "Mysore Pak - Box of 12",
     price: 749,
     buttonPrice: "Rs. 749",
-    image: "/product-4.jpg",
+    image: ["/product-4.jpg",],
     inStock: false,
     description: [
       "Classic gajar halwa packed for convenience.",
@@ -79,7 +83,7 @@ const products: Record<string, ProductType> = {
     name: "Pistabarfi - Box of 6",
     price: 899,
     buttonPrice: "Rs. 899",
-    image: "/product-5.jpg",
+    image: ["/product-5.jpg",],
     inStock: false,
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -90,7 +94,7 @@ const products: Record<string, ProductType> = {
     name: "Pistabarfi - Box of 12",
     price: 1699,
     buttonPrice: "Rs. 1699",
-    image: "/product-6.jpg",
+    image: ["/product-6.jpg",],
     inStock: false,
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -101,7 +105,7 @@ const products: Record<string, ProductType> = {
     name: "Khajur Barfi - Box of 6",
     price: 399,
     buttonPrice: "Rs. 399",
-    image: "/product-6.jpg",
+    image: ["/product-6.jpg",],
     inStock: false,
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -112,7 +116,7 @@ const products: Record<string, ProductType> = {
     name: "Khajur Barfi - Box of 12",
     price: 749,
     buttonPrice: "Rs. 749",
-    image: "/product-6.jpg",
+    image: ["/product-6.jpg",],
     inStock: false,
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -123,7 +127,7 @@ const products: Record<string, ProductType> = {
     name: "Matichur Laddu - Box of 6",
     price: 739,
     buttonPrice: "Rs. 399",
-    image: "/product-6.jpg",
+    image: ["/product-6.jpg",],
     inStock: false,
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -134,7 +138,7 @@ const products: Record<string, ProductType> = {
     name: "Matichur Laddu - Box of 12",
     price: 749,
     buttonPrice: "Rs. 749",
-    image: "/product-6.jpg",
+    image: ["/product-6.jpg",],
     inStock: false,
     description: ["Premium sweet selection.", "Shelf life : 7 days"],
     packSizes: ["Pack of 1"],
@@ -149,6 +153,9 @@ export default function ProductPage({
   const router = useRouter();
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [isImageOpen, setIsImageOpen] = useState(false);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
 
   const { slug } = use(params);
   const product = products[slug as keyof typeof products];
@@ -163,28 +170,103 @@ export default function ProductPage({
     return <main className="p-6">Product not found.</main>;
   }
 
+  const nextImage = () => {
+  setSelectedImage((prev) =>
+    prev === product.image.length - 1 ? 0 : prev + 1
+  );
+};
+
+const prevImage = () => {
+  setSelectedImage((prev) =>
+    prev === 0 ? product.image.length - 1 : prev - 1
+  );
+};
+
+const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+  if (touchStart === null) return;
+
+  const touchEnd = e.changedTouches[0].clientX;
+  const diff = touchStart - touchEnd;
+
+  if (diff > 50) nextImage();
+  if (diff < -50) prevImage();
+
+  setTouchStart(null);
+};
+
   return (
     <main className="min-h-screen bg-white text-black pt-[0px]">
       <div className="grid min-h-[calc(100vh-70px)] grid-cols-1 lg:grid-cols-2">
-        {/* IMAGE */}
-        <div className="relative border-b border-r border-black lg:border-b-0">
-          <div className="relative h-[500px] w-full lg:h-[calc(100vh-70px)]">
-            <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-              priority
-            />
+{/* IMAGE */}
+<div className="relative border-b border-r border-black lg:border-b-0">
+  <div
+    className="relative h-[500px] w-full cursor-pointer lg:h-[calc(100vh-70px)]"
+    onClick={() => setIsImageOpen(true)}
+    onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
+    onTouchEnd={handleTouchEnd}
+  >
+    <Image
+      src={product.image[selectedImage]}
+      alt={product.name}
+      fill
+      sizes="(max-width: 1024px) 100vw, 50vw"
+      className="object-cover"
+      priority
+    />
 
-            {product.inStock === false && (
-              <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
-                Sold out
-              </div>
-            )}
-          </div>
-        </div>
+    {/* LEFT / RIGHT BUTTONS */}
+    {product.image.length > 1 && (
+      <>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            prevImage();
+          }}
+          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-xl"
+        >
+          ‹
+        </button>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            nextImage();
+          }}
+          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-xl"
+        >
+          ›
+        </button>
+      </>
+    )}
+
+    {/* DOTS */}
+    {product.image.length > 1 && (
+      <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+        {product.image.map((_, index) => (
+          <button
+            key={index}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedImage(index);
+            }}
+            className={`h-2.5 w-2.5 rounded-full ${
+              selectedImage === index ? "bg-black" : "bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+    )}
+
+    {product.inStock === false && (
+      <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
+        Sold out
+      </div>
+    )}
+  </div>
+</div>
 
         {/* RIGHT SIDE */}
         <div>
@@ -314,7 +396,7 @@ export default function ProductPage({
                       slug: product.slug,
                       name: product.name,
                       price: product.price,
-                      image: product.image,
+                      image: product.image[0],
                       quantity,
                     }}
                     fullWidth
@@ -327,7 +409,7 @@ export default function ProductPage({
                       slug: product.slug,
                       name: product.name,
                       price: product.price,
-                      image: product.image,
+                      image: product.image[0],
                       quantity,
                     }}
                     fullWidth
@@ -359,7 +441,7 @@ export default function ProductPage({
               <Link href={`/product/${item.slug}`} className="block">
                 <div className="relative aspect-[4/5] w-full overflow-hidden bg-gray-100">
                   <Image
-                    src={item.image}
+                    src={item.image[0]}
                     alt={item.name}
                     fill
                     className="object-cover"
@@ -436,6 +518,69 @@ export default function ProductPage({
           </div>
         </div>
       </section>
+
+{isImageOpen && (
+  <div
+    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
+    onClick={() => setIsImageOpen(false)}
+  >
+    <button
+      type="button"
+      onClick={() => setIsImageOpen(false)}
+      className="absolute right-5 top-5 z-20 text-3xl text-white"
+    >
+      ×
+    </button>
+
+    <div
+      className="relative h-full w-full"
+      onClick={(e) => e.stopPropagation()}
+      onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
+      onTouchEnd={handleTouchEnd}
+    >
+      <Image
+        src={product.image[selectedImage]}
+        alt={product.name}
+        fill
+        className="object-contain"
+      />
+
+      {product.image.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={prevImage}
+            className="absolute left-4 top-1/2 z-20 text-5xl text-white"
+          >
+            ‹
+          </button>
+
+          <button
+            type="button"
+            onClick={nextImage}
+            className="absolute right-4 top-1/2 z-20 text-5xl text-white"
+          >
+            ›
+          </button>
+
+          <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+            {product.image.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setSelectedImage(index)}
+                className={`h-2.5 w-2.5 rounded-full ${
+                  selectedImage === index ? "bg-white" : "bg-gray-500"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  </div>
+)}
+
     </main>
   );
 }
