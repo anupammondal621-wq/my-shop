@@ -200,21 +200,29 @@ const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
 {/* IMAGE */}
 <div className="relative border-b border-r border-black lg:border-b-0">
   <div
-    className="relative h-[500px] w-full cursor-pointer lg:h-[calc(100vh-70px)]"
+    className="relative h-[500px] w-full cursor-pointer overflow-hidden lg:h-[calc(100vh-70px)]"
     onClick={() => setIsImageOpen(true)}
     onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
     onTouchEnd={handleTouchEnd}
   >
-    <Image
-      src={product.image[selectedImage]}
-      alt={product.name}
-      fill
-      sizes="(max-width: 1024px) 100vw, 50vw"
-      className="object-cover"
-      priority
-    />
+    <div
+      className="flex h-full w-full transition-transform duration-300 ease-out"
+      style={{ transform: `translateX(-${selectedImage * 100}%)` }}
+    >
+      {product.image.map((img, index) => (
+        <div key={img} className="relative h-full w-full shrink-0">
+          <Image
+            src={img}
+            alt={`${product.name} ${index + 1}`}
+            fill
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+            priority={index === 0}
+          />
+        </div>
+      ))}
+    </div>
 
-    {/* LEFT / RIGHT BUTTONS */}
     {product.image.length > 1 && (
       <>
         <button
@@ -238,26 +246,23 @@ const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
         >
           ›
         </button>
-      </>
-    )}
 
-    {/* DOTS */}
-    {product.image.length > 1 && (
-      <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-        {product.image.map((_, index) => (
-          <button
-            key={index}
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedImage(index);
-            }}
-            className={`h-2.5 w-2.5 rounded-full ${
-              selectedImage === index ? "bg-black" : "bg-gray-300"
-            }`}
-          />
-        ))}
-      </div>
+        <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
+          {product.image.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(index);
+              }}
+              className={`h-2.5 w-2.5 rounded-full ${
+                selectedImage === index ? "bg-black" : "bg-gray-300"
+              }`}
+            />
+          ))}
+        </div>
+      </>
     )}
 
     {product.inStock === false && (
@@ -533,17 +538,26 @@ const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
     </button>
 
     <div
-      className="relative h-full w-full"
+      className="relative h-full w-full overflow-hidden"
       onClick={(e) => e.stopPropagation()}
       onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
       onTouchEnd={handleTouchEnd}
     >
+<div
+  className="flex h-full w-full transition-transform duration-300 ease-out"
+  style={{ transform: `translateX(-${selectedImage * 100}%)` }}
+>
+  {product.image.map((img, index) => (
+    <div key={img} className="relative h-full w-full shrink-0">
       <Image
-        src={product.image[selectedImage]}
-        alt={product.name}
+        src={img}
+        alt={`${product.name} ${index + 1}`}
         fill
         className="object-contain"
       />
+    </div>
+  ))}
+</div>
 
       {product.image.length > 1 && (
         <>
