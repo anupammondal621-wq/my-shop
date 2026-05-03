@@ -25,7 +25,7 @@ const specials: ProductType[] = [
     name: "Kaju Katli - Box of 18",
     price: 499,
     buttonPrice: "Rs. 499",
-    image: "/product-1.jpg",
+    image: "/Kaju6_1.jpeg",
     //inStock: false,
   },
   {
@@ -60,7 +60,7 @@ const allProducts: ProductType[] = [
     name: "Kaju Katli - Box of 18",
     price: 499,
     buttonPrice: "Rs. 499",
-    image: "/product-1.jpg",
+    image: "/Kaju6_1.jpeg",
     //inStock: false,
   },
   {
@@ -117,6 +117,7 @@ const galleryImages = [
   "/product-7.jpg",
   "/product-8.jpeg",
   "/product-9.jpeg",
+  "/Kaju6_1.jpeg",
 ];
 
 const ProductCard = memo(function ProductCard({
@@ -280,7 +281,7 @@ export default function Home() {
         </button>
       </div>
 
-{/* PISTABARFI SPECIALS */}
+{/* BongoMithai SPECIALS */}
 <section className="w-full">
   <div className="border-b border-black px-6 py-4">
     <h2 className="text-sm tracking-widest">
