@@ -6,6 +6,11 @@ import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
 import BuyNowButton from "@/components/BuyNowButton";
 import { useRouter } from "next/navigation";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 type ProductType = {
   slug: string;
@@ -156,6 +161,8 @@ export default function ProductPage({
   const [selectedImage, setSelectedImage] = useState(0);
   const [isImageOpen, setIsImageOpen] = useState(false);
   const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchMove, setTouchMove] = useState(0);
+  const [initialSlide, setInitialSlide] = useState(0);
 
   const { slug } = use(params);
   const product = products[slug as keyof typeof products];
@@ -182,16 +189,19 @@ const prevImage = () => {
   );
 };
 
-const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  if (touchStart === null) return;
+  setTouchMove(e.touches[0].clientX - touchStart);
+};
+
+const handleTouchEnd = () => {
   if (touchStart === null) return;
 
-  const touchEnd = e.changedTouches[0].clientX;
-  const diff = touchStart - touchEnd;
-
-  if (diff > 50) nextImage();
-  if (diff < -50) prevImage();
+  if (touchMove > 80) prevImage();
+  else if (touchMove < -80) nextImage();
 
   setTouchStart(null);
+  setTouchMove(0);
 };
 
   return (
@@ -199,71 +209,54 @@ const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
       <div className="grid min-h-[calc(100vh-70px)] grid-cols-1 lg:grid-cols-2">
 {/* IMAGE */}
 <div className="relative border-b border-r border-black lg:border-b-0">
-  <div
-    className="relative h-[500px] w-full cursor-pointer overflow-hidden lg:h-[calc(100vh-70px)]"
-    onClick={() => setIsImageOpen(true)}
-    onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
-    onTouchEnd={handleTouchEnd}
-  >
-    <div
-      className="flex h-full w-full transition-transform duration-300 ease-out"
-      style={{ transform: `translateX(-${selectedImage * 100}%)` }}
+  <div className="relative h-[500px] w-full lg:h-[calc(100vh-70px)]">
+    <Swiper
+      modules={[Navigation, Pagination]}
+      loop={true}
+      navigation={{
+  prevEl: ".custom-swiper-prev",
+  nextEl: ".custom-swiper-next",
+}}
+      pagination={{ clickable: true }}
+className="h-full w-full"
+onSlideChange={(swiper) => setInitialSlide(swiper.realIndex)}
+onClick={() => setIsImageOpen(true)}
     >
       {product.image.map((img, index) => (
-        <div key={img} className="relative h-full w-full shrink-0">
-          <Image
-            src={img}
-            alt={`${product.name} ${index + 1}`}
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-cover"
-            priority={index === 0}
-          />
-        </div>
-      ))}
-    </div>
-
-    {product.image.length > 1 && (
-      <>
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            prevImage();
-          }}
-          className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-xl"
-        >
-          ‹
-        </button>
-
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            nextImage();
-          }}
-          className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-xl"
-        >
-          ›
-        </button>
-
-        <div className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-          {product.image.map((_, index) => (
-            <button
-              key={index}
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedImage(index);
-              }}
-              className={`h-2.5 w-2.5 rounded-full ${
-                selectedImage === index ? "bg-black" : "bg-gray-300"
-              }`}
+        <SwiperSlide key={img}>
+          <div className="relative h-full w-full">
+            <Image
+              src={img}
+              alt={`${product.name} ${index + 1}`}
+              fill
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+              priority={index === 0}
             />
-          ))}
-        </div>
-      </>
-    )}
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+
+    <style jsx global>{`
+  .swiper-pagination-bullet-active {
+    background: white !important;
+  }
+`}</style>
+
+<button
+  type="button"
+  className="custom-swiper-prev absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-3xl font-light text-white backdrop-blur-sm transition hover:bg-black/70"
+>
+  ‹
+</button>
+
+<button
+  type="button"
+  className="custom-swiper-next absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-3xl font-light text-white backdrop-blur-sm transition hover:bg-black/70"
+>
+  ›
+</button>
 
     {product.inStock === false && (
       <div className="absolute bottom-4 left-4 z-10 rounded-full bg-black px-4 py-1.5 text-sm font-medium text-white">
@@ -525,73 +518,53 @@ const handleTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
       </section>
 
 {isImageOpen && (
-  <div
-    className="fixed inset-0 z-[9999] flex items-center justify-center bg-black"
-    onClick={() => setIsImageOpen(false)}
-  >
+  <div className="fixed inset-0 z-[9999] bg-black">
     <button
       type="button"
       onClick={() => setIsImageOpen(false)}
-      className="absolute right-5 top-5 z-20 text-3xl text-white"
+      className="absolute right-5 top-5 z-30 text-3xl text-white"
     >
       ×
     </button>
 
-    <div
-      className="relative h-full w-full overflow-hidden"
-      onClick={(e) => e.stopPropagation()}
-      onTouchStart={(e) => setTouchStart(e.touches[0].clientX)}
-      onTouchEnd={handleTouchEnd}
+    <Swiper
+      modules={[Navigation, Pagination]}
+      loop={true}
+      initialSlide={initialSlide}
+      navigation={{
+        prevEl: ".fullscreen-swiper-prev",
+        nextEl: ".fullscreen-swiper-next",
+      }}
+      pagination={{ clickable: true }}
+      className="h-full w-full"
     >
-<div
-  className="flex h-full w-full transition-transform duration-300 ease-out"
-  style={{ transform: `translateX(-${selectedImage * 100}%)` }}
->
-  {product.image.map((img, index) => (
-    <div key={img} className="relative h-full w-full shrink-0">
-      <Image
-        src={img}
-        alt={`${product.name} ${index + 1}`}
-        fill
-        className="object-contain"
-      />
-    </div>
-  ))}
-</div>
-
-      {product.image.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={prevImage}
-            className="absolute left-4 top-1/2 z-20 text-5xl text-white"
-          >
-            ‹
-          </button>
-
-          <button
-            type="button"
-            onClick={nextImage}
-            className="absolute right-4 top-1/2 z-20 text-5xl text-white"
-          >
-            ›
-          </button>
-
-          <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-            {product.image.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setSelectedImage(index)}
-                className={`h-2.5 w-2.5 rounded-full ${
-                  selectedImage === index ? "bg-white" : "bg-gray-500"
-                }`}
-              />
-            ))}
+      {product.image.map((img, index) => (
+        <SwiperSlide key={img}>
+          <div className="relative h-full w-full">
+            <Image
+              src={img}
+              alt={`${product.name} ${index + 1}`}
+              fill
+              className="object-contain"
+            />
           </div>
-        </>
-      )}
-    </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+
+    <button
+      type="button"
+      className="fullscreen-swiper-prev absolute left-4 top-1/2 z-30 -translate-y-1/2 text-5xl text-white"
+    >
+      ‹
+    </button>
+
+    <button
+      type="button"
+      className="fullscreen-swiper-next absolute right-4 top-1/2 z-30 -translate-y-1/2 text-5xl text-white"
+    >
+      ›
+    </button>
   </div>
 )}
 
