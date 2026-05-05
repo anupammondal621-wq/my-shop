@@ -14,7 +14,7 @@ export const products: Product[] = [
     name: "Kaju Katli - Box of 18",
     price: 499,
     buttonPrice: "Rs. 499",
-    image: "/product-1.jpg",
+    image: "/Kaju6_1.jpeg",
     //inStock: false,
   },
   {
