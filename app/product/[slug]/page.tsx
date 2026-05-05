@@ -603,7 +603,7 @@ onClick={() => setIsImageOpen(true)}
   modules={[Navigation, Pagination]}
   loop={true}
   initialSlide={initialSlide}
-  allowTouchMove={zoomScale <= 1}
+  allowTouchMove={false}
   onSlideChange={resetZoom}
       navigation={{
         prevEl: ".fullscreen-swiper-prev",
