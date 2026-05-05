@@ -621,13 +621,15 @@ onClick={() => setIsImageOpen(true)}
   onTouchEnd={handleZoomTouchEnd}
   onDoubleClick={toggleZoom}
 >
-  <div
-    className="relative h-full w-full transition-transform duration-150"
-    style={{
-      transform: `translate(${zoomPosition.x}px, ${zoomPosition.y}px) scale(${zoomScale})`,
-      touchAction: "none",
-    }}
-  >
+<div
+  className="relative h-full w-full"
+  style={{
+    transform: `translate3d(${zoomPosition.x}px, ${zoomPosition.y}px, 0) scale(${zoomScale})`,
+    transformOrigin: "center center",
+    touchAction: "none",
+    willChange: "transform",
+  }}
+>
     <Image
       src={img}
       alt={`${product.name} ${index + 1}`}
