@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useMemo, useState } from "react";
+import { use, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
@@ -163,6 +163,12 @@ export default function ProductPage({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchMove, setTouchMove] = useState(0);
   const [initialSlide, setInitialSlide] = useState(0);
+  const [zoomScale, setZoomScale] = useState(1);
+  const [zoomPosition, setZoomPosition] = useState({ x: 0, y: 0 });
+
+const pinchStartDistance = useRef<number | null>(null);
+const pinchStartScale = useRef(1);
+const panStart = useRef<{ x: number; y: number } | null>(null);
 
   const { slug } = use(params);
   const product = products[slug as keyof typeof products];
@@ -202,6 +208,69 @@ const handleTouchEnd = () => {
 
   setTouchStart(null);
   setTouchMove(0);
+};
+
+const resetZoom = () => {
+  setZoomScale(1);
+  setZoomPosition({ x: 0, y: 0 });
+};
+
+const getDistance = (touches: React.TouchList) => {
+  const dx = touches[0].clientX - touches[1].clientX;
+  const dy = touches[0].clientY - touches[1].clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+};
+
+const handleZoomTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+  if (e.touches.length === 2) {
+    pinchStartDistance.current = getDistance(e.touches);
+    pinchStartScale.current = zoomScale;
+  }
+
+  if (e.touches.length === 1 && zoomScale > 1) {
+    panStart.current = {
+      x: e.touches[0].clientX - zoomPosition.x,
+      y: e.touches[0].clientY - zoomPosition.y,
+    };
+  }
+};
+
+const handleZoomTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+  if (e.touches.length === 2 && pinchStartDistance.current) {
+    e.preventDefault();
+
+    const distance = getDistance(e.touches);
+    const newScale =
+      pinchStartScale.current * (distance / pinchStartDistance.current);
+
+    setZoomScale(Math.min(Math.max(newScale, 1), 4));
+  }
+
+  if (e.touches.length === 1 && zoomScale > 1 && panStart.current) {
+    e.preventDefault();
+
+    setZoomPosition({
+      x: e.touches[0].clientX - panStart.current.x,
+      y: e.touches[0].clientY - panStart.current.y,
+    });
+  }
+};
+
+const handleZoomTouchEnd = () => {
+  pinchStartDistance.current = null;
+  panStart.current = null;
+
+  if (zoomScale <= 1) {
+    resetZoom();
+  }
+};
+
+const toggleZoom = () => {
+  if (zoomScale > 1) {
+    resetZoom();
+  } else {
+    setZoomScale(2);
+  }
 };
 
   return (
@@ -521,16 +590,21 @@ onClick={() => setIsImageOpen(true)}
   <div className="fixed inset-0 z-[9999] bg-black">
     <button
       type="button"
-      onClick={() => setIsImageOpen(false)}
+      onClick={() => {
+  setIsImageOpen(false);
+  resetZoom();
+}}
       className="absolute right-5 top-5 z-30 text-3xl text-white"
     >
       ×
     </button>
 
-    <Swiper
-      modules={[Navigation, Pagination]}
-      loop={true}
-      initialSlide={initialSlide}
+<Swiper
+  modules={[Navigation, Pagination]}
+  loop={true}
+  initialSlide={initialSlide}
+  allowTouchMove={zoomScale === 1}
+  onSlideChange={resetZoom}
       navigation={{
         prevEl: ".fullscreen-swiper-prev",
         nextEl: ".fullscreen-swiper-next",
@@ -540,14 +614,29 @@ onClick={() => setIsImageOpen(true)}
     >
       {product.image.map((img, index) => (
         <SwiperSlide key={img}>
-          <div className="relative h-full w-full">
-            <Image
-              src={img}
-              alt={`${product.name} ${index + 1}`}
-              fill
-              className="object-contain"
-            />
-          </div>
+<div
+  className="relative h-full w-full overflow-hidden"
+  onTouchStart={handleZoomTouchStart}
+  onTouchMove={handleZoomTouchMove}
+  onTouchEnd={handleZoomTouchEnd}
+  onDoubleClick={toggleZoom}
+>
+  <div
+    className="relative h-full w-full transition-transform duration-150"
+    style={{
+      transform: `translate(${zoomPosition.x}px, ${zoomPosition.y}px) scale(${zoomScale})`,
+      touchAction: "none",
+    }}
+  >
+    <Image
+      src={img}
+      alt={`${product.name} ${index + 1}`}
+      fill
+      className="object-contain"
+      draggable={false}
+    />
+  </div>
+</div>
         </SwiperSlide>
       ))}
     </Swiper>
