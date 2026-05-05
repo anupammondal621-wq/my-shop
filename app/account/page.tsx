@@ -5,6 +5,7 @@ import LogoutButton from "@/components/LogoutButton";
 import EditProfileModal from "@/components/EditProfileModal";
 import AddAddressModal from "@/components/AddAddressModal";
 import EditAddressModal from "@/components/EditAddressModal";
+import { signOutAllDevices } from "./sign-out-all-devices-action";
 
 type Order = {
   id: string;
@@ -154,9 +155,11 @@ export default async function AccountPage() {
         <div className="mb-10 flex items-center gap-7">
           <LogoutButton />
 
-          <button type="button" className="text-sm text-blue-600 hover:underline">
-            Sign out of all devices
-          </button>
+<form action={signOutAllDevices}>
+  <button type="submit" className="text-sm text-blue-600 hover:underline">
+    Sign out of all devices
+  </button>
+</form>
         </div>
 
         <div>
