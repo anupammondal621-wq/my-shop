@@ -603,7 +603,9 @@ onClick={() => setIsImageOpen(true)}
   modules={[Navigation, Pagination]}
   loop={true}
   initialSlide={initialSlide}
-  allowTouchMove={false}
+  allowTouchMove={true}
+  noSwiping={true}
+  noSwipingClass="zoom-no-swiper"
   onSlideChange={resetZoom}
       navigation={{
         prevEl: ".fullscreen-swiper-prev",
@@ -615,7 +617,9 @@ onClick={() => setIsImageOpen(true)}
       {product.image.map((img, index) => (
         <SwiperSlide key={img}>
 <div
-  className="relative h-full w-full overflow-hidden"
+  className={`relative h-full w-full overflow-hidden ${
+  zoomScale > 1 ? "zoom-no-swiper" : ""
+}`}
   onTouchStart={handleZoomTouchStart}
   onTouchMove={handleZoomTouchMove}
   onTouchEnd={handleZoomTouchEnd}
