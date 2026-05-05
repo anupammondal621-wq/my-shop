@@ -9,36 +9,24 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return NextResponse.json({ user: null, shippingDetails: null });
+    return NextResponse.json({
+      user: null,
+      addresses: [],
+    });
   }
 
-  const { data: profile } = await supabase
-    .from("profiles")
-.select(
-  "first_name,last_name,company,phone,address,apartment,city,state,postal_code,country"
-)
-    .eq("id", user.id)
-    .maybeSingle();
+  const { data: addresses } = await supabase
+    .from("user_addresses")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("is_default", { ascending: false })
+    .order("created_at", { ascending: false });
 
   return NextResponse.json({
     user: {
       id: user.id,
       email: user.email,
     },
-    shippingDetails: profile
-      ? {
-          email: user.email || "",
-          firstName: profile.first_name || "",
-          lastName: profile.last_name || "",
-          company: profile.company || "",
-          phone: profile.phone || "",
-          address: profile.address || "",
-          apartment: profile.apartment || "",
-          city: profile.city || "",
-          state: profile.state || "",
-          postalCode: profile.postal_code || "",
-          country: profile.country || "India",
-        }
-      : null,
+    addresses: addresses || [],
   });
 }

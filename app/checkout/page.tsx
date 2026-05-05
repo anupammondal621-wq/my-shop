@@ -28,6 +28,10 @@ export default function CheckoutPage() {
   const [showAddressMenu, setShowAddressMenu] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showPhoneHint, setShowPhoneHint] = useState(false);
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [editingAddressId, setEditingAddressId] = useState("");
+  const [showSavedAddresses, setShowSavedAddresses] = useState(true);
 
   const [form, setForm] = useState({
     email: "",
@@ -62,50 +66,55 @@ useEffect(() => {
     setCart(data);
   };
 
-  const getCheckoutAddress = async () => {
-    const res = await fetch("/api/user/checkout-address");
-    const data = await res.json();
+const getCheckoutAddress = async () => {
+  const res = await fetch("/api/user/checkout-address");
+  const data = await res.json();
 
-    if (data?.user?.email) {
-      setIsLoggedIn(true);
-      setUserEmail(data.user.email);
+  if (data?.user?.email) {
+    setIsLoggedIn(true);
+    setUserEmail(data.user.email);
 
-if (data.shippingDetails?.address) {
-  const shipping = data.shippingDetails;
+    const allAddresses = data.addresses || [];
+    setAddresses(allAddresses);
 
-  setForm({
-    email: data.user.email || "",
-    firstName: shipping.firstName || shipping.first_name || "",
-    lastName: shipping.lastName || shipping.last_name || "",
-    company: shipping.company || "",
-    phone: shipping.phone || "",
-    address: shipping.address || "",
-    apartment: shipping.apartment || "",
-    city: shipping.city || "",
-    state: shipping.state || "",
-    postalCode: shipping.postalCode || shipping.postal_code || "",
-    country: shipping.country || "India",
-  });
+    const defaultAddress =
+      allAddresses.find((addr: any) => addr.is_default) || allAddresses[0];
 
-  setShowManualAddress(false);
-}
-      else {
-        setForm((prev) => ({
-          ...prev,
-          email: data.user.email,
-        }));
-        setShowManualAddress(true);
-      }
+    if (defaultAddress) {
+      setSelectedAddressId(defaultAddress.id);
+
+      setForm({
+        email: data.user.email || "",
+        firstName: defaultAddress.first_name || "",
+        lastName: defaultAddress.last_name || "",
+        company: defaultAddress.company || "",
+        phone: defaultAddress.phone || "",
+        address: defaultAddress.address || "",
+        apartment: defaultAddress.apartment || "",
+        city: defaultAddress.city || "",
+        state: defaultAddress.state || "",
+        postalCode: defaultAddress.postal_code || "",
+        country: defaultAddress.country || "India",
+      });
+
+      setShowManualAddress(false);
     } else {
-      setIsLoggedIn(false);
+      setForm((prev) => ({
+        ...prev,
+        email: data.user.email,
+      }));
       setShowManualAddress(true);
-
-      const savedShipping = localStorage.getItem("checkout_shipping");
-      if (savedShipping) {
-        setForm(JSON.parse(savedShipping));
-      }
     }
-  };
+  } else {
+    setIsLoggedIn(false);
+    setShowManualAddress(true);
+
+    const savedShipping = localStorage.getItem("checkout_shipping");
+    if (savedShipping) {
+      setForm(JSON.parse(savedShipping));
+    }
+  }
+};
 
   getProductsForCheckout();
   getCheckoutAddress();
@@ -255,6 +264,29 @@ body: JSON.stringify({
             return;
           }
 
+          const supabase = createClient();
+
+const {
+  data: { user },
+} = await supabase.auth.getUser();
+
+if (user) {
+  await supabase.from("user_addresses").insert({
+    user_id: user.id,
+    first_name: form.firstName,
+    last_name: form.lastName,
+    company: form.company,
+    phone: form.phone,
+    address: form.address,
+    apartment: form.apartment,
+    city: form.city,
+    state: form.state,
+    postal_code: form.postalCode,
+    country: form.country,
+    is_default: false,
+  });
+}
+
           localStorage.removeItem("checkout_shipping");
 
           if (mode === "buy-now") {
@@ -289,6 +321,49 @@ const handleLogout = async () => {
 
   router.refresh();
   router.push("/");
+};
+
+const handleSetDefaultAddress = async (addressId: string) => {
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    alert("User not found");
+    return;
+  }
+
+  const { error: clearError } = await supabase
+    .from("user_addresses")
+    .update({ is_default: false })
+    .eq("user_id", user.id);
+
+  if (clearError) {
+    alert(clearError.message);
+    return;
+  }
+
+  const { error: setError } = await supabase
+    .from("user_addresses")
+    .update({ is_default: true })
+    .eq("id", addressId)
+    .eq("user_id", user.id);
+
+  if (setError) {
+    alert(setError.message);
+    return;
+  }
+
+  setAddresses((prev) =>
+    prev.map((addr) => ({
+      ...addr,
+      is_default: addr.id === addressId,
+    }))
+  );
+
+  setSelectedAddressId(addressId);
 };
 
   return (
@@ -360,62 +435,167 @@ const handleLogout = async () => {
 {/* DELIVERY */}
 {isLoggedIn && !showManualAddress ? (
   <div className="mb-8">
-    <p className="mb-2 text-sm text-gray-600">Ship to</p>
+<div className="mb-2 flex items-center justify-between">
+  <p className="text-sm text-gray-600">Ship to</p>
 
-    <div className="relative rounded-lg bg-[#f4f6ff] p-4 text-sm">
-  {/* 3 DOT BUTTON */}
   <button
     type="button"
-    onClick={() => setShowAddressMenu(!showAddressMenu)}
-    className="absolute right-4 top-3 text-xl"
+    onClick={() => setShowSavedAddresses(!showSavedAddresses)}
+    className="flex h-6 w-6 items-center justify-center rounded-full bg-[#f4f6ff] text-blue-600"
   >
-    ⋮
+    {showSavedAddresses ? "⌃" : "⌄"}
   </button>
+</div>
 
-  {/* DROPDOWN MENU */}
-  {showAddressMenu && (
-    <div className="absolute right-3 top-10 z-20 w-24 rounded-lg border bg-white py-2 shadow-lg">
+{showSavedAddresses ? (
+  <div className="space-y-3">
+
+  {addresses.map((addr) => (
+    <div
+      key={addr.id}
+      onClick={() => {
+        setSelectedAddressId(addr.id);
+
+        setForm({
+          email: userEmail,
+          firstName: addr.first_name || "",
+          lastName: addr.last_name || "",
+          company: addr.company || "",
+          phone: addr.phone || "",
+          address: addr.address || "",
+          apartment: addr.apartment || "",
+          city: addr.city || "",
+          state: addr.state || "",
+          postalCode: addr.postal_code || "",
+          country: addr.country || "India",
+        });
+      }}
+className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
+  selectedAddressId === addr.id ? "bg-[#f4f6ff]" : "bg-white"
+}`}
+    >
       <button
         type="button"
-        onClick={() => {
-          setShowAddressMenu(false);
-          setShowAddressModal(true);
+        onClick={(e) => {
+          e.stopPropagation();
+          setSelectedAddressId(addr.id);
+          setShowAddressMenu(!showAddressMenu);
         }}
-        className="block w-full px-4 py-2 text-left text-sm text-blue-600"
+        className="absolute right-3 top-3 text-xl"
       >
-        Edit
+        ⋮
       </button>
 
+      {showAddressMenu && selectedAddressId === addr.id && (
+        <div className="absolute right-3 top-10 z-20 w-24 rounded-lg border bg-white py-2 shadow-lg">
 <button
   type="button"
-  onClick={() => {
+  onClick={(e) => {
+    e.stopPropagation();
     setShowAddressMenu(false);
-    setShowDeleteConfirm(true);
+    setEditingAddressId(addr.id);
+
+    setForm({
+      email: userEmail,
+      firstName: addr.first_name || "",
+      lastName: addr.last_name || "",
+      company: addr.company || "",
+      phone: addr.phone || "",
+      address: addr.address || "",
+      apartment: addr.apartment || "",
+      city: addr.city || "",
+      state: addr.state || "",
+      postalCode: addr.postal_code || "",
+      country: addr.country || "India",
+    });
+
+    setShowAddressModal(true);
   }}
-  className="block w-full px-4 py-2 text-left text-sm text-red-600"
+  className="block w-full px-4 py-2 text-left text-sm text-blue-600"
 >
-  Delete
+  Edit
 </button>
-    </div>
-  )}
 
-  {/* ADDRESS TEXT */}
-<p>
-  {[`${form.firstName} ${form.lastName}`.trim(), form.company, form.address, form.apartment]
-    .filter(Boolean)
-    .join(", ")}
-</p>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowAddressMenu(false);
+              setShowDeleteConfirm(true);
+            }}
+            className="block w-full px-4 py-2 text-left text-sm text-red-600"
+          >
+            Delete
+          </button>
+        </div>
+      )}
 
-<p>
-  {[form.postalCode, form.city, form.state, "IN"]
-    .filter(Boolean)
-    .join(" ")}
-</p>
+      <span
+  className={`absolute left-4 top-5 h-4 w-4 rounded-full border ${
+    selectedAddressId === addr.id
+      ? "border-blue-600 bg-blue-600"
+      : "border-gray-300 bg-white"
+  }`}
+/>
 
+      <p>
+        {[
+          `${addr.first_name} ${addr.last_name}`.trim(),
+          addr.company,
+          addr.address,
+          addr.apartment,
+        ]
+          .filter(Boolean)
+          .join(", ")}
+      </p>
+
+      <p className="text-gray-500">
+        {[addr.postal_code, addr.city, addr.state, "IN"]
+          .filter(Boolean)
+          .join(" ")}
+      </p>
+
+{addr.is_default ? (
   <span className="mt-2 inline-block rounded-full bg-gray-600 px-2 py-1 text-xs text-white">
     Default
   </span>
-</div>
+) : (
+  selectedAddressId === addr.id && (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        handleSetDefaultAddress(addr.id);
+      }}
+      className="mt-2 block text-sm text-blue-600"
+    >
+      Set as default
+    </button>
+  )
+)}
+    </div>
+  ))}
+  </div>
+) : (
+  <div className="pb-2 text-sm">
+    <p>
+      {[
+        `${form.firstName} ${form.lastName}`.trim(),
+        form.company,
+        form.address,
+        form.apartment,
+        form.postalCode,
+        form.city,
+        form.state,
+        "IN",
+      ]
+        .filter(Boolean)
+        .join(", ")}
+    </p>
+
+    {form.phone && <p>+{form.phone}</p>}
+  </div>
+)}
 
 <button
   type="button"
@@ -1043,23 +1223,92 @@ const handleLogout = async () => {
 
           <button
             type="button"
-            onClick={() => {
-              if (
-                !form.firstName ||
-                !form.lastName ||
-                !form.phone ||
-                !form.address ||
-                !form.city ||
-                !form.state ||
-                !form.postalCode
-              ) {
-                alert("Please fill all required fields.");
-                return;
-              }
+onClick={async () => {
+  if (
+    !form.firstName ||
+    !form.lastName ||
+    !form.phone ||
+    !form.address ||
+    !form.city ||
+    !form.state ||
+    !form.postalCode
+  ) {
+    alert("Please fill all required fields.");
+    return;
+  }
 
-              setShowManualAddress(false);
-              setShowAddressModal(false);
-            }}
+  const supabase = createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return;
+
+  if (editingAddressId) {
+    const { data: updatedAddress, error } = await supabase
+      .from("user_addresses")
+      .update({
+        first_name: form.firstName,
+        last_name: form.lastName,
+        company: form.company,
+        phone: form.phone,
+        address: form.address,
+        apartment: form.apartment,
+        city: form.city,
+        state: form.state,
+        postal_code: form.postalCode,
+        country: form.country,
+      })
+      .eq("id", editingAddressId)
+      .eq("user_id", user.id)
+      .select()
+      .single();
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setAddresses((prev) =>
+      prev.map((addr) =>
+        addr.id === editingAddressId ? updatedAddress : addr
+      )
+    );
+
+    setEditingAddressId("");
+  } else {
+    const { data: newAddress, error } = await supabase
+      .from("user_addresses")
+      .insert({
+        user_id: user.id,
+        first_name: form.firstName,
+        last_name: form.lastName,
+        company: form.company,
+        phone: form.phone,
+        address: form.address,
+        apartment: form.apartment,
+        city: form.city,
+        state: form.state,
+        postal_code: form.postalCode,
+        country: form.country,
+        is_default: false,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    setAddresses((prev) => [...prev, newAddress]);
+    setSelectedAddressId(newAddress.id);
+  }
+
+  setShowManualAddress(false);
+  setShowAddressModal(false);
+}}
             className="rounded-lg bg-blue-600 px-4 py-4 font-semibold text-white"
           >
             Save address
@@ -1090,46 +1339,90 @@ const handleLogout = async () => {
 
         <button
           type="button"
-          onClick={async () => {
-            const supabase = createClient();
+onClick={async () => {
+  const supabase = createClient();
 
-            const {
-              data: { user },
-            } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-            if (!user) return;
+  if (!user || !selectedAddressId) return;
 
-            await supabase
-              .from("profiles")
-              .update({
-                first_name: null,
-                last_name: null,
-                phone: null,
-                address: null,
-                apartment: null,
-                city: null,
-                state: null,
-                postal_code: null,
-              })
-              .eq("id", user.id);
+  const deletedAddress = addresses.find(
+    (addr) => addr.id === selectedAddressId
+  );
 
-            setForm({
-              email: user.email || "",
-              firstName: "",
-              lastName: "",
-              company: "",
-              phone: "",
-              address: "",
-              apartment: "",
-              city: "",
-              state: "",
-              postalCode: "",
-              country: "India",
-            });
+  const { error } = await supabase
+    .from("user_addresses")
+    .delete()
+    .eq("id", selectedAddressId)
+    .eq("user_id", user.id);
 
-            setShowDeleteConfirm(false);
-            setShowManualAddress(true);
-          }}
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  const remainingAddresses = addresses.filter(
+    (addr) => addr.id !== selectedAddressId
+  );
+
+  if (deletedAddress?.is_default && remainingAddresses.length > 0) {
+    const nextDefault = remainingAddresses[0];
+
+    await supabase
+      .from("user_addresses")
+      .update({ is_default: true })
+      .eq("id", nextDefault.id)
+      .eq("user_id", user.id);
+
+    nextDefault.is_default = true;
+  }
+
+  setAddresses(remainingAddresses);
+
+  if (remainingAddresses.length > 0) {
+    const nextSelected = remainingAddresses.find((addr) => addr.is_default) || remainingAddresses[0];
+
+    setSelectedAddressId(nextSelected.id);
+
+    setForm({
+      email: user.email || "",
+      firstName: nextSelected.first_name || "",
+      lastName: nextSelected.last_name || "",
+      company: nextSelected.company || "",
+      phone: nextSelected.phone || "",
+      address: nextSelected.address || "",
+      apartment: nextSelected.apartment || "",
+      city: nextSelected.city || "",
+      state: nextSelected.state || "",
+      postalCode: nextSelected.postal_code || "",
+      country: nextSelected.country || "India",
+    });
+
+    setShowManualAddress(false);
+  } else {
+    setSelectedAddressId("");
+
+    setForm({
+      email: user.email || "",
+      firstName: "",
+      lastName: "",
+      company: "",
+      phone: "",
+      address: "",
+      apartment: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      country: "India",
+    });
+
+    setShowManualAddress(true);
+  }
+
+  setShowDeleteConfirm(false);
+}}
           className="flex-1 rounded-lg bg-red-600 py-3 text-white"
         >
           Delete

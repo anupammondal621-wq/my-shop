@@ -134,6 +134,39 @@ export async function POST(req: NextRequest) {
       { onConflict: "id" }
     );
 
+    const { data: existingAddresses } = await supabaseAdmin
+  .from("user_addresses")
+  .select("id")
+  .eq("user_id", userId);
+
+const isFirstAddress =
+  !existingAddresses || existingAddresses.length === 0;
+
+const { data: sameAddress } = await supabaseAdmin
+  .from("user_addresses")
+  .select("id")
+  .eq("user_id", userId)
+  .eq("address", shippingDetails?.address || "")
+  .eq("postal_code", shippingDetails?.postalCode || "")
+  .maybeSingle();
+
+if (!sameAddress && shippingDetails?.address) {
+  await supabaseAdmin.from("user_addresses").insert({
+    user_id: userId,
+    first_name: shippingDetails?.firstName || "",
+    last_name: shippingDetails?.lastName || "",
+    company: shippingDetails?.company || "",
+    phone: shippingDetails?.phone || "",
+    address: shippingDetails?.address || "",
+    apartment: shippingDetails?.apartment || "",
+    city: shippingDetails?.city || "",
+    state: shippingDetails?.state || "",
+    postal_code: shippingDetails?.postalCode || "",
+    country: shippingDetails?.country || "India",
+    is_default: isFirstAddress,
+  });
+}
+
     const { data: existingOrder } = await supabaseAdmin
       .from("orders")
       .select("*")
