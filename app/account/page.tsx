@@ -4,6 +4,7 @@ import Image from "next/image";
 import LogoutButton from "@/components/LogoutButton";
 import EditProfileModal from "@/components/EditProfileModal";
 import AddAddressModal from "@/components/AddAddressModal";
+import EditAddressModal from "@/components/EditAddressModal";
 
 type Order = {
   id: string;
@@ -98,39 +99,56 @@ export default async function AccountPage() {
 <AddAddressModal />
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-[#f7f7f7] px-5 py-5">
-{addresses && addresses.length > 0 ? (
-  <div className="space-y-4">
-    {addresses.map((addr) => (
-      <div
-        key={addr.id}
-        className="rounded-lg border border-gray-200 bg-[#f7f7f7] px-5 py-5"
-      >
-        <p className="text-base">
-          {addr.first_name} {addr.last_name}
-          {addr.company ? `, ${addr.company}` : ""}
-          {addr.address ? `, ${addr.address}` : ""}
-          {addr.apartment ? `, ${addr.apartment}` : ""}
-        </p>
+<div>
+  {addresses && addresses.length > 0 ? (
+    <div className="flex flex-wrap gap-8">
+      {addresses.map((addr) => (
+        <div
+          key={addr.id}
+          className={`relative w-[260px] rounded-lg px-5 py-4 pr-10 ${
+            addr.is_default ? "bg-[#f3f3f3]" : "bg-white"
+          }`}
+        >
+          <EditAddressModal address={addr} />
 
-        <p className="text-base">
-          {addr.postal_code} {addr.city} {addr.state}, IN
-        </p>
+          {addr.is_default && (
+            <p className="mb-3 text-sm text-gray-500">Default address</p>
+          )}
 
-        {addr.is_default && (
-          <span className="mt-2 inline-block rounded-full bg-gray-600 px-2 py-1 text-xs text-white">
-            Default
-          </span>
-        )}
-      </div>
-    ))}
-  </div>
-) : (
-  <div className="rounded-lg border border-gray-200 bg-[#f7f7f7] px-5 py-5">
-    <p className="text-base text-gray-700">ⓘ &nbsp; No addresses added</p>
-  </div>
-)}
-  </div>
+          <p className="text-sm leading-6">
+            {addr.first_name} {addr.last_name}
+          </p>
+
+          {addr.company && (
+            <p className="text-sm leading-6">{addr.company}</p>
+          )}
+
+          <p className="text-sm leading-6">{addr.address}</p>
+
+          {addr.apartment && (
+            <p className="text-sm leading-6">{addr.apartment}</p>
+          )}
+
+          <p className="text-sm leading-6">{addr.city}</p>
+
+          <p className="text-sm leading-6">
+            {addr.postal_code} {addr.city} {addr.state}
+          </p>
+
+          <p className="text-sm leading-6">{addr.country || "India"}</p>
+
+          {addr.phone && (
+            <p className="text-sm leading-6">+{addr.phone}</p>
+          )}
+        </div>
+      ))}
+    </div>
+  ) : (
+    <div className="rounded-lg border border-gray-200 bg-[#f7f7f7] px-5 py-5">
+      <p className="text-base text-gray-700">ⓘ &nbsp; No addresses added</p>
+    </div>
+  )}
+</div>
         </div>
 
         <div className="mb-10 flex items-center gap-7">
