@@ -33,6 +33,7 @@ export default function CheckoutPage() {
     email: "",
     firstName: "",
     lastName: "",
+    company: "",
     phone: "",
     address: "",
     apartment: "",
@@ -69,10 +70,26 @@ useEffect(() => {
       setIsLoggedIn(true);
       setUserEmail(data.user.email);
 
-      if (data.shippingDetails?.address) {
-        setForm(data.shippingDetails);
-        setShowManualAddress(false);
-      } else {
+if (data.shippingDetails?.address) {
+  const shipping = data.shippingDetails;
+
+  setForm({
+    email: data.user.email || "",
+    firstName: shipping.firstName || shipping.first_name || "",
+    lastName: shipping.lastName || shipping.last_name || "",
+    company: shipping.company || "",
+    phone: shipping.phone || "",
+    address: shipping.address || "",
+    apartment: shipping.apartment || "",
+    city: shipping.city || "",
+    state: shipping.state || "",
+    postalCode: shipping.postalCode || shipping.postal_code || "",
+    country: shipping.country || "India",
+  });
+
+  setShowManualAddress(false);
+}
+      else {
         setForm((prev) => ({
           ...prev,
           email: data.user.email,
@@ -199,6 +216,7 @@ body: JSON.stringify({
           contact: form.phone,
         },
         notes: {
+          company: form.company,
           address: `${form.address} ${form.apartment}`.trim(),
           city: form.city,
           state: form.state,
@@ -382,14 +400,17 @@ const handleLogout = async () => {
   )}
 
   {/* ADDRESS TEXT */}
-  <p>
-    {form.firstName} {form.lastName}, {form.address}
-    {form.apartment ? `, ${form.apartment}` : ""}
-  </p>
+<p>
+  {[`${form.firstName} ${form.lastName}`.trim(), form.company, form.address, form.apartment]
+    .filter(Boolean)
+    .join(", ")}
+</p>
 
-  <p>
-    {form.postalCode} {form.city} {form.state}, IN
-  </p>
+<p>
+  {[form.postalCode, form.city, form.state, "IN"]
+    .filter(Boolean)
+    .join(" ")}
+</p>
 
   <span className="mt-2 inline-block rounded-full bg-gray-600 px-2 py-1 text-xs text-white">
     Default
@@ -436,10 +457,13 @@ const handleLogout = async () => {
         />
       </div>
 
-      <input
-        placeholder="Company (optional)"
-        className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
-      />
+<input
+  name="company"
+  placeholder="Company (optional)"
+  value={form.company}
+  onChange={handleChange}
+  className="w-full rounded-lg border border-gray-300 px-4 py-4 outline-none"
+/>
 
       <input
         name="address"
@@ -884,10 +908,13 @@ const handleLogout = async () => {
           />
         </div>
 
-        <input
-          placeholder="Company (optional)"
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none"
-        />
+<input
+  name="company"
+  placeholder="Company (optional)"
+  value={form.company}
+  onChange={handleChange}
+  className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none"
+/>
 
         <input
           name="address"
@@ -1090,6 +1117,7 @@ const handleLogout = async () => {
               email: user.email || "",
               firstName: "",
               lastName: "",
+              company: "",
               phone: "",
               address: "",
               apartment: "",

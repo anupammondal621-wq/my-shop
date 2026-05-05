@@ -14,9 +14,9 @@ export async function GET() {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select(
-      "first_name,last_name,phone,address,apartment,city,state,postal_code,country"
-    )
+.select(
+  "first_name,last_name,company,phone,address,apartment,city,state,postal_code,country"
+)
     .eq("id", user.id)
     .maybeSingle();
 
@@ -30,6 +30,7 @@ export async function GET() {
           email: user.email || "",
           firstName: profile.first_name || "",
           lastName: profile.last_name || "",
+          company: profile.company || "",
           phone: profile.phone || "",
           address: profile.address || "",
           apartment: profile.apartment || "",
