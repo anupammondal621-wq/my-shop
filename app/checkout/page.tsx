@@ -532,13 +532,17 @@ className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
         </div>
       )}
 
-      <span
-  className={`absolute left-4 top-5 h-4 w-4 rounded-full border ${
+<span
+  className={`absolute left-4 top-5 flex h-4 w-4 items-center justify-center rounded-full border ${
     selectedAddressId === addr.id
-      ? "border-blue-600 bg-blue-600"
+      ? "border-blue-600 bg-white"
       : "border-gray-300 bg-white"
   }`}
-/>
+>
+  {selectedAddressId === addr.id && (
+    <span className="h-2 w-2 rounded-full bg-blue-600" />
+  )}
+</span>
 
       <p>
         {[
