@@ -249,10 +249,15 @@ const handleZoomTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
   if (e.touches.length === 1 && zoomScale > 1 && panStart.current) {
     e.preventDefault();
 
-    setZoomPosition({
-      x: e.touches[0].clientX - panStart.current.x,
-      y: e.touches[0].clientY - panStart.current.y,
-    });
+const newX = e.touches[0].clientX - panStart.current.x;
+const newY = e.touches[0].clientY - panStart.current.y;
+
+const maxMove = (zoomScale - 1) * 180;
+
+setZoomPosition({
+  x: Math.max(-maxMove, Math.min(maxMove, newX)),
+  y: Math.max(-maxMove, Math.min(maxMove, newY)),
+});
   }
 };
 
