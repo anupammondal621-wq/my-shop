@@ -238,14 +238,26 @@ export default function EditAddressModal({ address }: any) {
               </div>
             </div>
 
-            <div className="mt-7 flex items-center justify-between">
-              <button
-                type="button"
-                onClick={() => setShowDeleteModal(true)}
-                className="text-red-600 hover:underline"
-              >
-                Delete
-              </button>
+            <div className="mt-7 flex items-end justify-between">
+<div>
+  <label className="mb-4 flex items-center gap-3 text-sm">
+    <input
+      type="checkbox"
+      checked={isDefault}
+      onChange={(e) => setIsDefault(e.target.checked)}
+      className="h-5 w-5 rounded border-gray-300"
+    />
+    This is my default address
+  </label>
+
+  <button
+    type="button"
+    onClick={handleDelete}
+    className="text-red-600 hover:underline"
+  >
+    Delete
+  </button>
+</div>
 
               <div className="flex gap-4">
                 <button

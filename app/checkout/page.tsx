@@ -32,6 +32,7 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [editingAddressId, setEditingAddressId] = useState("");
   const [showSavedAddresses, setShowSavedAddresses] = useState(true);
+  const [modalIsDefault, setModalIsDefault] = useState(false);
 
   const [form, setForm] = useState({
     email: "",
@@ -494,6 +495,7 @@ className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
     e.stopPropagation();
     setShowAddressMenu(false);
     setEditingAddressId(addr.id);
+    setModalIsDefault(Boolean(addr.is_default));
 
     setForm({
       email: userEmail,
@@ -599,7 +601,11 @@ className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
 
 <button
   type="button"
-  onClick={() => setShowAddressModal(true)}
+  onClick={() => {
+  setEditingAddressId("");
+  setModalIsDefault(false);
+  setShowAddressModal(true);
+}}
   className="mt-5 text-sm text-blue-600"
 >
   + Use a different address
@@ -762,6 +768,17 @@ className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
   </div>
 )}
 
+            <div className="mb-8 flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="saveInfo"
+                className="h-5 w-5 rounded border-gray-300"
+              />
+              <label htmlFor="saveInfo" className="text-sm text-gray-700">
+                Save this information for next time
+              </label>
+            </div>
+
             {/* SHIPPING METHOD */}
             <div className="mb-8">
               <h2 className="mb-4 text-xl font-semibold">Shipping method</h2>
@@ -772,17 +789,6 @@ className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
                   {shipping === 0 ? "FREE" : `₹${shipping.toFixed(2)}`}
                 </span>
               </div>
-            </div>
-
-            <div className="mb-8 flex items-center gap-3">
-              <input
-                type="checkbox"
-                id="saveInfo"
-                className="h-5 w-5 rounded border-gray-300"
-              />
-              <label htmlFor="saveInfo" className="text-sm text-gray-700">
-                Save this information for next time
-              </label>
             </div>
 
             {/* PAYMENT */}
@@ -1208,7 +1214,12 @@ className={`relative cursor-pointer rounded-lg p-4 pl-11 pr-12 text-sm ${
 </div>
 
         <label className="flex items-center gap-3 text-sm">
-          <input type="checkbox" className="h-5 w-5 rounded border-gray-300" />
+          <input
+  type="checkbox"
+  checked={modalIsDefault}
+  onChange={(e) => setModalIsDefault(e.target.checked)}
+  className="h-5 w-5 rounded border-gray-300"
+/>
           This is my default address
         </label>
 
@@ -1245,6 +1256,13 @@ onClick={async () => {
 
   if (!user) return;
 
+  if (modalIsDefault) {
+  await supabase
+    .from("user_addresses")
+    .update({ is_default: false })
+    .eq("user_id", user.id);
+}
+
   if (editingAddressId) {
     const { data: updatedAddress, error } = await supabase
       .from("user_addresses")
@@ -1259,6 +1277,7 @@ onClick={async () => {
         state: form.state,
         postal_code: form.postalCode,
         country: form.country,
+        is_default: modalIsDefault,
       })
       .eq("id", editingAddressId)
       .eq("user_id", user.id)
@@ -1270,11 +1289,19 @@ onClick={async () => {
       return;
     }
 
-    setAddresses((prev) =>
-      prev.map((addr) =>
-        addr.id === editingAddressId ? updatedAddress : addr
-      )
-    );
+setAddresses((prev) =>
+  prev.map((addr) => {
+    if (addr.id === editingAddressId) {
+      return updatedAddress;
+    }
+
+    if (modalIsDefault) {
+      return { ...addr, is_default: false };
+    }
+
+    return addr;
+  })
+);
 
     setEditingAddressId("");
   } else {
@@ -1292,7 +1319,7 @@ onClick={async () => {
         state: form.state,
         postal_code: form.postalCode,
         country: form.country,
-        is_default: false,
+        is_default: modalIsDefault,
       })
       .select()
       .single();
