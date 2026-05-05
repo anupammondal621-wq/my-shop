@@ -60,7 +60,7 @@ export default async function AccountPage() {
     .order("created_at", { ascending: false });
 
   return (
-    <main className="min-h-screen bg-[#f4f4f4] px-[52px] pt-3 pb-12 text-black">
+    <main className="min-h-screen bg-[#f4f4f4] px-4 pt-3 pb-12 text-black sm:px-[52px]">
       <div>
         <h1 className="mb-12 text-2xl font-semibold">Profile</h1>
 
@@ -94,11 +94,11 @@ export default async function AccountPage() {
 </div>
 
         <div className="mb-8 rounded-xl bg-white px-7 py-7">
-          <div className="mb-8 flex items-center gap-8">
-            <h2 className="text-lg font-semibold">Addresses</h2>
+<div className="mb-8 flex items-center justify-between lg:justify-start lg:gap-8">
+  <h2 className="text-lg font-semibold">Addresses</h2>
 
-<AddAddressModal />
-          </div>
+  <AddAddressModal />
+</div>
 
 <div>
   {addresses && addresses.length > 0 ? (
@@ -106,7 +106,7 @@ export default async function AccountPage() {
       {addresses.map((addr) => (
         <div
           key={addr.id}
-          className={`relative w-[260px] rounded-lg px-5 py-4 pr-10 ${
+          className={`relative w-full rounded-lg px-5 py-4 pr-10 sm:w-[260px] ${
             addr.is_default ? "bg-[#f3f3f3]" : "bg-white"
           }`}
         >
@@ -152,15 +152,24 @@ export default async function AccountPage() {
 </div>
         </div>
 
-        <div className="mb-10 flex items-center gap-7">
-          <LogoutButton />
+<div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-center lg:gap-7">
+  
+  {/* Logout Button */}
+  <div className="w-full rounded-lg border border-gray-300 bg-white py-4 text-center lg:w-auto lg:border-0 lg:bg-transparent lg:p-0">
+    <LogoutButton />
+  </div>
 
-<form action={signOutAllDevices}>
-  <button type="submit" className="text-sm text-blue-600 hover:underline">
-    Sign out of all devices
-  </button>
-</form>
-        </div>
+  {/* Sign out all devices */}
+  <form action={signOutAllDevices} className="text-center lg:text-left">
+    <button
+      type="submit"
+      className="text-base text-blue-600 hover:underline lg:text-sm"
+    >
+      Sign out of all devices
+    </button>
+  </form>
+
+</div>
 
         <div>
           <h2 className="mb-6 text-3xl font-semibold">Order History</h2>
