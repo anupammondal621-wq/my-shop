@@ -191,8 +191,8 @@ export default async function AccountPage() {
   key={order.id}
   className="rounded-xl bg-white px-4 py-4"
 >
-  <div className="flex items-center gap-5">
-    <div className="flex -space-x-3">
+  <div className="relative flex items-start gap-4 sm:items-center sm:gap-5">
+    <div className="flex shrink-0 -space-x-3">
       {items.slice(0, 2).map((item: OrderItem) => (
         <Image
           key={item.id}
@@ -205,36 +205,52 @@ export default async function AccountPage() {
       ))}
     </div>
 
-    <div className="min-w-[120px]">
-      <p className="text-sm font-medium">
-        #{order.id.slice(0, 4)}
-      </p>
-      <p className="text-sm text-gray-500">
-        {items.reduce((total, item) => total + item.quantity, 0)}{" "}
-        {items.reduce((total, item) => total + item.quantity, 0) === 1 ? "item" : "items"}
-      </p>
-    </div>
-
-    <div className="min-w-[140px]">
+    <div className="pt-1 sm:min-w-[140px] sm:pt-0">
       <p className="text-sm font-semibold">
         {order.status === "paid" ? "On its way" : order.status}
       </p>
+
       <p className="text-sm text-gray-500">
         {new Date(order.created_at).toLocaleDateString("en-GB", {
           day: "numeric",
           month: "short",
         })}
       </p>
+
+      <p className="mt-2 text-sm text-gray-500 sm:hidden">
+        #{order.id.slice(0, 4)} ·{" "}
+        {items.reduce((total, item) => total + item.quantity, 0)}{" "}
+        {items.reduce((total, item) => total + item.quantity, 0) === 1
+          ? "item"
+          : "items"}
+      </p>
+
+      <p className="text-sm text-gray-500 sm:hidden">
+        ₹{Number(order.total_amount).toLocaleString("en-IN", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })} INR
+      </p>
     </div>
 
-    <div className="ml-auto text-sm font-medium">
+    <div className="hidden min-w-[120px] sm:block">
+      <p className="text-sm font-medium">#{order.id.slice(0, 4)}</p>
+      <p className="text-sm text-gray-500">
+        {items.reduce((total, item) => total + item.quantity, 0)}{" "}
+        {items.reduce((total, item) => total + item.quantity, 0) === 1
+          ? "item"
+          : "items"}
+      </p>
+    </div>
+
+    <div className="ml-auto hidden text-sm font-medium sm:block">
       ₹{Number(order.total_amount).toLocaleString("en-IN", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       })} INR
     </div>
 
-    <details className="relative">
+    <details className="absolute right-0 top-0 sm:relative">
       <summary className="list-none cursor-pointer text-xl text-blue-600">
         ⋯
       </summary>
