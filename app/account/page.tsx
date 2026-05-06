@@ -172,7 +172,7 @@ export default async function AccountPage() {
 </div>
 
         <div>
-          <h2 className="mb-6 text-3xl font-semibold">Order History</h2>
+          <h2 className="mb-6 text-xl font-medium">Order History</h2>
 
           {!orders || orders.length === 0 ? (
             <div className="rounded-3xl border border-black/10 bg-white p-8 shadow-sm">
@@ -187,63 +187,70 @@ export default async function AccountPage() {
                   ) ?? [];
 
                 return (
-                  <div
-                    key={order.id}
-                    className="rounded-3xl border border-black/10 bg-white p-6 shadow-sm"
-                  >
-                    <div className="mb-5 flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-5">
-                      <div>
-                        <p className="text-sm uppercase tracking-[0.2em] text-gray-500">
-                          Order
-                        </p>
+<div
+  key={order.id}
+  className="rounded-xl bg-white px-4 py-4"
+>
+  <div className="flex items-center gap-5">
+    <div className="flex -space-x-3">
+      {items.slice(0, 2).map((item: OrderItem) => (
+        <Image
+          key={item.id}
+          src={item.image}
+          alt={item.name}
+          width={62}
+          height={80}
+          className="h-20 w-14 rounded-lg object-cover"
+        />
+      ))}
+    </div>
 
-                        <p className="font-medium">{order.id}</p>
+    <div className="min-w-[120px]">
+      <p className="text-sm font-medium">
+        #{order.id.slice(0, 4)}
+      </p>
+      <p className="text-sm text-gray-500">
+        {items.reduce((total, item) => total + item.quantity, 0)}{" "}
+        {items.reduce((total, item) => total + item.quantity, 0) === 1 ? "item" : "items"}
+      </p>
+    </div>
 
-                        <p className="mt-1 text-sm text-gray-500">
-                          {new Date(order.created_at).toLocaleString()}
-                        </p>
-                      </div>
+    <div className="min-w-[140px]">
+      <p className="text-sm font-semibold">
+        {order.status === "paid" ? "On its way" : order.status}
+      </p>
+      <p className="text-sm text-gray-500">
+        {new Date(order.created_at).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "short",
+        })}
+      </p>
+    </div>
 
-                      <div className="text-right">
-                        <p className="text-sm uppercase tracking-[0.2em] text-gray-500">
-                          Status
-                        </p>
+    <div className="ml-auto text-sm font-medium">
+      ₹{Number(order.total_amount).toLocaleString("en-IN", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      })} INR
+    </div>
 
-                        <p className="font-medium capitalize">{order.status}</p>
+    <details className="relative">
+      <summary className="list-none cursor-pointer text-xl text-blue-600">
+        ⋯
+      </summary>
 
-                        <p className="mt-1 text-xl font-semibold">
-                          ₹{Number(order.total_amount).toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
+      <div className="absolute right-0 top-8 z-20 w-48 rounded-lg border border-gray-300 bg-white p-1 shadow-xl">
+        <button
+          type="button"
+          className="w-full rounded-md px-4 py-3 text-left text-sm hover:bg-gray-100"
+        >
+          Buy again
+        </button>
+      </div>
+    </details>
+  </div>
+</div>
 
-                    <div className="space-y-4">
-                      {items.map((item: OrderItem) => (
-                        <div
-                          key={item.id}
-                          className="flex items-center gap-4 rounded-2xl border border-black/10 p-4"
-                        >
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            width={90}
-                            height={90}
-                            className="h-20 w-20 rounded-xl object-cover"
-                          />
-
-                          <div>
-                            <h3 className="font-medium">{item.name}</h3>
-
-                            <p className="text-gray-600">{item.price}</p>
-
-                            <p className="text-sm text-gray-500">
-                              Quantity: {item.quantity}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
                 );
               })}
             </div>
