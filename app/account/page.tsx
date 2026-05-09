@@ -6,6 +6,7 @@ import EditProfileModal from "@/components/EditProfileModal";
 import AddAddressModal from "@/components/AddAddressModal";
 import EditAddressModal from "@/components/EditAddressModal";
 import { signOutAllDevices } from "./sign-out-all-devices-action";
+import Link from "next/link";
 
 type Order = {
   id: string;
@@ -187,9 +188,10 @@ export default async function AccountPage() {
                   ) ?? [];
 
                 return (
-<div
+<Link
+  href={`/account/orders/${order.id}`}
   key={order.id}
-  className="rounded-xl bg-white px-4 py-4"
+  className="block rounded-xl bg-white px-4 py-4"
 >
   <div className="relative flex items-start gap-4 sm:items-center sm:gap-5">
     <div className="flex shrink-0 -space-x-3">
@@ -265,7 +267,7 @@ export default async function AccountPage() {
       </div>
     </details>
   </div>
-</div>
+</Link>
 
                 );
               })}

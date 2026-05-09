@@ -142,6 +142,24 @@ export async function POST(req: NextRequest) {
 const isFirstAddress =
   !existingAddresses || existingAddresses.length === 0;
 
+const orderItemsSource =
+  mode === "buy-now" && buyNowProduct ? [buyNowProduct] : cartItems || [];
+
+const subtotalAmount = orderItemsSource.reduce((total: number, item: any) => {
+  const price = Number(String(item.price).replace(/[^\d.]/g, ""));
+  return total + price * (item.quantity || 1);
+}, 0);
+
+const shippingAmount =
+  subtotalAmount > 0 && subtotalAmount >= 1400
+    ? 0
+    : subtotalAmount > 0
+    ? 199
+    : 0;
+
+const taxAmount = subtotalAmount * 0.05;  
+
+
 const { data: sameAddress } = await supabaseAdmin
   .from("user_addresses")
   .select("id")
@@ -183,6 +201,12 @@ if (!sameAddress && shippingDetails?.address) {
           status: "paid",
           razorpay_order_id,
           razorpay_payment_id,
+
+            shipping_details: shippingDetails,
+  billing_details: shippingDetails,
+  subtotal_amount: subtotalAmount,
+  shipping_amount: shippingAmount,
+  tax_amount: taxAmount,
         })
         .select()
         .single();
