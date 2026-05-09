@@ -78,12 +78,14 @@ export default async function OrderDetailsPage({
 
   return (
     <main className="min-h-screen bg-[#f4f4f4] px-4 py-5 text-black sm:px-[52px]">
-<details open className="mb-6 bg-white lg:hidden">
+<details open className="group mb-6 bg-white lg:hidden">
   <summary className="flex cursor-pointer list-none items-center justify-between px-5 py-5">
     <div className="flex items-center gap-2 text-blue-600">
       <span className="text-sm">Order summary</span>
 
-      <span className="text-xs">⌃</span>
+      <span className="text-xs transition-transform group-open:rotate-180">
+  ⌃
+</span>
     </div>
 
     <span className="text-xl font-semibold">
